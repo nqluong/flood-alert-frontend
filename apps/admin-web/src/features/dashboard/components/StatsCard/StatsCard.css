@@ -1,0 +1,80 @@
+.stats-card {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stats-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.stats-card__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-gray-500);
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+
+.stats-card__value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.stats-card__value--default { color: var(--color-gray-900); }
+.stats-card__value--red     { color: var(--color-red-500); }
+.stats-card__value--orange  { color: var(--color-orange-500); }
+.stats-card__value--green   { color: var(--color-green-500); }
+
+.stats-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  letter-spacing: -0.5px;
+}
+
+.stats-card__meta--default { color: var(--color-green-500); }
+.stats-card__meta--red     { color: var(--color-red-500); }
+.stats-card__meta--orange  { color: var(--color-orange-500); }
+.stats-card__meta--green   { color: var(--color-green-500); }
+
+/* Icon box on the right */
+.stats-card__icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stats-card__icon-box--blue   { background: var(--color-blue-100);   color: var(--color-primary); }
+.stats-card__icon-box--red    { background: var(--color-red-100);    color: var(--color-red-500); }
+.stats-card__icon-box--orange { background: var(--color-orange-100); color: var(--color-orange-500); }
+.stats-card__icon-box--green  { background: var(--color-green-100);  color: var(--color-green-500); }
+
+/* Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1200px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .stats-grid { grid-template-columns: 1fr; }
+}

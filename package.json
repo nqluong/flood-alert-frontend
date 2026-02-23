@@ -1,0 +1,22 @@
+{
+  "name": "flood-alert-frontend",
+  "packageManager": "yarn@4.12.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "web": "yarn workspace admin-web dev",
+    "mobile": "yarn workspace mobile-app start"
+  },
+  "resolutions": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.1"
+  }
+}

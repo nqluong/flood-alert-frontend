@@ -1,0 +1,85 @@
+import './StatsCard.css';
+import { IconTrendUp, IconAlert, IconReport, IconShield, IconSensor } from '../../../../components/icons/Icons';
+
+export type StatsColorVariant = 'default' | 'red' | 'orange' | 'green';
+export type StatsIconVariant  = 'blue' | 'red' | 'orange' | 'green';
+
+export interface StatsCardProps {
+  label: string;
+  value: string;
+  meta: string;
+  metaIcon?: React.ReactNode;
+  colorVariant?: StatsColorVariant;
+  iconVariant?: StatsIconVariant;
+  icon: React.ReactNode;
+}
+
+export function StatsCard({
+  label,
+  value,
+  meta,
+  metaIcon,
+  colorVariant = 'default',
+  iconVariant = 'blue',
+  icon,
+}: StatsCardProps) {
+  return (
+    <div className="stats-card">
+      <div className="stats-card__body">
+        <p className="stats-card__label">{label}</p>
+        <p className={`stats-card__value stats-card__value--${colorVariant}`}>{value}</p>
+        <div className={`stats-card__meta stats-card__meta--${colorVariant}`}>
+          {metaIcon}
+          <span>{meta}</span>
+        </div>
+      </div>
+      <div className={`stats-card__icon-box stats-card__icon-box--${iconVariant}`}>
+        {icon}
+      </div>
+    </div>
+  );
+}
+
+// ---- Preset stats used on the Dashboard ----
+export function StatsGrid() {
+  return (
+    <div className="stats-grid">
+      <StatsCard
+        label="Tổng số cảm biến"
+        value="5,247"
+        meta="+2.5% so với tháng trước"
+        metaIcon={<IconTrendUp size={14} />}
+        colorVariant="default"
+        iconVariant="blue"
+        icon={<IconSensor size={20} />}
+      />
+      <StatsCard
+        label="Cảnh báo đang hoạt động"
+        value="12"
+        meta="Cần xử lý ngay"
+        metaIcon={<IconAlert size={14} />}
+        colorVariant="red"
+        iconVariant="red"
+        icon={<IconAlert size={20} />}
+      />
+      <StatsCard
+        label="Báo cáo đang chờ"
+        value="45"
+        meta="Đang xem xét"
+        metaIcon={<IconReport size={14} />}
+        colorVariant="orange"
+        iconVariant="orange"
+        icon={<IconReport size={20} />}
+      />
+      <StatsCard
+        label="Tình trạng hệ thống"
+        value="99.8%"
+        meta="Hoạt động tốt"
+        metaIcon={<IconShield size={14} />}
+        colorVariant="green"
+        iconVariant="green"
+        icon={<IconShield size={20} />}
+      />
+    </div>
+  );
+}
