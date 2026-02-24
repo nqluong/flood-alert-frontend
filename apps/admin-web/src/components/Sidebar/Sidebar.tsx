@@ -3,12 +3,13 @@ import {
   IconDashboard,
   IconSensor,
   IconAlert,
+  IconMap,
   IconReport,
   IconUsers,
   IconSettings,
   IconHelp,
-  IconMoreVertical,
   IconShield,
+  IconLogout,
 } from '../icons/Icons';
 
 interface NavItem {
@@ -20,6 +21,7 @@ interface NavItem {
 interface SidebarProps {
   activeNav?: string;
   onNavChange?: (id: string) => void;
+  onLogout?: () => void;
 }
 
 const mainNavItems: NavItem[] = [
@@ -35,7 +37,7 @@ const settingsNavItems: NavItem[] = [
   { id: 'support', label: 'Hỗ trợ',   icon: <IconHelp size={16} /> },
 ];
 
-export default function Sidebar({ activeNav = 'dashboard', onNavChange }: SidebarProps) {
+export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout }: SidebarProps) {
   return (
     <aside className="sidebar">
       {/* Logo */}
@@ -86,8 +88,13 @@ export default function Sidebar({ activeNav = 'dashboard', onNavChange }: Sideba
           <p className="sidebar__user-name">Nguyễn Văn A</p>
           <p className="sidebar__user-role">Quản trị viên</p>
         </div>
-        <button className="sidebar__user-menu-btn" aria-label="Tùy chọn người dùng">
-          <IconMoreVertical size={16} />
+        <button
+          className="sidebar__user-menu-btn sidebar__user-logout-btn"
+          aria-label="Đăng xuất"
+          title="Đăng xuất"
+          onClick={onLogout}
+        >
+          <IconLogout size={16} />
         </button>
       </div>
     </aside>

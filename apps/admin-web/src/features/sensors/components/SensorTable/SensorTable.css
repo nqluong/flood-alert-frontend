@@ -1,0 +1,231 @@
+/* ============================================================
+   SensorTable
+   ============================================================ */
+
+.sensor-table__wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.sensor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: fixed;
+}
+
+/* ---- Header ---- */
+
+.sensor-table thead tr {
+  background: var(--color-bg-subtle);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sensor-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+}
+
+/* Column widths */
+.sensor-table th:nth-child(1) { width: 150px; }
+.sensor-table th:nth-child(2) { width: 260px; }
+.sensor-table th:nth-child(3) { width: 140px; }
+.sensor-table th:nth-child(4) { width: 140px; }
+.sensor-table th:nth-child(5) { width: 180px; }
+.sensor-table th:nth-child(6) { width: 130px; }
+
+/* ---- Rows ---- */
+
+.sensor-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s;
+}
+
+.sensor-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.sensor-table tbody tr:hover {
+  background: var(--color-bg-subtle);
+}
+
+.sensor-table td {
+  padding: 16px;
+  vertical-align: middle;
+  color: var(--color-text-primary);
+}
+
+/* ---- Sensor ID ---- */
+
+.sensor-table__id {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.sensor-table__id:hover {
+  text-decoration: underline;
+}
+
+/* ---- Location cell ---- */
+
+.sensor-table__location {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sensor-table__location-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary-light, #eff6ff);
+  color: var(--color-primary);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sensor-table__name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.sensor-table__district {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* ---- Status badge ---- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge--active {
+  background: #dcfce7;
+  color: #15803d;
+}
+.badge--active .badge__dot {
+  background: #16a34a;
+}
+
+.badge--offline {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.badge--offline .badge__dot {
+  background: #dc2626;
+}
+
+.badge--disabled {
+  background: #fef3c7;
+  color: #b45309;
+}
+.badge--disabled .badge__dot {
+  background: #d97706;
+}
+
+/* ---- Reading cell ---- */
+
+.sensor-table__reading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sensor-table__reading-time {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.sensor-table__reading-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* ---- Threshold cell ---- */
+
+.threshold-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.threshold-cell__warning {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d97706;
+}
+
+.threshold-cell__danger {
+  font-size: 12px;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+/* ---- Action cell ---- */
+
+.action-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+
+.action-btn:hover {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+}
+
+.action-btn--edit:hover   { color: var(--color-primary); }
+.action-btn--power:hover  { color: #d97706; }
+
+/* ---- Empty state ---- */
+
+.sensor-table__empty {
+  padding: 48px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}

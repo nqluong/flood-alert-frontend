@@ -1,0 +1,136 @@
+.sensors-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---- Top bar ---- */
+
+.sensors-page__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sensors-page__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.sensors-page__stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sensors-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.sensors-stat__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sensors-stat--active  { color: #16a34a; }
+.sensors-stat--active  .sensors-stat__dot { background: #16a34a; }
+
+.sensors-stat--offline { color: #dc2626; }
+.sensors-stat--offline .sensors-stat__dot { background: #dc2626; }
+
+.sensors-stat--disabled { color: #d97706; }
+.sensors-stat--disabled .sensors-stat__dot { background: #d97706; }
+
+/* ---- Add button ---- */
+
+.sensors-page__add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 44px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.sensors-page__add-btn:hover {
+  background: var(--color-primary-hover, #1d4ed8);
+}
+
+/* ---- Table card ---- */
+
+.sensors-page__card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- Modal overlay ---- */
+
+.sensors-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.sensors-modal {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  min-width: 340px;
+  box-shadow: var(--shadow-lg);
+}
+
+.sensors-modal h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--color-text-primary);
+}
+
+.sensors-modal p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0 0 24px;
+}
+
+.sensors-modal__close {
+  padding: 8px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sensors-modal__close:hover {
+  background: var(--color-primary-hover, #1d4ed8);
+}
