@@ -5,8 +5,10 @@ import { StatsGrid } from './components/StatsCard/StatsCard';
 import SensorMap from './components/SensorMap/SensorMap';
 import RecentActivity from './components/RecentActivity/RecentActivity';
 import SensorsPage from '../sensors/SensorsPage';
+import type { AuthSession } from '../../types/auth.types';
 
 interface DashboardPageProps {
+  session: AuthSession;
   onLogout?: () => void;
 }
 
@@ -39,7 +41,7 @@ function PlaceholderPage({ title }: { title: string }) {
   );
 }
 
-export default function DashboardPage({ onLogout }: DashboardPageProps) {
+export default function DashboardPage({ session, onLogout }: DashboardPageProps) {
   const [activeNav, setActiveNav] = useState('dashboard');
 
   const meta = PAGE_META[activeNav] ?? { title: activeNav };
@@ -67,6 +69,7 @@ export default function DashboardPage({ onLogout }: DashboardPageProps) {
     <DashboardLayout
       title={meta.title}
       subtitle={meta.subtitle}
+      user={session.user}
       onLogout={onLogout}
       activeNav={activeNav}
       onNavChange={setActiveNav}

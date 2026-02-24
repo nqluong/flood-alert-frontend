@@ -3,7 +3,6 @@ import {
   IconDashboard,
   IconSensor,
   IconAlert,
-  IconMap,
   IconReport,
   IconUsers,
   IconSettings,
@@ -11,6 +10,7 @@ import {
   IconShield,
   IconLogout,
 } from '../icons/Icons';
+import type { User } from '../../types/auth.types';
 
 interface NavItem {
   id: string;
@@ -22,6 +22,7 @@ interface SidebarProps {
   activeNav?: string;
   onNavChange?: (id: string) => void;
   onLogout?: () => void;
+  user?: User;
 }
 
 const mainNavItems: NavItem[] = [
@@ -37,7 +38,9 @@ const settingsNavItems: NavItem[] = [
   { id: 'support', label: 'Hỗ trợ',   icon: <IconHelp size={16} /> },
 ];
 
-export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout }: SidebarProps) {
+const DEFAULT_AVATAR = 'https://ui-avatars.com/api/?background=0ea5e9&color=fff&name=';
+
+export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout, user }: SidebarProps) {
   return (
     <aside className="sidebar">
       {/* Logo */}
@@ -81,12 +84,12 @@ export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout
       <div className="sidebar__user">
         <img
           className="sidebar__user-avatar"
-          src="https://www.figma.com/api/mcp/asset/fda90483-6c15-4304-bbaf-5aa1c8f6b7f7"
-          alt="User avatar"
+          src={user?.avatarUrl ?? `${DEFAULT_AVATAR}${encodeURIComponent(user?.name ?? 'Admin')}`}
+          alt={user?.name ?? 'Admin'}
         />
         <div className="sidebar__user-info">
-          <p className="sidebar__user-name">Nguyễn Văn A</p>
-          <p className="sidebar__user-role">Quản trị viên</p>
+          <p className="sidebar__user-name">{user?.name ?? 'Admin'}</p>
+          <p className="sidebar__user-role">{user?.email ?? ''}</p>
         </div>
         <button
           className="sidebar__user-menu-btn sidebar__user-logout-btn"

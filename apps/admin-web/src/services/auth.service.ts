@@ -1,49 +1,92 @@
-import type { LoginCredentials, AuthResponse, AuthSession } from '../types/auth.types';
+import type {
+  LoginCredentials,
+  AuthResponse,
+  AuthSession,
+  ApiLoginResponse,
+} from '../types/auth.types';
 
-const DEMO_EMAIL    = import.meta.env.VITE_DEMO_EMAIL    as string;
-const DEMO_PASSWORD = import.meta.env.VITE_DEMO_PASSWORD as string;
+const API_BASE_URL =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
+  'http://localhost:8080/flood-alert/api/v1';
 
-const MOCK_SESSION: AuthSession = {
-  user: {
-    id: '1',
-    name: 'Nguyễn Văn A',
-    email: DEMO_EMAIL,
-    role: 'admin',
-    avatarUrl: 'https://www.figma.com/api/mcp/asset/fda90483-6c15-4304-bbaf-5aa1c8f6b7f7',
-  },
-  accessToken: 'mock-jwt-token',
-};
-
-// ---- Interface ----
 export interface IAuthService {
   login(credentials: LoginCredentials): Promise<AuthResponse>;
   logout(): void;
 }
 
-// ---- Implementation ----
 export const authService: IAuthService = {
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    // Giả lập độ trễ mạng
-    await simulateApiCall(600);
+    let apiRes: Response;
 
-    const emailMatch    = credentials.email.trim().toLowerCase() === DEMO_EMAIL?.toLowerCase();
-    const passwordMatch = credentials.password === DEMO_PASSWORD;
-
-    if (emailMatch && passwordMatch) {
-      return { success: true, session: MOCK_SESSION };
+    try {
+      apiRes = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: credentials.email.trim(),
+          password: credentials.password,
+        }),
+      });
+    } catch {
+      return {
+        success: false,
+        message: 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.',
+      };
     }
 
-    return { success: false, message: 'Email hoặc mật khẩu không đúng. Vui lòng thử lại.' };
+    let body: ApiLoginResponse;
+    try {
+      body = (await apiRes.json()) as ApiLoginResponse;
+    } catch {
+      return { success: false, message: 'Phản hồi từ máy chủ không hợp lệ.' };
+    }
+
+    if (!apiRes.ok || !body.success) {
+      return {
+        success: false,
+        message: body.message ?? 'Email hoặc mật khẩu không đúng. Vui lòng thử lại.',
+      };
+    }
+
+    const { accessToken, refreshToken, userResponse } = body.data;
+
+    const isAdmin = userResponse.roles.includes('ADMIN');
+    if (!isAdmin) {
+      return {
+        success: false,
+        message:
+          'Tài khoản của bạn không có quyền truy cập vào trang quản trị. Vui lòng liên hệ quản trị viên.',
+      };
+    }
+
+    const session: AuthSession = {
+      user: {
+        id: userResponse.id,
+        name: userResponse.fullName,
+        email: userResponse.email,
+        role: 'admin',
+        roles: userResponse.roles,
+        avatarUrl: userResponse.avatarUrl ?? undefined,
+        phoneNumber: userResponse.phoneNumber,
+        status: userResponse.status,
+      },
+      accessToken,
+      refreshToken,
+    };
+
+    // Lưu tokens vào localStorage
+    localStorage.setItem('fg_access_token', accessToken);
+    localStorage.setItem('fg_refresh_token', refreshToken);
+    localStorage.setItem('fg_session', JSON.stringify(session));
+
+    return { success: true, session };
   },
 
   logout(): void {
     localStorage.removeItem('fg_session');
     localStorage.removeItem('fg_remember');
+    localStorage.removeItem('fg_access_token');
+    localStorage.removeItem('fg_refresh_token');
   },
 };
-
-// ---- Helpers ----
-function simulateApiCall(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
