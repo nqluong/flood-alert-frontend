@@ -1,5 +1,5 @@
 import './StatsCard.css';
-import { IconTrendUp, IconAlert, IconReport, IconShield, IconSensor } from '../../../../components/icons/Icons';
+import { TrendingUp, AlertTriangle, FileText, ShieldCheck, Radio } from 'lucide-react';
 
 export type StatsColorVariant = 'default' | 'red' | 'orange' | 'green';
 export type StatsIconVariant  = 'blue' | 'red' | 'orange' | 'green';
@@ -48,37 +48,37 @@ export function StatsGrid() {
         label="Tổng số cảm biến"
         value="5,247"
         meta="+2.5% so với tháng trước"
-        metaIcon={<IconTrendUp size={14} />}
+        metaIcon={<TrendingUp size={14} />}
         colorVariant="default"
         iconVariant="blue"
-        icon={<IconSensor size={20} />}
+        icon={<Radio size={20} />}
       />
       <StatsCard
         label="Cảnh báo đang hoạt động"
         value="12"
         meta="Cần xử lý ngay"
-        metaIcon={<IconAlert size={14} />}
+        metaIcon={<AlertTriangle size={14} />}
         colorVariant="red"
         iconVariant="red"
-        icon={<IconAlert size={20} />}
+        icon={<AlertTriangle size={20} />}
       />
       <StatsCard
         label="Báo cáo đang chờ"
         value="45"
         meta="Đang xem xét"
-        metaIcon={<IconReport size={14} />}
+        metaIcon={<FileText size={14} />}
         colorVariant="orange"
         iconVariant="orange"
-        icon={<IconReport size={20} />}
+        icon={<FileText size={20} />}
       />
       <StatsCard
         label="Tình trạng hệ thống"
         value="99.8%"
         meta="Hoạt động tốt"
-        metaIcon={<IconShield size={14} />}
+        metaIcon={<ShieldCheck size={14} />}
         colorVariant="green"
         iconVariant="green"
-        icon={<IconShield size={20} />}
+        icon={<ShieldCheck size={20} />}
       />
     </div>
   );

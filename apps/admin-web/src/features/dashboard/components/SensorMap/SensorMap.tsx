@@ -3,17 +3,15 @@ import './SensorMap.css';
 import { MapContainer, TileLayer, Marker, Tooltip, Circle, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
-import { Client } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
-import { floodService } from '../../../../services/flood.service';
 import type {
   ActiveFloodEvent,
-  FloodLifecycleEvent,
   ProcessedSensorData,
+  SensorMapItem,
   SeverityLevel,
 } from '../../../../types/flood.types';
+import type { WsStatus } from '../../hooks/useFloodWebSocket';
 
-// ── Màu sắc & nhãn theo mức độ ──────────────────────────────────────────────
+//  Màu sắc & nhãn theo mức độ 
 const SEVERITY_COLOR: Record<SeverityLevel, string> = {
   SAFE:    '#22c55e',
   WARNING: '#f59e0b',
@@ -38,16 +36,15 @@ const SEVERITY_HALO: Partial<Record<SeverityLevel, { radius: number; fillOpacity
 };
 
 const STATUS_SENSOR_COLOR: Record<string, string> = {
-  NORMAL:  '#22c55e',
-  WARNING: '#f59e0b',
-  DANGER:  '#ef4444',
+  NORMAL:   '#22c55e',
+  ACTIVE:   '#22c55e',
+  WARNING:  '#f59e0b',
+  DANGER:   '#ef4444',
+  INACTIVE: '#6b7280',
 };
 
-const WS_URL =
-  (import.meta.env.VITE_WS_BASE_URL as string | undefined) ??
-  'http://localhost:8080/flood-alert/ws-admin';
 
-// ── Icon helpers ─────────────────────────────────────────────────────────────
+//  Icon helpers 
 function createFloodMarkerIcon(severity: SeverityLevel) {
   const color = SEVERITY_COLOR[severity];
   return L.divIcon({
@@ -68,9 +65,17 @@ function createSensorIcon(status: string) {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function createSensorClusterIcon(cluster: any): L.DivIcon {
+  const count: number = cluster.getChildCount();
+  return L.divIcon({
+    className: '',
+    html: `<span class="sensor-cluster">${count}</span>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+  });
+}
+
 function createClusterIcon(cluster: any): L.DivIcon {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const children: any[] = cluster.getAllChildMarkers();
   let maxPriority = 0;
   let maxSeverity: SeverityLevel = 'SAFE';
@@ -91,7 +96,7 @@ function createClusterIcon(cluster: any): L.DivIcon {
   });
 }
 
-// ── Nút fullscreen ───────────────────────────────────────────────────────────
+//  Nút fullscreen 
 function FullscreenControl({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
   const map = useMap();
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -139,133 +144,44 @@ function LegendItem({ color, label }: { color: string; label: string }) {
   );
 }
 
-// ── Types ────────────────────────────────────────────────────────────────────
-type SensorsState      = Record<string, ProcessedSensorData>;
-type ActiveFloodsState = Record<string, ActiveFloodEvent>;
-type WsStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
+//  Types 
+interface SensorMapProps {
+  activeFloods:   Record<string, ActiveFloodEvent>;
+  sensors:        Record<string, ProcessedSensorData>;
+  sensorMarkers:  SensorMapItem[];
+  loading:        boolean;
+  apiError:       string | null;
+  wsStatus:       WsStatus;
+  wsError:        string | null;
+  onClearWsError: () => void;
+}
 
-// ── Component chính ──────────────────────────────────────────────────────────
-export default function SensorMap() {
-  const [activeFloods, setActiveFloods] = useState<ActiveFloodsState>({});
-  const [sensors, setSensors]           = useState<SensorsState>({});
-  const [loading, setLoading]           = useState(true);
-  const [apiError, setApiError]         = useState<string | null>(null);
-  const [wsStatus, setWsStatus]         = useState<WsStatus>('connecting');
-  const [wsError, setWsError]           = useState<string | null>(null);
-  const canvasRef                       = useRef<HTMLDivElement>(null);
+//  Component chính 
+export default function SensorMap({
+  activeFloods,
+  sensors,
+  sensorMarkers,
+  loading,
+  apiError,
+  wsStatus,
+  wsError,
+  onClearWsError,
+}: SensorMapProps) {
+  const canvasRef = useRef<HTMLDivElement>(null);
 
-  // ── 1. Load điểm ngập ban đầu từ REST API ───────────────────────────────
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-
-    floodService.getActiveFloods()
-      .then((data) => {
-        if (cancelled) return;
-        const dict: ActiveFloodsState = {};
-        for (const item of data) dict[item.eventId] = item;
-        setActiveFloods(dict);
-        setLoading(false);
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setApiError(err instanceof Error ? err.message : 'Lỗi tải dữ liệu ban đầu');
-          setLoading(false);
-        }
-      });
-
-    return () => { cancelled = true; };
-  }, []);
-
-  // ── 2. Kết nối WebSocket STOMP qua SockJS ───────────────────────────────
-  useEffect(() => {
-    fetch(`${WS_URL}/info?t=${Date.now()}`)
-      .then(async (res) => {
-        const text = await res.text();
-      })
-      .catch((err) => {
-        console.error('[SensorMap] SockJS /info fetch failed:', err);
-      });
-
-    const stompClient = new Client({
-      webSocketFactory: () => new SockJS(WS_URL) as WebSocket,
-      reconnectDelay: 5000,
-
-      onConnect: () => {
-        setWsStatus('connected');
-        setWsError(null);
-
-        // Kênh telemetry — cập nhật vị trí & trạng thái cảm biến
-        stompClient.subscribe('/topic/admin/map/telemetry', (msg) => {
-          try {
-            const data = JSON.parse(msg.body) as ProcessedSensorData;
-            setSensors((prev) => ({ ...prev, [data.sensorId]: data }));
-          } catch {
-            console.warn('[SensorMap] Lỗi parse telemetry');
-          }
-        });
-
-        // Kênh alerts — thêm / cập nhật / xóa điểm ngập
-        stompClient.subscribe('/topic/admin/alerts', (msg) => {
-          try {
-            const event = JSON.parse(msg.body) as FloodLifecycleEvent;
-            if (event.type === 'RESOLVED') {
-              setActiveFloods((prev) => {
-                const next = { ...prev };
-                delete next[event.eventId];
-                return next;
-              });
-            } else {
-              // CREATED hoặc ESCALATED
-              setActiveFloods((prev) => ({
-                ...prev,
-                [event.eventId]: {
-                  eventId:       event.eventId,
-                  lat:           event.lat,
-                  lon:           event.lon,
-                  location:      event.location,
-                  waterLevel:    event.waterLevel,
-                  severityLevel: event.severityLevel,
-                  status:        'CONFIRMED',
-                  updatedAt:     new Date().toISOString(),
-                },
-              }));
-            }
-          } catch {
-            console.warn('[SensorMap] Lỗi parse flood alert');
-          }
-        });
-      },
-
-      onDisconnect: () => {
-        setWsStatus('disconnected');
-        setWsError('Mất kết nối WebSocket. Đang thử kết nối lại…');
-      },
-
-      onStompError: (frame) => {
-        setWsStatus('error');
-        const msg = frame.headers?.message ?? 'Lỗi không xác định từ server';
-        setWsError(`Kết nối WebSocket thất bại: ${msg}`);
-      },
-
-      onWebSocketError: (evt) => {
-        setWsStatus('error');
-        const detail = (evt as ErrorEvent).message;
-        setWsError(
-          detail
-            ? `Không thể kết nối WebSocket: ${detail}`
-            : 'Không thể kết nối WebSocket. Kiểm tra lại máy chủ hoặc mạng.'
-        );
-      },
-    });
-
-    stompClient.activate();
-    return () => { stompClient.deactivate(); };
-  }, []);
-
-  // ── Dữ liệu render ──────────────────────────────────────────────────────
+  //  Dữ liệu render 
   const floodList  = Object.values(activeFloods);
-  const sensorList = Object.values(sensors);
+
+  // Cảm biến có telemetry real-time (loại trừ vị trí trùng điểm ngập)
+  const sensorList = Object.values(sensors).filter(
+    (s) => !floodList.some((f) => f.lat === s.lat && f.lon === s.lon),
+  );
+
+  // Cảm biến tĩnh từ API /sensors/map chưa có telemetry
+  const telemetrySensorIds = new Set(Object.keys(sensors));
+  const staticMarkers = sensorMarkers.filter((m) => !telemetrySensorIds.has(m.sensorId));
+
+  const totalSensorCount = sensorMarkers.length || sensorList.length;
   const counts: Record<SeverityLevel, number> = {
     SAFE:    floodList.filter(f => f.severityLevel === 'SAFE').length,
     WARNING: floodList.filter(f => f.severityLevel === 'WARNING').length,
@@ -283,7 +199,7 @@ export default function SensorMap() {
             <line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
           <span>{wsError}</span>
-          <button className="sensor-map__ws-toast-close" onClick={() => setWsError(null)}>✕</button>
+          <button className="sensor-map__ws-toast-close" onClick={onClearWsError}>✕</button>
         </div>
       )}
 
@@ -309,8 +225,8 @@ export default function SensorMap() {
           {!loading && !apiError && (
             <span className="sensor-map__badge sensor-map__badge--count">{floodList.length} điểm ngập</span>
           )}
-          {sensorList.length > 0 && (
-            <span className="sensor-map__badge sensor-map__badge--sensor">{sensorList.length} cảm biến</span>
+          {totalSensorCount > 0 && (
+            <span className="sensor-map__badge sensor-map__badge--sensor">{totalSensorCount} cảm biến</span>
           )}
         </div>
 
@@ -398,27 +314,53 @@ export default function SensorMap() {
             ))}
           </MarkerClusterGroup>
 
-          {/* Marker cảm biến telemetry real-time */}
-          {sensorList.map((sensor) => (
-            <Marker
-              key={sensor.sensorId}
-              position={[sensor.lat, sensor.lon]}
-              icon={createSensorIcon(sensor.status)}
-            >
-              <Tooltip direction="top" offset={[0, -6]} opacity={0.92}>
-                <div className="sensor-map__tooltip">
-                  <strong>📡 {sensor.sensorId}</strong>
-                  <span>Mực nước: {sensor.waterLevel.toFixed(2)} cm</span>
-                  <span>Trạng thái: {sensor.status}</span>
-                  {sensor.recordedAt && (
-                    <span style={{ color: '#9ca3af', fontSize: 10 }}>
-                      {new Date(sensor.recordedAt).toLocaleTimeString('vi-VN')}
-                    </span>
-                  )}
-                </div>
-              </Tooltip>
-            </Marker>
-          ))}
+          {/* Cluster cảm biến: telemetry real-time + tĩnh từ /sensors/map */}
+          <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createSensorClusterIcon}
+            showCoverageOnHover={false}
+            maxClusterRadius={50}
+            spiderfyOnMaxZoom
+            zoomToBoundsOnClick
+          >
+            {sensorList.map((sensor) => (
+              <Marker
+                key={sensor.sensorId}
+                position={[sensor.lat, sensor.lon]}
+                icon={createSensorIcon(sensor.status)}
+              >
+                <Tooltip direction="top" offset={[0, -6]} opacity={0.92}>
+                  <div className="sensor-map__tooltip">
+                    <strong>📡 {sensor.sensorId}</strong>
+                    <span>Mực nước: {sensor.waterLevel.toFixed(2)} cm</span>
+                    <span>Trạng thái: {sensor.status}</span>
+                    {sensor.recordedAt && (
+                      <span style={{ color: '#9ca3af', fontSize: 10 }}>
+                        {new Date(sensor.recordedAt).toLocaleTimeString('vi-VN')}
+                      </span>
+                    )}
+                  </div>
+                </Tooltip>
+              </Marker>
+            ))}
+
+            {staticMarkers.map((sensor) => (
+              <Marker
+                key={`map-${sensor.sensorId}`}
+                position={[sensor.lat, sensor.lon]}
+                icon={createSensorIcon(sensor.status)}
+              >
+                <Tooltip direction="top" offset={[0, -6]} opacity={0.92}>
+                  <div className="sensor-map__tooltip">
+                    <strong>📡 {sensor.sensorId}</strong>
+                    <span>{sensor.name}</span>
+                    <span>Trạng thái: {sensor.status}</span>
+                    <span>Pin: {sensor.batteryLevel}%</span>
+                  </div>
+                </Tooltip>
+              </Marker>
+            ))}
+          </MarkerClusterGroup>
         </MapContainer>
       </div>
     </div>

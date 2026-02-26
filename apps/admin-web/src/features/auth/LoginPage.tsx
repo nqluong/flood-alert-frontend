@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import './LoginPage.css';
 import {
-  IconShield,
-  IconMail,
-  IconLock,
-  IconEye,
-  IconEyeOff,
-  IconAlertCircle,
-} from '../../components/icons/Icons';
+  ShieldCheck,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+} from 'lucide-react';
 import { authService } from '../../services/auth.service';
 import type { LoginCredentials } from '../../types/auth.types';
 
@@ -76,7 +76,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
         {/* Brand */}
         <div className="login-card__brand">
           <div className="login-card__logo-icon">
-            <IconShield size={26} />
+            <ShieldCheck size={26} />
           </div>
           <span className="login-card__logo-name">FloodGuard</span>
           <span className="login-card__tagline">Hệ thống quản lý cảnh báo lũ lụt</span>
@@ -93,7 +93,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
           <div className="login-form__group">
             <label className="login-form__label" htmlFor="email">Email</label>
             <div className="login-form__input-wrap">
-              <span className="login-form__input-icon"><IconMail size={16} /></span>
+              <span className="login-form__input-icon"><Mail size={16} /></span>
               <input
                 id="email"
                 type="email"
@@ -111,7 +111,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
           <div className="login-form__group">
             <label className="login-form__label" htmlFor="password">Mật khẩu</label>
             <div className="login-form__input-wrap">
-              <span className="login-form__input-icon"><IconLock size={16} /></span>
+              <span className="login-form__input-icon"><Lock size={16} /></span>
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
@@ -128,7 +128,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                 onClick={() => setForm((p) => ({ ...p, showPassword: !p.showPassword }))}
                 aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
               >
-                {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
@@ -152,7 +152,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
           {/* Error */}
           {error && (
             <div className="login-form__error" role="alert">
-              <IconAlertCircle size={16} />
+              <AlertCircle size={16} />
               {error}
             </div>
           )}

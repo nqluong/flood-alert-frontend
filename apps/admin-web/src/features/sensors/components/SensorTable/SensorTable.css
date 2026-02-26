@@ -32,7 +32,7 @@
 }
 
 /* Column widths */
-.sensor-table th:nth-child(1) { width: 150px; }
+.sensor-table th:nth-child(1) { width: 175px; }
 .sensor-table th:nth-child(2) { width: 260px; }
 .sensor-table th:nth-child(3) { width: 140px; }
 .sensor-table th:nth-child(4) { width: 140px; }
@@ -152,6 +152,14 @@
   background: #d97706;
 }
 
+.badge--maintenance {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+.badge--maintenance .badge__dot {
+  background: #3b82f6;
+}
+
 /* ---- Reading cell ---- */
 
 .sensor-table__reading {
@@ -220,6 +228,27 @@
 
 .action-btn--edit:hover   { color: var(--color-primary); }
 .action-btn--power:hover  { color: #d97706; }
+.action-btn--more:hover   { color: #ef4444; background: #fef2f2; }
+
+/* ---- Deleted badge ---- */
+.badge--deleted { background: #fce7f3; color: #9d174d; }
+
+/* ---- Restore button ---- */
+.action-btn--restore {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: #000000;
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.action-btn--restore:hover { background: #a7f3d0; }
 
 /* ---- Empty state ---- */
 

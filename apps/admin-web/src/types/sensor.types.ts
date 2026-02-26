@@ -5,20 +5,16 @@ export type SensorStatus = 'active' | 'offline' | 'disabled';
 // ---- Sub-models ----
 
 export interface SensorThreshold {
-  /** Cảnh báo level (cm) */
   warning: number;
-  /** Nguy cấp level (cm) */
   danger: number;
 }
 
 export interface SensorReading {
-  /** Water level in cm */
   value: number;
-  /** Human-readable relative time, e.g. "2 phút trước" */
   timestamp: string;
 }
 
-// ---- Core model ----
+// ---- Core model (mock) ----
 
 export interface Sensor {
   id: string;            // e.g. SENS-HN-001
@@ -27,14 +23,200 @@ export interface Sensor {
   status: SensorStatus;
   lastReading: SensorReading;
   thresholds: SensorThreshold;
-  /** Latitude/longitude for map rendering */
   coordinates: [number, number];
 }
 
-// ---- Filter shape ----
+// ---- Filter shape (aligned with API) ----
 
 export interface SensorFilters {
   search: string;
-  status: SensorStatus | 'all';
-  district: string | 'all';
+  status: SensorApiStatus | 'all';
+  region: string;
+}
+
+export type SensorApiStatus = 'ACTIVE' | 'DISABLED' | 'MAINTENANCE' | 'OFFLINE';
+
+/** Kết quả 1 sensor từ API GET /sensors */
+export interface SensorSummaryResponse {
+  id: string;
+  sensorId: string;
+  name: string;
+  locationName: string | null;
+  lat: number;
+  lon: number;
+  status: SensorApiStatus;
+  batteryLevel: number | null;
+  signalStrength: number | null;
+  lastHeartbeat: string | null;
+  lastReadingAt: string | null;
+  hardwareModel: string | null;
+  firmwareVersion: string | null;
+  warningThreshold: number | null;
+  dangerThreshold: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Envelope phân trang */
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+  numberOfElements: number;
+  sorted: boolean;
+}
+
+/** Params gửi lên API filter */
+export interface SensorApiFilter {
+  page?: number;
+  size?: number;
+  status?: SensorApiStatus | '';
+  search?: string;
+  region?: string;
+  sortBy?: string;
+  sortDirection?: 'ASC' | 'DESC';
+}
+
+export interface SensorsApiResponse {
+  success: boolean;
+  code: number;
+  message: string | null;
+  data: PageResponse<SensorSummaryResponse>;
+  timestamp: string;
+}
+
+export interface CreateSensorRequest {
+  sensorId: string;
+  name: string;
+  locationName?: string;
+  lat: number;
+  lon: number;
+  warningThreshold: number;
+  dangerThreshold: number;
+  hardwareModel?: string;
+  firmwareVersion?: string;
+}
+
+export interface CreateSensorResponse {
+  id: string;
+  sensorId: string;
+  name: string;
+  locationName: string | null;
+  lat: number;
+  lon: number;
+  status: SensorApiStatus;
+  apiKey: string;
+  warningThreshold: number;
+  dangerThreshold: number;
+  hardwareModel: string | null;
+  firmwareVersion: string | null;
+  createdAt: string;
+  message: string | null;
+}
+
+export interface CreateSensorApiResponse {
+  success: boolean;
+  code: number;
+  message: string | null;
+  data: CreateSensorResponse | null;
+  timestamp: string;
+}
+
+// ---- Update Sensor ----
+
+export interface UpdateSensorRequest {
+  name?: string;
+  locationName?: string;
+  lat?: number;
+  lon?: number;
+  warningThreshold?: number;
+  dangerThreshold?: number;
+  hardwareModel?: string;
+  firmwareVersion?: string;
+  comment?: string;
+}
+
+export interface UpdateSensorResponse {
+  id: string;
+  sensorId: string;
+  name: string;
+  locationName: string | null;
+  lat: number;
+  lon: number;
+  status: SensorApiStatus;
+  warningThreshold: number;
+  dangerThreshold: number;
+  hardwareModel: string | null;
+  firmwareVersion: string | null;
+  updatedAt: string;
+  changedFields: string[];
+  message: string | null;
+}
+
+export interface UpdateSensorApiResponse {
+  success: boolean;
+  code: number;
+  message: string | null;
+  data: UpdateSensorResponse | null;
+  timestamp: string;
+}
+
+// ---- Change Sensor Status ----
+
+export interface ChangeStatusRequest {
+  newStatus: SensorApiStatus;
+  reason: string;
+  comment?: string;
+}
+
+export interface ChangeStatusResponse {
+  id: string;
+  sensorId: string;
+  name: string;
+  previousStatus: SensorApiStatus;
+  currentStatus: SensorApiStatus;
+  allowedNextStatuses: SensorApiStatus[];
+  syncedToRedis: boolean;
+  addedToBlacklist: boolean;
+  message: string | null;
+  changedAt: string;
+}
+
+export interface ChangeStatusApiResponse {
+  success: boolean;
+  code: number;
+  message: string | null;
+  data: ChangeStatusResponse | null;
+  timestamp: string;
+}
+
+// ---- Delete Sensor ----
+
+export interface DeleteSensorRequest {
+  reason: string;
+  removeFromMap?: boolean;
+}
+
+export interface DeleteSensorResponse {
+  id: string;
+  sensorId: string;
+  deleteType: string;        // 'SOFT' | 'HARD'
+  status: string;
+  message: string | null;
+  deletedAt: string;
+  removedFromMap: boolean;
+  removedFromRedis: boolean;
+}
+
+export interface DeleteSensorApiResponse {
+  success: boolean;
+  code: number;
+  message: string | null;
+  data: DeleteSensorResponse | null;
+  timestamp: string;
 }

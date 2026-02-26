@@ -6,6 +6,7 @@ import SensorMap from './components/SensorMap/SensorMap';
 import RecentActivity from './components/RecentActivity/RecentActivity';
 import SensorsPage from '../sensors/SensorsPage';
 import type { AuthSession } from '../../types/auth.types';
+import { useFloodWebSocket } from './hooks/useFloodWebSocket';
 
 interface DashboardPageProps {
   session: AuthSession;
@@ -28,6 +29,31 @@ const PAGE_META: Record<string, PageMeta> = {
   support:   { title: 'Hỗ trợ' },
 };
 
+function DashboardView() {
+  const ws = useFloodWebSocket();
+  return (
+    <>
+      <StatsGrid />
+      <div className="dashboard-page__widgets">
+        <SensorMap
+          activeFloods={ws.activeFloods}
+          sensors={ws.sensors}
+          sensorMarkers={ws.sensorMarkers}
+          loading={ws.loading}
+          apiError={ws.apiError}
+          wsStatus={ws.wsStatus}
+          wsError={ws.wsError}
+          onClearWsError={ws.clearWsError}
+        />
+        <RecentActivity
+          recentActivities={ws.recentActivities}
+          wsStatus={ws.wsStatus}
+        />
+      </div>
+    </>
+  );
+}
+
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <div style={{
@@ -48,20 +74,9 @@ export default function DashboardPage({ session, onLogout }: DashboardPageProps)
 
   const renderContent = () => {
     switch (activeNav) {
-      case 'dashboard':
-        return (
-          <>
-            <StatsGrid />
-            <div className="dashboard-page__widgets">
-              <SensorMap />
-              <RecentActivity />
-            </div>
-          </>
-        );
-      case 'sensors':
-        return <SensorsPage />;
-      default:
-        return <PlaceholderPage title={meta.title} />;
+      case 'dashboard': return <DashboardView />;
+      case 'sensors':   return <SensorsPage />;
+      default:          return <PlaceholderPage title={meta.title} />;
     }
   };
 

@@ -1,86 +1,114 @@
 import './SensorTable.css';
-import type { Sensor, SensorStatus } from '../../../../types/sensor.types';
-import {
-  IconEdit,
-  IconPower,
-  IconMoreHorizontal,
-} from '../../../../components/icons/Icons';
+import type { SensorApiStatus, SensorSummaryResponse } from '../../../../types/sensor.types';
+import { Pencil, Power, Trash2, Cpu, RotateCcw } from 'lucide-react';
 
-// ---- Status helpers ----
 
-const STATUS_LABEL: Record<SensorStatus, string> = {
-  active: 'Hoạt động',
-  offline: 'Ngoại tuyến',
-  disabled: 'Vô hiệu hóa',
+const STATUS_LABEL: Record<SensorApiStatus, string> = {
+  ACTIVE:      'Hoạt động',
+  OFFLINE:     'Ngoại tuyến',
+  DISABLED:    'Vô hiệu hóa',
+  MAINTENANCE: 'Bảo trì'
 };
 
-const STATUS_CLASS: Record<SensorStatus, string> = {
-  active: 'badge--active',
-  offline: 'badge--offline',
-  disabled: 'badge--disabled',
+const STATUS_CLASS: Record<SensorApiStatus, string> = {
+  ACTIVE:      'badge--active',
+  OFFLINE:     'badge--offline',
+  DISABLED:    'badge--disabled',
+  MAINTENANCE: 'badge--maintenance'
 };
 
-// ---- Sub-components ----
-
-function StatusBadge({ status }: { status: SensorStatus }) {
+function StatusBadge({ status }: { status: SensorApiStatus }) {
   return (
-    <span className={`badge ${STATUS_CLASS[status]}`}>
+    <span className={`badge ${STATUS_CLASS[status] ?? 'badge--offline'}`}>
       <span className="badge__dot" />
-      {STATUS_LABEL[status]}
+      {STATUS_LABEL[status] ?? status}
     </span>
   );
 }
 
-function ThresholdCell({ warning, danger }: { warning: number; danger: number }) {
+function BatteryCell({ battery, signal }: { battery: number | null; signal: number | null }) {
   return (
     <div className="threshold-cell">
-      <span className="threshold-cell__warning">CB: {warning}cm</span>
-      <span className="threshold-cell__danger">NC: {danger}cm</span>
+      {battery !== null
+        ? <span className="threshold-cell__warning">Pin: {battery}%</span>
+        : <span className="threshold-cell__warning" style={{ color: 'var(--color-text-muted)' }}>Pin: --</span>}
+      {signal !== null
+        ? <span className="threshold-cell__danger">Tín hiệu: {signal} dBm</span>
+        : <span className="threshold-cell__danger" style={{ color: 'var(--color-text-muted)' }}>Tín hiệu: --</span>}
     </div>
   );
 }
 
-function ActionCell({ sensor, onEdit, onToggle }: {
-  sensor: Sensor;
-  onEdit: (id: string) => void;
-  onToggle: (id: string) => void;
+function ActionCell({ sensor, onEdit, onToggle, onDelete, onRestore }: {
+  sensor: SensorSummaryResponse;
+  onEdit: (sensor: SensorSummaryResponse) => void;
+  onToggle: (sensor: SensorSummaryResponse) => void;
+  onDelete: (sensor: SensorSummaryResponse) => void;
+  onRestore: (sensor: SensorSummaryResponse) => void;
 }) {
+
   return (
     <div className="action-cell">
       <button
         className="action-btn action-btn--edit"
         title="Chỉnh sửa"
-        onClick={() => onEdit(sensor.id)}
+        onClick={() => onEdit(sensor)}
       >
-        <IconEdit size={15} />
+        <Pencil size={15} />
       </button>
       <button
         className="action-btn action-btn--power"
-        title={sensor.status === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt'}
-        onClick={() => onToggle(sensor.id)}
+        title="Chuyển trạng thái"
+        onClick={() => onToggle(sensor)}
       >
-        <IconPower size={15} />
+        <Power size={15} />
       </button>
-      <button className="action-btn action-btn--more" title="Xem thêm">
-        <IconMoreHorizontal size={15} />
+      <button
+        className="action-btn action-btn--more"
+        title="Xóa cảm biến"
+        onClick={() => onDelete(sensor)}
+      >
+        <Trash2 size={15} />
       </button>
+      {sensor.status === 'DISABLED' && (
+        <button
+          className="action-btn action-btn--restore"
+          title="Khôi phục cảm biến"
+          onClick={() => onRestore(sensor)}
+        >
+          <RotateCcw size={15} />
+        </button>
+      )}
     </div>
   );
 }
 
-// ---- Main component ----
 
 interface SensorTableProps {
-  sensors: Sensor[];
-  onEdit?: (id: string) => void;
-  onToggle?: (id: string) => void;
+  sensors: SensorSummaryResponse[];
+  loading?: boolean;
+  onEdit?: (sensor: SensorSummaryResponse) => void;
+  onToggle?: (sensor: SensorSummaryResponse) => void;
+  onDelete?: (sensor: SensorSummaryResponse) => void;
+  onRestore?: (sensor: SensorSummaryResponse) => void;
 }
 
 export default function SensorTable({
   sensors,
+  loading = false,
   onEdit = () => {},
   onToggle = () => {},
+  onDelete = () => {},
+  onRestore = () => {},
 }: SensorTableProps) {
+  if (loading) {
+    return (
+      <div className="sensor-table__empty">
+        Đang tải dữ liệu…
+      </div>
+    );
+  }
+
   if (sensors.length === 0) {
     return (
       <div className="sensor-table__empty">
@@ -97,8 +125,9 @@ export default function SensorTable({
             <th>Mã Cảm biến</th>
             <th>Tên / Vị trí</th>
             <th>Trạng thái</th>
-            <th>Đọc gần nhất</th>
-            <th>Ngưỡng</th>
+            <th>Kết nối gần nhất</th>
+            <th>Pin / Tin hiệu</th>
+            <th>Cấu hình</th>
             <th>Thao tác</th>
           </tr>
         </thead>
@@ -107,7 +136,7 @@ export default function SensorTable({
             <tr key={sensor.id}>
               {/* Mã Cảm biến */}
               <td>
-                <span className="sensor-table__id">{sensor.id}</span>
+                <span className="sensor-table__id"><Cpu size={16} /> {sensor.sensorId}</span>
               </td>
 
               {/* Tên / Vị trí */}
@@ -121,7 +150,9 @@ export default function SensorTable({
                   </div>
                   <div>
                     <p className="sensor-table__name">{sensor.name}</p>
-                    <p className="sensor-table__district">{sensor.district}</p>
+                    <p className="sensor-table__district">
+                      {sensor.locationName ?? `${sensor.lat.toFixed(5)}, ${sensor.lon.toFixed(5)}`}
+                    </p>
                   </div>
                 </div>
               </td>
@@ -131,25 +162,40 @@ export default function SensorTable({
                 <StatusBadge status={sensor.status} />
               </td>
 
-              {/* Đọc gần nhất */}
+              {/* Kết nối gần nhất */}
               <td>
                 <div className="sensor-table__reading">
-                  <span className="sensor-table__reading-time">{sensor.lastReading.timestamp}</span>
-                  <span className="sensor-table__reading-value">{sensor.lastReading.value}cm</span>
+                  {sensor.lastHeartbeat ? (
+                    <>
+                      <span className="sensor-table__reading-time">
+                        {new Date(sensor.lastHeartbeat).toLocaleDateString('vi-VN')}
+                      </span>
+                      <span className="sensor-table__reading-value">
+                        {new Date(sensor.lastHeartbeat).toLocaleTimeString('vi-VN')}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="sensor-table__reading-time" style={{ color: 'var(--color-text-muted)' }}>Chưa có dữ liệu</span>
+                  )}
                 </div>
               </td>
 
-              {/* Ngưỡng */}
+              {/* Pin / Tin hiệu */}
               <td>
-                <ThresholdCell
-                  warning={sensor.thresholds.warning}
-                  danger={sensor.thresholds.danger}
-                />
+                <BatteryCell battery={sensor.batteryLevel} signal={sensor.signalStrength} />
+              </td>
+
+              {/* Phiên bản phần cứng */}
+              <td>
+                <div className="sensor-table__reading">
+                  <span className="sensor-table__reading-time">{sensor.hardwareModel ?? '--'}</span>
+                  <span className="sensor-table__reading-value">{sensor.firmwareVersion ?? '--'}</span>
+                </div>
               </td>
 
               {/* Thao tác */}
               <td>
-                <ActionCell sensor={sensor} onEdit={onEdit} onToggle={onToggle} />
+                <ActionCell sensor={sensor} onEdit={onEdit} onToggle={onToggle} onDelete={onDelete} onRestore={onRestore} />
               </td>
             </tr>
           ))}
@@ -158,3 +204,4 @@ export default function SensorTable({
     </div>
   );
 }
+

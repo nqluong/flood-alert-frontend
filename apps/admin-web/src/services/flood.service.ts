@@ -1,22 +1,22 @@
-import type { ActiveFloodEvent, ActiveFloodsResponse } from '../types/flood.types';
+import type { ActiveFloodEvent, ActiveFloodsResponse, SensorMapItem, SensorMapResponse } from '../types/flood.types';
+import { getValidAccessToken } from './auth.service';
 
 const API_BASE_URL =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
   'http://localhost:8080/flood-alert/api/v1';
 
-function getAccessToken(): string | null {
-  return localStorage.getItem('fg_access_token');
+async function authHeaders(): Promise<HeadersInit> {
+  const token = await getValidAccessToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 }
 
 export const floodService = {
   async getActiveFloods(): Promise<ActiveFloodEvent[]> {
-    const token = getAccessToken();
-
     const res = await fetch(`${API_BASE_URL}/admin/floods/active`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
+      headers: await authHeaders(),
     });
 
     if (!res.ok) {
@@ -30,5 +30,31 @@ export const floodService = {
     }
 
     return body.data;
+  },
+
+  async getSensorsMap(): Promise<SensorMapItem[]> {
+    const res = await fetch(`${API_BASE_URL}/sensors/map`, {
+      headers: await authHeaders(),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Lỗi tải bản đồ cảm biến: ${res.status}`);
+    }
+
+    const body = (await res.json()) as SensorMapResponse;
+
+    if (!body.success) {
+      throw new Error(body.message ?? 'Không thể tải bản đồ cảm biến.');
+    }
+
+    // Chuyển GeoJSON features thành SensorMapItem (đảo lon/lat thành lat/lon)
+    return body.data.features.map((f) => ({
+      sensorId:     f.properties.sensorId,
+      name:         f.properties.name,
+      status:       f.properties.status,
+      batteryLevel: f.properties.batteryLevel,
+      lat:          f.geometry.coordinates[1],
+      lon:          f.geometry.coordinates[0],
+    }));
   },
 };

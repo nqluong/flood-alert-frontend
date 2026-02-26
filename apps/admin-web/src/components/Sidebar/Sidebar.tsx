@@ -1,15 +1,15 @@
 import './Sidebar.css';
 import {
-  IconDashboard,
-  IconSensor,
-  IconAlert,
-  IconReport,
-  IconUsers,
-  IconSettings,
-  IconHelp,
-  IconShield,
-  IconLogout,
-} from '../icons/Icons';
+  LayoutDashboard,
+  Radio,
+  AlertTriangle,
+  FileText,
+  Users,
+  Settings,
+  HelpCircle,
+  ShieldCheck,
+  LogOut,
+} from 'lucide-react';
 import type { User } from '../../types/auth.types';
 
 interface NavItem {
@@ -26,16 +26,16 @@ interface SidebarProps {
 }
 
 const mainNavItems: NavItem[] = [
-  { id: 'dashboard', label: 'Tổng quan',   icon: <IconDashboard size={16} /> },
-  { id: 'sensors',   label: 'Cảm biến',    icon: <IconSensor size={16} /> },
-  { id: 'alerts',    label: 'Cảnh báo',    icon: <IconAlert size={16} /> },
-  { id: 'reports',   label: 'Báo cáo',     icon: <IconReport size={16} /> },
-  { id: 'users',     label: 'Người dùng',  icon: <IconUsers size={16} /> },
+  { id: 'dashboard', label: 'Tổng quan',   icon: <LayoutDashboard size={16} /> },
+  { id: 'sensors',   label: 'Cảm biến',    icon: <Radio size={16} /> },
+  { id: 'alerts',    label: 'Cảnh báo',    icon: <AlertTriangle size={16} /> },
+  { id: 'reports',   label: 'Báo cáo',     icon: <FileText size={16} /> },
+  { id: 'users',     label: 'Người dùng',  icon: <Users size={16} /> },
 ];
 
 const settingsNavItems: NavItem[] = [
-  { id: 'config',  label: 'Cấu hình', icon: <IconSettings size={16} /> },
-  { id: 'support', label: 'Hỗ trợ',   icon: <IconHelp size={16} /> },
+  { id: 'config',  label: 'Cấu hình', icon: <Settings size={16} /> },
+  { id: 'support', label: 'Hỗ trợ',   icon: <HelpCircle size={16} /> },
 ];
 
 const DEFAULT_AVATAR = 'https://ui-avatars.com/api/?background=0ea5e9&color=fff&name=';
@@ -46,7 +46,7 @@ export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout
       {/* Logo */}
       <div className="sidebar__logo">
         <div className="sidebar__logo-icon">
-          <IconShield size={14} />
+          <ShieldCheck size={14} />
         </div>
         <span className="sidebar__logo-text">FloodGuard</span>
       </div>
@@ -97,7 +97,7 @@ export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout
           title="Đăng xuất"
           onClick={onLogout}
         >
-          <IconLogout size={16} />
+          <LogOut size={16} />
         </button>
       </div>
     </aside>
