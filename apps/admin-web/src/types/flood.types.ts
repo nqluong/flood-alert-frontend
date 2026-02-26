@@ -1,3 +1,5 @@
+import type { ApiResponse } from './api.types';
+
 export type SeverityLevel = 'SAFE' | 'WARNING' | 'DANGER' | 'UNKNOWN';
 export type FloodStatus    = 'CONFIRMED' | 'PENDING' | 'RESOLVED';
 
@@ -12,13 +14,7 @@ export interface ActiveFloodEvent {
   updatedAt:     string | null;
 }
 
-export interface ActiveFloodsResponse {
-  success:   boolean;
-  code:      number;
-  message:   string | null;
-  data:      ActiveFloodEvent[];
-  timestamp: string;
-}
+export type ActiveFloodsResponse = ApiResponse<ActiveFloodEvent[]>;
 
 // ---- WebSocket: Telemetry từ cảm biến ----
 export interface ProcessedSensorData {
@@ -70,11 +66,5 @@ interface SensorMapFeatureCollection {
   features: SensorMapFeature[];
 }
 
-export interface SensorMapResponse {
-  success:   boolean;
-  code:      number;
-  message:   string | null;
-  data:      SensorMapFeatureCollection;
-  timestamp: string;
-}
+export type SensorMapResponse = ApiResponse<SensorMapFeatureCollection>;
 

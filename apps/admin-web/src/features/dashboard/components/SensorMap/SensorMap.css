@@ -1,3 +1,4 @@
+/* ---- Root wrapper ---- */
 .sensor-map {
   background: #ffffff;
   border: 1px solid var(--color-gray-200);
@@ -6,253 +7,7 @@
   flex-direction: column;
 }
 
-.sensor-map__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--color-gray-200);
-  flex-shrink: 0;
-}
-
-.sensor-map__title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-gray-900);
-  letter-spacing: -0.5px;
-}
-
-.sensor-map__legend {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.sensor-map__legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--color-gray-600);
-}
-
-.sensor-map__legend-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: var(--radius-full);
-  flex-shrink: 0;
-}
-
-
-/* Map canvas — Leaflet requires an explicit pixel height on the container */
-.sensor-map__canvas {
-  position: relative;
-  height: 460px;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  overflow: hidden;
-}
-
-.sensor-map__canvas .leaflet-container {
-  width: 100%;
-  height: 100%;
-  font-family: inherit;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-
-/* Keep attribution and popups from being clipped */
-.sensor-map__canvas .leaflet-pane,
-.sensor-map__canvas .leaflet-top,
-.sensor-map__canvas .leaflet-bottom {
-  z-index: 400;
-}
-
-/* Tooltip content */
-.sensor-map__tooltip {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 12px;
-  line-height: 1.4;
-  min-width: 120px;
-}
-
-.sensor-map__tooltip strong {
-  font-size: 13px;
-  font-weight: 600;
-  color: #111827;
-}
-
-.sensor-map__tooltip span {
-  color: #4b5563;
-}
-
-.sensor-map__tooltip-status {
-  font-weight: 500;
-  margin-top: 2px;
-}
-
-/* tooltip status color is set inline per severity */
-
-/* ---- Header left (title + badge) ---- */
-.sensor-map__header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sensor-map__badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.sensor-map__badge--count {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.sensor-map__badge--loading {
-  background: #f3f4f6;
-  color: #6b7280;
-  animation: pulse 1.2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.45; }
-}
-
-/* ---- Error overlay ---- */
-.sensor-map__error {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
-  color: #b91c1c;
-  font-size: 13px;
-  padding: 6px 14px;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-
-/* ---- Individual flood marker dot ---- */
-.flood-marker {
-  display: block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2.5px solid;
-  opacity: 0.9;
-  box-shadow: 0 1px 4px rgba(0,0,0,.25);
-  transition: transform .15s;
-}
-.flood-marker:hover { transform: scale(1.3); }
-
-/* ---- Cluster bubble ---- */
-.flood-cluster {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2.5px solid;
-  opacity: 0.92;
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,.3);
-  cursor: pointer;
-  transition: transform .15s;
-}
-.flood-cluster:hover { transform: scale(1.1); }
-
-/* ---- Sensor cluster bubble ---- */
-.sensor-cluster {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid #3b82f6;
-  background: #2563eb;
-  opacity: 0.88;
-  font-size: 11px;
-  font-weight: 700;
-  color: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,.25);
-  cursor: pointer;
-  transition: transform .15s;
-}
-.sensor-cluster:hover { transform: scale(1.1); }
-
-/* ---- Fullscreen button (absolute, top-right of canvas) ---- */
-.sensor-map__fullscreen-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: #fff;
-  border: 2px solid rgba(0,0,0,.2);
-  border-radius: 4px;
-  cursor: pointer;
-  color: #374151;
-  box-shadow: 0 1px 3px rgba(0,0,0,.15);
-  transition: background .15s, color .15s;
-}
-.sensor-map__fullscreen-btn:hover {
-  background: #f0f9ff;
-  color: #0369a1;
-}
-
-/* ---- Fullscreen mode: stretch canvas & map to fill screen ---- */
-.sensor-map__canvas:fullscreen {
-  height: 100dvh !important;
-  border-radius: 0;
-}
-.sensor-map__canvas:fullscreen .leaflet-container {
-  height: 100% !important;
-  border-radius: 0;
-}
-
-/* ---- Sensor telemetry marker dot ---- */
-.sensor-marker {
-  display: block;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid;
-  opacity: 0.85;
-  box-shadow: 0 1px 3px rgba(0,0,0,.2);
-}
-
-/* ---- WebSocket status badges ---- */
-.sensor-map__badge--ws-on {
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.sensor-map__badge--ws-off {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.sensor-map__badge--sensor {
-  background: #ede9fe;
-  color: #6d28d9;
-}
-
-/* ---- WebSocket error toast (above the map header) ---- */
+/* ---- WebSocket error toast (above the header) ---- */
 .sensor-map__ws-toast {
   display: flex;
   align-items: center;
@@ -275,3 +30,77 @@
   padding: 0 2px;
 }
 .sensor-map__ws-toast-close:hover { color: #78350f; }
+
+/* ---- Map canvas (Leaflet requires explicit height) ---- */
+.sensor-map__canvas {
+  position: relative;
+  height: 460px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.sensor-map__canvas .leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* Keep attribution and popups from being clipped */
+.sensor-map__canvas .leaflet-pane,
+.sensor-map__canvas .leaflet-top,
+.sensor-map__canvas .leaflet-bottom {
+  z-index: 400;
+}
+
+/* ---- Fullscreen mode: stretch canvas & map to fill screen ---- */
+.sensor-map__canvas:fullscreen {
+  height: 100dvh !important;
+  border-radius: 0;
+}
+.sensor-map__canvas:fullscreen .leaflet-container {
+  height: 100% !important;
+  border-radius: 0;
+}
+
+/* ---- Error overlay ---- */
+.sensor-map__error {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* ---- Shared tooltip (used by FloodMarkers & SensorMarkers) ---- */
+.sensor-map__tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  min-width: 120px;
+}
+
+.sensor-map__tooltip strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.sensor-map__tooltip span {
+  color: #4b5563;
+}
+
+.sensor-map__tooltip-status {
+  font-weight: 500;
+  margin-top: 2px;
+  /* color is set inline per severity level */
+}

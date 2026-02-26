@@ -1,3 +1,5 @@
+import type { ApiResponse } from './api.types';
+
 // ---- Credentials ----
 export interface LoginCredentials {
   email: string;
@@ -54,10 +56,4 @@ export interface ApiLoginData {
   userResponse: ApiUserResponse;
 }
 
-export interface ApiLoginResponse {
-  success: boolean;
-  code: number;
-  message: string;
-  data: ApiLoginData;
-  timestamp: string;
-}
+export type ApiLoginResponse = ApiResponse<ApiLoginData>;

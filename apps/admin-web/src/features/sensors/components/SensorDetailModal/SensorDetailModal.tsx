@@ -79,11 +79,12 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 interface SensorDetailModalProps {
     sensor: SensorSummaryResponse;
     onClose: () => void;
+    hideMap?: boolean;
 }
 
 type Tab = 'info' | 'logs';
 
-export default function SensorDetailModal({ sensor, onClose }: SensorDetailModalProps) {
+export default function SensorDetailModal({ sensor, onClose, hideMap = false }: SensorDetailModalProps) {
     const [detail, setDetail] = useState<SensorDetailResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -194,8 +195,8 @@ export default function SensorDetailModal({ sensor, onClose }: SensorDetailModal
 
                     {/* ======== INFO TAB ======== */}
                     {tab === 'info' && <>
-                        {/* Map panel */}
-                        <div className="sdm-map-panel">
+                        {/* Map panel — ẩn nếu hideMap=true */}
+                        {!hideMap && <div className="sdm-map-panel">
                             <MapContainer
                                 center={[sensor.lat, sensor.lon]}
                                 zoom={15}
@@ -227,10 +228,10 @@ export default function SensorDetailModal({ sensor, onClose }: SensorDetailModal
                                     <span className="sdm-coords__location"> — {sensor.locationName}</span>
                                 )}
                             </div>
-                        </div>
+                        </div>}
 
                         {/* Info panel */}
-                        <div className="sdm-info-panel">
+                        <div className={`sdm-info-panel${hideMap ? ' sdm-info-panel--full' : ''}`}>
                             {loading && (
                                 <div className="sdm-loading">
                                     <span className="sdm-loading__spinner" />

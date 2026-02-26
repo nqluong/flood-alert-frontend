@@ -1,6 +1,7 @@
 import './SensorFilters.css';
 import type { SensorFilters, SensorApiStatus } from '../../../../types/sensor.types';
-import { Search, SlidersHorizontal, ChevronDown, BrushCleaning } from 'lucide-react';
+import { Search, BrushCleaning } from 'lucide-react';
+import Select from '../../../../components/Select/Select';
 
 const STATUS_OPTIONS: { value: SensorApiStatus | 'all'; label: string }[] = [
   { value: 'all',         label: 'Tất cả trạng thái' },
@@ -37,18 +38,12 @@ export default function SensorFiltersBar({ filters, onChange }: SensorFiltersPro
       </div>
 
       {/* Status select */}
-      <div className="sensor-filters__select-wrap">
-        <select
-          className="sensor-filters__select"
-          value={filters.status}
-          onChange={(e) => set('status', e.target.value as SensorFilters['status'])}
-        >
-          {STATUS_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-        <span className="sensor-filters__select-arrow"><ChevronDown size={16} /></span>
-      </div>
+      <Select
+        className="sensor-filters__status-select"
+        options={STATUS_OPTIONS}
+        value={filters.status}
+        onChange={(v) => set('status', v)}
+      />
 
       {/* Reset filter button */}
       <button

@@ -19,6 +19,7 @@ import type {
   SensorDetailApiResponse,
 } from '../types/sensor.types';
 import { getValidAccessToken } from './auth.service';
+import { parseApiError, ApiError } from './api.helpers';
 
 const API_BASE_URL =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
@@ -50,15 +51,11 @@ export const sensorService = {
       headers: await authHeaders(),
     });
 
-    if (!res.ok) {
-      throw new Error(`Lỗi tải danh sách cảm biến: ${res.status}`);
-    }
+    if (!res.ok) await parseApiError(res);
 
     const body = (await res.json()) as SensorsApiResponse;
 
-    if (!body.success) {
-      throw new Error(body.message ?? 'Không thể tải danh sách cảm biến.');
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Không thể tải danh sách cảm biến.', body.code);
 
     return body.data;
   },
@@ -70,11 +67,11 @@ export const sensorService = {
       body: JSON.stringify(payload),
     });
 
+    if (!res.ok) await parseApiError(res);
+
     const body = (await res.json()) as CreateSensorApiResponse;
 
-    if (!res.ok || !body.success) {
-      throw new Error(body.message ?? `Tạo cảm biến thất bại (${res.status})`);
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Tạo cảm biến thất bại.', body.code);
 
     return body.data!;
   },
@@ -86,11 +83,11 @@ export const sensorService = {
       body: JSON.stringify(payload),
     });
 
+    if (!res.ok) await parseApiError(res);
+
     const body = (await res.json()) as UpdateSensorApiResponse;
 
-    if (!res.ok || !body.success) {
-      throw new Error(body.message ?? `Cập nhật cảm biến thất bại (${res.status})`);
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Cập nhật cảm biến thất bại.', body.code);
 
     return body.data!;
   },
@@ -102,11 +99,11 @@ export const sensorService = {
       body: JSON.stringify(payload),
     });
 
+    if (!res.ok) await parseApiError(res);
+
     const body = (await res.json()) as ChangeStatusApiResponse;
 
-    if (!res.ok || !body.success) {
-      throw new Error(body.message ?? `Chuyển trạng thái thất bại (${res.status})`);
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Chuyển trạng thái thất bại.', body.code);
 
     return body.data!;
   },
@@ -118,11 +115,11 @@ export const sensorService = {
       body: JSON.stringify(payload),
     });
 
+    if (!res.ok) await parseApiError(res);
+
     const body = (await res.json()) as DeleteSensorApiResponse;
 
-    if (!res.ok || !body.success) {
-      throw new Error(body.message ?? `Xóa cảm biến thất bại (${res.status})`);
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Xóa cảm biến thất bại.', body.code);
 
     return body.data!;
   },
@@ -134,11 +131,11 @@ export const sensorService = {
       body: JSON.stringify(payload),
     });
 
+    if (!res.ok) await parseApiError(res);
+
     const body = (await res.json()) as DeleteSensorApiResponse;
 
-    if (!res.ok || !body.success) {
-      throw new Error(body.message ?? `Xóa vĩnh viễn cảm biến thất bại (${res.status})`);
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Xóa vĩnh viễn cảm biến thất bại.', body.code);
 
     return body.data!;
   },
@@ -149,11 +146,11 @@ export const sensorService = {
       headers: await authHeaders(),
     });
 
+    if (!res.ok) await parseApiError(res);
+
     const body = (await res.json()) as DeleteSensorApiResponse;
 
-    if (!res.ok || !body.success) {
-      throw new Error(body.message ?? `Khôi phục cảm biến thất bại (${res.status})`);
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Khôi phục cảm biến thất bại.', body.code);
 
     return body.data!;
   },
@@ -164,11 +161,11 @@ export const sensorService = {
       headers: await authHeaders(),
     });
 
+    if (!res.ok) await parseApiError(res);
+
     const body = (await res.json()) as SensorDetailApiResponse;
 
-    if (!res.ok || !body.success) {
-      throw new Error(body.message ?? `Không thể tải chi tiết cảm biến (${res.status})`);
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Không thể tải chi tiết cảm biến.', body.code);
 
     return body.data;
   },

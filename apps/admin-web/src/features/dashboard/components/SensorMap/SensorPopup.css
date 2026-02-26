@@ -1,0 +1,137 @@
+/* ---- Leaflet popup wrapper overrides ---- */
+.smap-popup-wrap .leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .15), 0 1px 4px rgba(0, 0, 0, .08);
+  border: 1px solid #e2e8f0;
+}
+
+.smap-popup-wrap .leaflet-popup-content {
+  margin: 0;
+}
+
+/* ---- Popup root ---- */
+.smap-popup {
+  font-family: inherit;
+  min-width: 210px;
+  padding: 12px 12px 10px;
+}
+
+/* ---- Header: tên + id ---- */
+.smap-popup__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.smap-popup__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 190px;
+}
+
+.smap-popup__sid {
+  font-size: 11px;
+  color: #6b7280;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+}
+
+/* ---- Meta row: badge + chips ---- */
+.smap-popup__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.smap-popup__badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.smap-popup__chip {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* ---- Timestamp ---- */
+.smap-popup__time {
+  font-size: 10.5px;
+  color: #9ca3af;
+  margin: 2px 0 0;
+}
+
+/* ---- Action buttons row ---- */
+.smap-popup__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.smap-popup__action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+  padding: 6px 4px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  background: #f8fafc;
+  cursor: pointer;
+  color: #374151;
+  font-size: 10.5px;
+  font-weight: 500;
+  transition: background .12s, border-color .12s, color .12s;
+  white-space: nowrap;
+}
+
+.smap-popup__action-btn:hover:not(:disabled) {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.smap-popup__action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.smap-popup__action-btn--danger {
+  color: #ef4444;
+  border-color: #fecaca;
+  background: #fff5f5;
+}
+
+.smap-popup__action-btn--danger:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+/* ---- Spinner (loading state) ---- */
+.smap-popup__spin {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #bfdbfe;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  margin: 6px auto 0;
+  animation: smap-spin .65s linear infinite;
+}
+
+@keyframes smap-spin {
+  to { transform: rotate(360deg); }
+}

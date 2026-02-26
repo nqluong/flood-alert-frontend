@@ -1,0 +1,108 @@
+/* ---- Map header ---- */
+.sensor-map__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-gray-200);
+  flex-shrink: 0;
+}
+
+.sensor-map__header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sensor-map__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-gray-900);
+  letter-spacing: -0.5px;
+}
+
+/* ---- Legend ---- */
+.sensor-map__legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sensor-map__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-gray-600);
+}
+
+.sensor-map__legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ---- Status badges ---- */
+.sensor-map__badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.sensor-map__badge--count {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.sensor-map__badge--loading {
+  background: #f3f4f6;
+  color: #6b7280;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.sensor-map__badge--ws-on {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.sensor-map__badge--ws-off {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.sensor-map__badge--sensor {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* ---- Fullscreen button (absolute, top-right of canvas) ---- */
+.sensor-map__fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border: 2px solid rgba(0,0,0,.2);
+  border-radius: 4px;
+  cursor: pointer;
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  transition: background .15s, color .15s;
+}
+
+.sensor-map__fullscreen-btn:hover {
+  background: #f0f9ff;
+  color: #0369a1;
+}

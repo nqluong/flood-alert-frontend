@@ -162,6 +162,14 @@
   gap: 0;
 }
 
+/* Khi không có map panel — info chiếm toàn bộ modal */
+.sdm-info-panel--full {
+  padding: 20px 28px;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 /* Loading */
 
 .sdm-loading {

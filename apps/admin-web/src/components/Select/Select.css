@@ -1,0 +1,54 @@
+.select {
+  position: relative;
+  width: 200px;
+}
+
+.select__trigger {
+  width: 100%;
+  padding: 6px 10px;
+  text-align: left;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.select__chevron {
+  flex-shrink: 0;
+  color: #6b7280;
+  transition: transform 0.2s;
+}
+
+.select__chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.select__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-top: 4px;
+  z-index: 10;
+}
+
+.select__option {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.select__option:hover {
+  background: #f3f4f6;
+}
+
+.select__option.is-selected {
+  font-weight: 600;
+  background: #e5f3ff;
+}

@@ -1,5 +1,6 @@
 import type { ActiveFloodEvent, ActiveFloodsResponse, SensorMapItem, SensorMapResponse } from '../types/flood.types';
 import { getValidAccessToken } from './auth.service';
+import { parseApiError, ApiError } from './api.helpers';
 
 const API_BASE_URL =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
@@ -19,15 +20,11 @@ export const floodService = {
       headers: await authHeaders(),
     });
 
-    if (!res.ok) {
-      throw new Error(`Lỗi tải dữ liệu lũ lụt: ${res.status}`);
-    }
+    if (!res.ok) await parseApiError(res);
 
     const body = (await res.json()) as ActiveFloodsResponse;
 
-    if (!body.success) {
-      throw new Error(body.message ?? 'Không thể tải dữ liệu lũ lụt.');
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Không thể tải dữ liệu lũ lụt.', body.code);
 
     return body.data;
   },
@@ -37,15 +34,11 @@ export const floodService = {
       headers: await authHeaders(),
     });
 
-    if (!res.ok) {
-      throw new Error(`Lỗi tải bản đồ cảm biến: ${res.status}`);
-    }
+    if (!res.ok) await parseApiError(res);
 
     const body = (await res.json()) as SensorMapResponse;
 
-    if (!body.success) {
-      throw new Error(body.message ?? 'Không thể tải bản đồ cảm biến.');
-    }
+    if (!body.success) throw new ApiError(body.message ?? 'Không thể tải bản đồ cảm biến.', body.code);
 
     // Chuyển GeoJSON features thành SensorMapItem (đảo lon/lat thành lat/lon)
     return body.data.features.map((f) => ({

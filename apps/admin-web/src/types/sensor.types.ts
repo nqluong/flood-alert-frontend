@@ -1,3 +1,5 @@
+import type { ApiResponse } from './api.types';
+
 // ---- Enums / Literals ----
 
 export type SensorStatus = 'active' | 'offline' | 'disabled';
@@ -82,13 +84,7 @@ export interface SensorApiFilter {
   sortDirection?: 'ASC' | 'DESC';
 }
 
-export interface SensorsApiResponse {
-  success: boolean;
-  code: number;
-  message: string | null;
-  data: PageResponse<SensorSummaryResponse>;
-  timestamp: string;
-}
+export type SensorsApiResponse = ApiResponse<PageResponse<SensorSummaryResponse>>;
 
 export interface CreateSensorRequest {
   sensorId: string;
@@ -119,13 +115,7 @@ export interface CreateSensorResponse {
   message: string | null;
 }
 
-export interface CreateSensorApiResponse {
-  success: boolean;
-  code: number;
-  message: string | null;
-  data: CreateSensorResponse | null;
-  timestamp: string;
-}
+export type CreateSensorApiResponse = ApiResponse<CreateSensorResponse | null>;
 
 // ---- Update Sensor ----
 
@@ -158,13 +148,7 @@ export interface UpdateSensorResponse {
   message: string | null;
 }
 
-export interface UpdateSensorApiResponse {
-  success: boolean;
-  code: number;
-  message: string | null;
-  data: UpdateSensorResponse | null;
-  timestamp: string;
-}
+export type UpdateSensorApiResponse = ApiResponse<UpdateSensorResponse | null>;
 
 // ---- Change Sensor Status ----
 
@@ -187,13 +171,7 @@ export interface ChangeStatusResponse {
   changedAt: string;
 }
 
-export interface ChangeStatusApiResponse {
-  success: boolean;
-  code: number;
-  message: string | null;
-  data: ChangeStatusResponse | null;
-  timestamp: string;
-}
+export type ChangeStatusApiResponse = ApiResponse<ChangeStatusResponse | null>;
 
 // ---- Delete Sensor ----
 
@@ -213,13 +191,7 @@ export interface DeleteSensorResponse {
   removedFromRedis: boolean;
 }
 
-export interface DeleteSensorApiResponse {
-  success: boolean;
-  code: number;
-  message: string | null;
-  data: DeleteSensorResponse | null;
-  timestamp: string;
-}
+export type DeleteSensorApiResponse = ApiResponse<DeleteSensorResponse | null>;
 
 // ---- Sensor Detail ----
 
@@ -240,10 +212,4 @@ export interface SensorDetailResponse extends SensorSummaryResponse {
   logs: SensorLog[] | null;
 }
 
-export interface SensorDetailApiResponse {
-  success: boolean;
-  code: number;
-  message: string | null;
-  data: SensorDetailResponse;
-  timestamp: string;
-}
+export type SensorDetailApiResponse = ApiResponse<SensorDetailResponse>;

@@ -51,42 +51,55 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* ---- Selects ---- */
+/* ---- Custom status select ---- */
 
-.sensor-filters__select-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
+.sensor-filters__status-select {
+  width: auto;
+  min-width: 180px;
 }
 
-.sensor-filters__select {
+.sensor-filters__status-select .select__trigger {
   height: 44px;
-  padding: 0 36px 0 12px;
+  padding: 0 12px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: 14px;
   color: var(--color-text-primary);
   background: var(--color-bg-card);
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-  cursor: pointer;
-  min-width: 160px;
   transition: border-color 0.15s;
 }
 
-.sensor-filters__select:focus {
+.sensor-filters__status-select .select__trigger:hover {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.sensor-filters__select-arrow {
-  position: absolute;
-  right: 8px;
+.sensor-filters__status-select .select__chevron {
   color: var(--color-text-muted);
-  pointer-events: none;
-  display: flex;
-  align-items: center;
+}
+
+.sensor-filters__status-select .select__menu {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  z-index: 50;
+}
+
+.sensor-filters__status-select .select__option {
+  font-size: 14px;
+  padding: 9px 14px;
+  color: var(--color-text-primary);
+  transition: background 0.1s;
+}
+
+.sensor-filters__status-select .select__option:hover {
+  background: var(--color-bg-hover, #f3f4f6);
+}
+
+.sensor-filters__status-select .select__option.is-selected {
+  font-weight: 600;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--color-primary);
 }
 
 /* ---- Icon button (filter / reset) ---- */
