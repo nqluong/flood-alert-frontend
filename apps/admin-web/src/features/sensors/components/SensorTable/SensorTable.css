@@ -225,7 +225,7 @@
   background: var(--color-bg-subtle);
   color: var(--color-text-primary);
 }
-
+.action-btn--view:hover    { color: #16a34a; }
 .action-btn--edit:hover   { color: var(--color-primary); }
 .action-btn--power:hover  { color: #d97706; }
 .action-btn--more:hover   { color: #ef4444; background: #fef2f2; }

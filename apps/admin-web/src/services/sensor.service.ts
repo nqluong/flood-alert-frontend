@@ -15,6 +15,8 @@ import type {
   DeleteSensorRequest,
   DeleteSensorResponse,
   DeleteSensorApiResponse,
+  SensorDetailResponse,
+  SensorDetailApiResponse,
 } from '../types/sensor.types';
 import { getValidAccessToken } from './auth.service';
 
@@ -154,5 +156,20 @@ export const sensorService = {
     }
 
     return body.data!;
+  },
+
+  async getSensorById(id: string, options: { includeLogs?: boolean } = {}): Promise<SensorDetailResponse> {
+    const params = options.includeLogs ? '?includeLogs=true' : '';
+    const res = await fetch(`${API_BASE_URL}/sensors/${id}${params}`, {
+      headers: await authHeaders(),
+    });
+
+    const body = (await res.json()) as SensorDetailApiResponse;
+
+    if (!res.ok || !body.success) {
+      throw new Error(body.message ?? `Không thể tải chi tiết cảm biến (${res.status})`);
+    }
+
+    return body.data;
   },
 };

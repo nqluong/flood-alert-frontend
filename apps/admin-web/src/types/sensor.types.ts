@@ -220,3 +220,30 @@ export interface DeleteSensorApiResponse {
   data: DeleteSensorResponse | null;
   timestamp: string;
 }
+
+// ---- Sensor Detail ----
+
+export interface SensorLog {
+  id: string;
+  sensorId: string;
+  action: string;         // 'CREATED' | 'STATUS_CHANGED' | 'UPDATED' | ...
+  performedBy: string | null;
+  oldValue: Record<string, unknown> | null;
+  newValue: Record<string, unknown> | null;
+  comment: string | null;
+  createdAt: string;
+}
+
+export interface SensorDetailResponse extends SensorSummaryResponse {
+  installedAt: string | null;
+  createdBy: string | null;
+  logs: SensorLog[] | null;
+}
+
+export interface SensorDetailApiResponse {
+  success: boolean;
+  code: number;
+  message: string | null;
+  data: SensorDetailResponse;
+  timestamp: string;
+}

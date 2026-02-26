@@ -1,6 +1,6 @@
 import './SensorTable.css';
 import type { SensorApiStatus, SensorSummaryResponse } from '../../../../types/sensor.types';
-import { Pencil, Power, Trash2, Cpu, RotateCcw } from 'lucide-react';
+import { Pencil, Power, Trash2, Cpu, RotateCcw, Eye } from 'lucide-react';
 
 
 const STATUS_LABEL: Record<SensorApiStatus, string> = {
@@ -39,8 +39,9 @@ function BatteryCell({ battery, signal }: { battery: number | null; signal: numb
   );
 }
 
-function ActionCell({ sensor, onEdit, onToggle, onDelete, onRestore }: {
+function ActionCell({ sensor, onView, onEdit, onToggle, onDelete, onRestore }: {
   sensor: SensorSummaryResponse;
+  onView: (sensor: SensorSummaryResponse) => void;
   onEdit: (sensor: SensorSummaryResponse) => void;
   onToggle: (sensor: SensorSummaryResponse) => void;
   onDelete: (sensor: SensorSummaryResponse) => void;
@@ -49,6 +50,12 @@ function ActionCell({ sensor, onEdit, onToggle, onDelete, onRestore }: {
 
   return (
     <div className="action-cell">
+      <button className='action-btn action-btn--view'
+        title="Xem chi tiết"
+        onClick={() => onView(sensor)}
+      >
+        <Eye size={15} />
+      </button>
       <button
         className="action-btn action-btn--edit"
         title="Chỉnh sửa"
@@ -87,6 +94,7 @@ function ActionCell({ sensor, onEdit, onToggle, onDelete, onRestore }: {
 interface SensorTableProps {
   sensors: SensorSummaryResponse[];
   loading?: boolean;
+  onView?: (sensor: SensorSummaryResponse) => void;
   onEdit?: (sensor: SensorSummaryResponse) => void;
   onToggle?: (sensor: SensorSummaryResponse) => void;
   onDelete?: (sensor: SensorSummaryResponse) => void;
@@ -96,6 +104,7 @@ interface SensorTableProps {
 export default function SensorTable({
   sensors,
   loading = false,
+  onView = () => {},
   onEdit = () => {},
   onToggle = () => {},
   onDelete = () => {},
@@ -133,7 +142,7 @@ export default function SensorTable({
         </thead>
         <tbody>
           {sensors.map((sensor) => (
-            <tr key={sensor.id}>
+            <tr key={sensor.id} onDoubleClick={() => onView(sensor)} style={{ cursor: 'pointer' }}>
               {/* Mã Cảm biến */}
               <td>
                 <span className="sensor-table__id"><Cpu size={16} /> {sensor.sensorId}</span>
@@ -195,7 +204,7 @@ export default function SensorTable({
 
               {/* Thao tác */}
               <td>
-                <ActionCell sensor={sensor} onEdit={onEdit} onToggle={onToggle} onDelete={onDelete} onRestore={onRestore} />
+                <ActionCell sensor={sensor} onView={onView} onEdit={onEdit} onToggle={onToggle} onDelete={onDelete} onRestore={onRestore} />
               </td>
             </tr>
           ))}

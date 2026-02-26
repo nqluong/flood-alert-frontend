@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import './SensorsPage.css';
 import type {
   SensorFilters,
@@ -13,6 +13,9 @@ import EditSensorModal from './components/EditSensorModal/EditSensorModal';
 import ChangeStatusModal from './components/ChangeStatusModal/ChangeStatusModal';
 import DeleteSensorModal from './components/DeleteSensorModal/DeleteSensorModal';
 import RestoreConfirmModal from './components/RestoreConfirmModal/RestoreConfirmModal';
+const SensorDetailModal = lazy(
+  () => import('./components/SensorDetailModal/SensorDetailModal'),
+);
 import { Plus } from 'lucide-react';
 
 const DEFAULT_FILTERS: SensorFilters = {
@@ -34,6 +37,7 @@ export default function SensorsPage() {
   const [toggleSensor,   setToggleSensor]   = useState<SensorSummaryResponse | null>(null);
   const [deletingSensor, setDeletingSensor] = useState<SensorSummaryResponse | null>(null);
   const [restoringSensor, setRestoringSensor] = useState<SensorSummaryResponse | null>(null);
+  const [viewingSensor,   setViewingSensor]   = useState<SensorSummaryResponse | null>(null);
 
   // Debounce search — chờ 400ms sau khi ngừng gõ mới gọi API
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -150,6 +154,7 @@ export default function SensorsPage() {
           onToggle={(sensor) => setToggleSensor(sensor)}
           onDelete={(sensor) => setDeletingSensor(sensor)}
           onRestore={(sensor) => setRestoringSensor(sensor)}
+          onView={(sensor) => setViewingSensor(sensor)}
         />
 
         {/* ---- Pagination ---- */}
@@ -187,6 +192,16 @@ export default function SensorsPage() {
           </div>
         )}
       </div>
+
+      {/* ---- Sensor Detail Modal ---- */}
+      {viewingSensor && (
+        <Suspense fallback={null}>
+          <SensorDetailModal
+            sensor={viewingSensor}
+            onClose={() => setViewingSensor(null)}
+          />
+        </Suspense>
+      )}
 
       {/* ---- Add Sensor Modal ---- */}
       {showAddModal && (

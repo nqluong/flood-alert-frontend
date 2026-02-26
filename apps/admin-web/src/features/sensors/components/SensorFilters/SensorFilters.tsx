@@ -1,6 +1,6 @@
 import './SensorFilters.css';
 import type { SensorFilters, SensorApiStatus } from '../../../../types/sensor.types';
-import { Search, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { Search, SlidersHorizontal, ChevronDown, BrushCleaning } from 'lucide-react';
 
 const STATUS_OPTIONS: { value: SensorApiStatus | 'all'; label: string }[] = [
   { value: 'all',         label: 'Tất cả trạng thái' },
@@ -56,7 +56,7 @@ export default function SensorFiltersBar({ filters, onChange }: SensorFiltersPro
         title="Xóa bộ lọc"
         onClick={() => onChange({ search: '', status: 'all', region: '' })}
       >
-        <SlidersHorizontal size={15} />
+        <BrushCleaning size={15} />
       </button>
     </div>
   );
