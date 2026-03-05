@@ -22,13 +22,29 @@ export default function LoginScreen() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [identifierError, setIdentifierError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const { showError } = useAlert();
 
-  async function handleLogin() {
-    if (!identifier.trim() || !password.trim()) {
-      showError('Lỗi', 'Vui lòng nhập đầy đủ thông tin.');
-      return;
+  function validate(): boolean {
+    let valid = true;
+    if (!identifier.trim()) {
+      setIdentifierError('Vui lòng nhập email hoặc số điện thoại.');
+      valid = false;
+    } else {
+      setIdentifierError('');
     }
+    if (!password.trim()) {
+      setPasswordError('Vui lòng nhập mật khẩu.');
+      valid = false;
+    } else {
+      setPasswordError('');
+    }
+    return valid;
+  }
+
+  async function handleLogin() {
+    if (!validate()) return;
     setLoading(true);
     try {
       await authService.login(identifier, password);
@@ -69,25 +85,27 @@ export default function LoginScreen() {
           <View style={styles.form}>
             <FormInput
               value={identifier}
-              onChangeText={setIdentifier}
+              onChangeText={(t) => { setIdentifier(t); if (identifierError) setIdentifierError(''); }}
               placeholder="Email hoặc số điện thoại"
               keyboardType="email-address"
               returnKeyType="next"
+              error={identifierError}
               leftIcon={
-                <Ionicons name="person-outline" size={20} color="#9ca3af" />
+                <Ionicons name="person-outline" size={20} color={identifierError ? '#ef4444' : '#9ca3af'} />
               }
             />
 
             <FormInput
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(t) => { setPassword(t); if (passwordError) setPasswordError(''); }}
               placeholder="Mật khẩu"
               passwordToggle
               secureTextEntry
               returnKeyType="done"
               onSubmitEditing={handleLogin}
+              error={passwordError}
               leftIcon={
-                <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
+                <Ionicons name="lock-closed-outline" size={20} color={passwordError ? '#ef4444' : '#9ca3af'} />
               }
             />
 
@@ -123,7 +141,7 @@ export default function LoginScreen() {
           <View style={styles.footer}>
             <Text style={styles.footerGray}>Chưa có tài khoản?</Text>
             <TouchableOpacity
-              onPress={() => {/* TODO: navigate to register */}}
+              onPress={() => router.push('/register')}
               activeOpacity={0.7}
               hitSlop={8}
             >

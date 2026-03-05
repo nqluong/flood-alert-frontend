@@ -1,16 +1,7 @@
-import { Platform } from 'react-native';
-import type { LoginRequest, LoginApiResponse, LoginData } from '../types/auth.types';
+import type { LoginRequest, LoginApiResponse, LoginData, RegisterRequest, UserResponse } from '../types/auth.types';
+import type { ApiResponse } from '../types/auth.types';
 import { storageService } from './storage.service';
-
-function getBaseUrl(): string {
-  if (__DEV__) {
-    if (Platform.OS === 'android') {
-      return process.env.EXPO_PUBLIC_API_URL_ANDROID;
-    }
-    return process.env.EXPO_PUBLIC_API_URL;
-  }
-  return process.env.EXPO_PUBLIC_API_URL;
-}
+import { getBaseUrl } from './apiClient';
 
 /** Phân biệt số điện thoại vs email để xây đúng payload */
 function buildLoginPayload(identifier: string, password: string): LoginRequest {
@@ -22,6 +13,7 @@ function buildLoginPayload(identifier: string, password: string): LoginRequest {
 }
 
 export const authService = {
+
   async login(identifier: string, password: string): Promise<LoginData> {
     const payload = buildLoginPayload(identifier, password);
 
@@ -31,7 +23,7 @@ export const authService = {
       body: JSON.stringify(payload),
     });
 
-    const json: LoginApiResponse = await response.json() as LoginApiResponse;
+    const json = (await response.json()) as LoginApiResponse;
 
     if (!response.ok || !json.success) {
       throw new Error(json.message ?? 'Đăng nhập thất bại');
@@ -45,5 +37,21 @@ export const authService = {
 
   async logout(): Promise<void> {
     await storageService.clearAll();
+  },
+
+  async register(data: RegisterRequest): Promise<UserResponse> {
+    const response = await fetch(`${getBaseUrl()}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    const json = (await response.json()) as ApiResponse<UserResponse>;
+
+    if (!response.ok || !json.success) {
+      throw new Error(json.message ?? 'Đăng ký thất bại');
+    }
+
+    return json.data;
   },
 };

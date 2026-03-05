@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
-type SocialProvider = 'google' | 'facebook' | 'apple';
+type SocialProvider = 'google' | 'facebook';
 
 interface SocialConfig {
   label: string;
@@ -18,18 +18,13 @@ const SOCIAL_CONFIG: Record<SocialProvider, SocialConfig> = {
   google: {
     label: 'Google',
     icon: (
-      // Simple G icon using FontAwesome
       <FontAwesome name="google" size={22} color="#ea4335" />
     ),
   },
   facebook: {
     label: 'Facebook',
     icon: <FontAwesome name="facebook" size={22} color="#1877f2" />,
-  },
-  apple: {
-    label: 'Apple',
-    icon: <Ionicons name="logo-apple" size={22} color="#111827" />,
-  },
+  }
 };
 
 interface SocialLoginButtonProps {
@@ -49,13 +44,11 @@ export function SocialLoginButton({ provider, onPress }: SocialLoginButtonProps)
 interface SocialLoginGroupProps {
   onGooglePress?: () => void;
   onFacebookPress?: () => void;
-  onApplePress?: () => void;
 }
 
 export function SocialLoginGroup({
   onGooglePress,
-  onFacebookPress,
-  onApplePress,
+  onFacebookPress
 }: SocialLoginGroupProps) {
   return (
     <View style={styles.container}>

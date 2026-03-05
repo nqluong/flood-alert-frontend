@@ -4,10 +4,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
-  Alert,
   StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 import { AppHeader } from '../../components/AppHeader';
 import { SettingsSectionHeader } from '../../components/settings/SettingsSectionHeader';
@@ -15,17 +15,25 @@ import { SettingsToggleRow } from '../../components/settings/SettingsToggleRow';
 import { SettingsNavRow } from '../../components/settings/SettingsNavRow';
 import { SettingsSliderRow } from '../../components/settings/SettingsSliderRow';
 import { SettingsInfoBox } from '../../components/settings/SettingsInfoBox';
+import { authService } from '../../services/auth.service';
+import { useAlert } from '../../hooks/useAlert';
 
 export default function SettingsScreen() {
   const [pushEnabled, setPushEnabled] = useState(true);
   const [severeOnly, setSevereOnly] = useState(false);
   const [radius, setRadius] = useState(5);
+  const { showConfirm } = useAlert();
 
   const handleLogout = () => {
-    Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất?', [
-      { text: 'Huỷ', style: 'cancel' },
-      { text: 'Đăng xuất', style: 'destructive', onPress: () => {} },
-    ]);
+    showConfirm(
+      'Đăng xuất',
+      'Bạn có chắc muốn đăng xuất không?',
+      async () => {
+        await authService.logout();
+        router.replace('/login');
+      },
+      { destructive: true, confirmLabel: 'Đăng xuất' },
+    );
   };
 
   return (
@@ -94,7 +102,6 @@ export default function SettingsScreen() {
           />
         </View>
 
-        {/* ── Về ứng dụng ───────────────────────── */}
         <SettingsSectionHeader title="Về ứng dụng" />
         <View style={styles.card}>
           <SettingsNavRow
@@ -118,7 +125,6 @@ export default function SettingsScreen() {
           />
         </View>
 
-        {/* ── Đăng xuất ─────────────────────────── */}
         <View style={styles.logoutSection}>
           <TouchableOpacity
             style={styles.logoutButton}

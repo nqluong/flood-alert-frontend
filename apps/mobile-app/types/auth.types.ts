@@ -4,6 +4,17 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  fullName: string;
+  phoneNumber?: string;
+}
+
+export interface RefreshRequest {
+  refreshToken: string;
+}
+
 export interface UserResponse {
   id: string;
   email: string;
@@ -20,6 +31,14 @@ export interface LoginData {
   tokenType: string;
   expiresIn: number;
   userResponse: UserResponse;
+}
+
+export interface RefreshData {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresIn: number;
+  userResponse?: UserResponse;
 }
 
 export interface ApiResponse<T> {
