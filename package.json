@@ -11,7 +11,10 @@
   ],
   "scripts": {
     "web": "yarn workspace admin-web dev",
-    "mobile": "yarn workspace mobile-app start"
+    "mobile": "yarn workspace mobile-app start",
+    "mobile:8000": "yarn workspace mobile-app start:8000",
+    "mobile:android": "yarn workspace mobile-app android",
+    "mobile:ios": "yarn workspace mobile-app ios"
   },
   "resolutions": {
     "react": "18.3.1",

@@ -1,5 +1,10 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+# Environment variables (chứa thông tin nhạy cảm)
+.env
+.env.local
+.env.*.local
+
 # dependencies
 node_modules/
 
