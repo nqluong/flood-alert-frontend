@@ -14,12 +14,16 @@
     "mobile": "yarn workspace mobile-app start",
     "mobile:8000": "yarn workspace mobile-app start:8000",
     "mobile:android": "yarn workspace mobile-app android",
-    "mobile:ios": "yarn workspace mobile-app ios"
+    "mobile:ios": "yarn workspace mobile-app ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "resolutions": {
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-native": "0.76.0",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.1"
-  }
+  },
+  "version": "1.0.0"
 }

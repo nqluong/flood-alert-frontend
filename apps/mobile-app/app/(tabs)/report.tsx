@@ -9,6 +9,7 @@ import {
   FloodLevel,
 } from '../../components/report/FloodLevelOption';
 import { SubmitSection } from '../../components/report/SubmitSection';
+import { showMediaPickerSheet } from '../../hooks/useMediaPicker';
 
 // TODO: replace with GPS hook value
 const MOCK_ADDRESS =
@@ -20,8 +21,9 @@ export default function ReportScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleCameraPress = () => {
-    // TODO: open expo-image-picker or expo-camera
-    Alert.alert('Camera', 'Tích hợp expo-camera hoặc expo-image-picker tại đây');
+    showMediaPickerSheet((media) => {
+      if (media) setImageUri(media.uri);
+    });
   };
 
   const handleSubmit = () => {
