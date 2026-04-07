@@ -1,67 +1,102 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { type CameraRef, MarkerView, MapView, Camera } from '@maplibre/maplibre-react-native';
+import {
+  type CameraRef,
+  type OnPressEvent,
+  MapView,
+  Camera,
+  ShapeSource,
+  CircleLayer,
+} from '@maplibre/maplibre-react-native';
+import { debounce } from 'lodash';
+
+import { useNearbyFloods } from '../../hooks/useNearbyFloods';
+import { useUserLocation } from '../../hooks/useUserLocation';
+import type { FloodEvent, Viewport } from '../../types/flood.types';
 
 import { SearchBar } from '../../components/home/SearchBar';
 import { MapControlButton } from '../../components/home/MapControlButton';
-import { FloodZoneMarker } from '../../components/home/FloodZoneMarker';
-import { UserLocationMarker } from '../../components/home/UserLocationMarker';
-import { BottomSheet } from '../../components/home/BottomSheet';
 import { FABCamera } from '../../components/home/FABCamera';
-import { FloodPoint } from '../../components/home/FloodPointCard';
+import { FloodDetailSheet } from '../../components/home/FloodDetailSheet';
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 
-// Trung tâm Quận 1, TP.HCM [longitude, latitude]
-const HCM_CENTER: [number, number] = [105.8256, 21.0059];
-
-interface FloodMarker extends FloodPoint {
-  coordinate: [number, number]; // [longitude, latitude]
-}
-
-const FLOOD_POINTS: FloodMarker[] = [
-  {
-    id: '1',
-    name: 'Đường Nguyễn Huệ',
-    description: 'Ngập chết máy - 2.1 km',
-    timeAgo: '5 phút trước',
-    severity: 'danger',
-    coordinate: [106.7029, 10.7730],
-  },
-  {
-    id: '2',
-    name: 'Đường Lê Lợi',
-    description: 'Ngập nửa bánh xe - 3.8 km',
-    timeAgo: '12 phút trước',
-    severity: 'warning',
-    coordinate: [106.7003, 10.7728],
-  },
-  {
-    id: '3',
-    name: 'Đường Trần Hưng Đạo',
-    description: 'Ngập nhẹ - 5.2 km',
-    timeAgo: '20 phút trước',
-    severity: 'warning',
-    coordinate: [106.6982, 10.7655],
-  },
-];
-
-// Cảm biến nước thêm
-const SENSOR_COORDINATE: [number, number] = [106.7050, 10.7755];
-
-// Vị trí user giả lập (sẽ được thay bằng GPS thực tế)
-const USER_COORDINATE: [number, number] = [105.8256273, 21.0059432];
+const HANOI_CENTER: [number, number] = [105.8342, 21.0278];
+const DEFAULT_VIEWPORT: Viewport = { centerLat: 21.0278, centerLon: 105.8342, radius: 5 };
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const cameraRef = useRef<CameraRef>(null);
   const router = useRouter();
 
+  const [viewport, setViewport] = useState<Viewport>(DEFAULT_VIEWPORT);
+
+  const [selectedFlood, setSelectedFlood] = useState<FloodEvent | null>(null);
+
+  const { coordinate: userCoordinate } = useUserLocation();
+
+  // Tự bay về vị trí người dùng ngay khi GPS lần đầu có tín hiệu
+  const hasFlownToUser = useRef(false);
+  useEffect(() => {
+    if (userCoordinate && !hasFlownToUser.current) {
+      hasFlownToUser.current = true;
+      cameraRef.current?.flyTo(userCoordinate, 1000);
+    }
+  }, [userCoordinate]);
+
+  const userGeoJSON = useMemo((): GeoJSON.FeatureCollection => ({
+    type: 'FeatureCollection',
+    features: userCoordinate
+      ? [{ type: 'Feature', id: 'user', geometry: { type: 'Point', coordinates: userCoordinate }, properties: {} }]
+      : [],
+  }), [userCoordinate]);
+
+  const { data: floods = [] } = useNearbyFloods(viewport);
+
+  const floodsGeoJSON = useMemo((): GeoJSON.FeatureCollection => ({
+    type: 'FeatureCollection',
+    features: floods.map((flood) => ({
+      type: 'Feature',
+      id: flood.eventId,
+      geometry: { type: 'Point', coordinates: [flood.lon, flood.lat] },
+      properties: { ...flood },
+    })),
+  }), [floods]);
+
+  const debouncedSetViewport = useRef(
+    debounce((v: Viewport) => setViewport(v), 500),
+  ).current;
+
+  useEffect(() => () => debouncedSetViewport.cancel(), [debouncedSetViewport]);
+
+  const onRegionDidChange = useCallback(
+    (feature: GeoJSON.Feature) => {
+      const coords = (feature.geometry as GeoJSON.Point).coordinates;
+      if (coords) {
+        debouncedSetViewport({
+          centerLon: coords[0],
+          centerLat: coords[1],
+          radius: viewport.radius,
+        });
+      }
+    },
+    [debouncedSetViewport, viewport.radius],
+  );
+
+  const handleFloodPress = useCallback(
+    (e: OnPressEvent) => {
+      const eventId = e.features[0]?.properties?.eventId as string | undefined;
+      if (!eventId) return;
+      setSelectedFlood(floods.find((f) => f.eventId === eventId) ?? null);
+    },
+    [floods],
+  );
+
   const handleLocateUser = () => {
-    cameraRef.current?.flyTo(USER_COORDINATE, 800);
+    if (userCoordinate) cameraRef.current?.flyTo(userCoordinate, 800);
   };
 
   return (
@@ -72,35 +107,64 @@ export default function HomeScreen() {
         mapStyle={MAP_STYLE}
         logoEnabled={false}
         attributionEnabled={false}
+        onRegionDidChange={onRegionDidChange}
       >
         <Camera
           ref={cameraRef}
-          centerCoordinate={HCM_CENTER}
+          centerCoordinate={HANOI_CENTER}
           zoomLevel={14.5}
           animationDuration={0}
         />
 
-        {/* Vị trí người dùng */}
-        <MarkerView coordinate={USER_COORDINATE}>
-          <UserLocationMarker />
-        </MarkerView>
+        {/* Vị trí người dùng — native layer, không lag khi pan */}
+        <ShapeSource id="userLocation" shape={userGeoJSON}>
+          <CircleLayer
+            id="userHalo"
+            style={{
+              circleRadius: 20,
+              circleColor: '#60a5fa',
+              circleOpacity: 0.35,
+              circlePitchAlignment: 'map',
+            }}
+          />
+          <CircleLayer
+            id="userDot"
+            style={{
+              circleRadius: 9,
+              circleColor: '#3b82f6',
+              circleStrokeWidth: 3,
+              circleStrokeColor: '#ffffff',
+              circlePitchAlignment: 'map',
+            }}
+          />
+        </ShapeSource>
 
-        {/*/!* Marker điểm ngập *!/*/}
-        {/*{FLOOD_POINTS.map((point) => (*/}
-        {/*  <MarkerView key={point.id} coordinate={point.coordinate}>*/}
-        {/*    <FloodZoneMarker type={point.severity === 'danger' ? 'flood' : 'water'} />*/}
-        {/*  </MarkerView>*/}
-        {/*))}*/}
-
-        {/* Cảm biến nước bổ sung */}
-        {/*<MarkerView coordinate={SENSOR_COORDINATE}>*/}
-        {/*  <FloodZoneMarker type="water" />*/}
-        {/*</MarkerView>*/}
+        <ShapeSource id="floods" shape={floodsGeoJSON} onPress={handleFloodPress} hitbox={{ width: 48, height: 48 }}>
+          {/* Halo */}
+          <CircleLayer
+            id="floodHalo"
+            style={{
+              circleRadius: 24,
+              circleColor: ['match', ['get', 'severityLevel'], 'DANGER', '#E53935', '#FB8C00'],
+              circleOpacity: 0.3,
+              circlePitchAlignment: 'map',
+            }}
+          />
+          {/* Dot */}
+          <CircleLayer
+            id="floodDot"
+            style={{
+              circleRadius: 13,
+              circleColor: ['match', ['get', 'severityLevel'], 'DANGER', '#E53935', '#FB8C00'],
+              circleStrokeWidth: 2.5,
+              circleStrokeColor: '#ffffff',
+              circlePitchAlignment: 'map',
+            }}
+          />
+        </ShapeSource>
       </MapView>
 
       {/* ── Overlay UI ── */}
-
-      {/* Search bar */}
       <View style={[styles.searchBarWrapper, { top: insets.top + 8 }]}>
         <SearchBar />
       </View>
@@ -114,13 +178,12 @@ export default function HomeScreen() {
         </MapControlButton>
       </View>
 
-      <View style={styles.bottomSheetWrapper}>
-        <BottomSheet items={FLOOD_POINTS} />
-      </View>
-
       <View style={styles.fabWrapper}>
         <FABCamera onPress={() => router.push('/(tabs)/report')} />
       </View>
+
+      {/* ── Flood detail sheet ── */}
+      <FloodDetailSheet flood={selectedFlood} onClose={() => setSelectedFlood(null)} />
     </View>
   );
 }
@@ -128,7 +191,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f6',
+    backgroundColor: '#1a1a2e',
   },
   searchBarWrapper: {
     position: 'absolute',
@@ -142,17 +205,10 @@ const styles = StyleSheet.create({
     gap: 12,
     zIndex: 10,
   },
-  bottomSheetWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 20,
-  },
   fabWrapper: {
     position: 'absolute',
     right: 16,
-    bottom: 230,
+    bottom: 100,
     zIndex: 30,
   },
 });

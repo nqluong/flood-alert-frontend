@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Alert, StyleSheet } from 'react-native';
+import * as Location from 'expo-location';
 
 import { AppHeader } from '../../components/AppHeader';
 import { CameraCapture } from '../../components/report/CameraCapture';
@@ -10,15 +11,34 @@ import {
 } from '../../components/report/FloodLevelOption';
 import { SubmitSection } from '../../components/report/SubmitSection';
 import { showMediaPickerSheet } from '../../hooks/useMediaPicker';
-
-// TODO: replace with GPS hook value
-const MOCK_ADDRESS =
-  'Đường Nguyễn Huệ, Phường Bến Nghé,\nQuận 1, TP. Hồ Chí Minh';
+import { useUserLocation } from '../../hooks/useUserLocation';
+import { uploadReportImage } from '../../services/firebase';
+import { floodService } from '../../services/flood.service';
 
 export default function ReportScreen() {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<FloodLevel | null>(null);
   const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState<string>('Đang xác định vị trí...');
+
+  const { coordinate } = useUserLocation();
+
+  // Reverse geocode whenever GPS coordinate changes
+  useEffect(() => {
+    if (!coordinate) return;
+    const [lon, lat] = coordinate;
+    Location.reverseGeocodeAsync({ latitude: lat, longitude: lon })
+      .then((results) => {
+        if (results.length > 0) {
+          const r = results[0];
+          const parts = [r.street, r.district, r.city].filter(Boolean);
+          setAddress(parts.join(', '));
+        }
+      })
+      .catch(() => {
+        // Giữ nguyên địa chỉ hiện tại nếu geocode thất bại
+      });
+  }, [coordinate]);
 
   const handleCameraPress = () => {
     showMediaPickerSheet((media) => {
@@ -26,19 +46,34 @@ export default function ReportScreen() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedLevel) {
       Alert.alert('Thiếu thông tin', 'Vui lòng chọn mức độ ngập trước khi gửi.');
       return;
     }
+    if (!coordinate) {
+      Alert.alert('Chưa có vị trí', 'Vui lòng chờ ứng dụng xác định vị trí GPS.');
+      return;
+    }
+
     setLoading(true);
-    // TODO: call report API
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      let imageUrl: string | undefined;
+      if (imageUri) {
+        imageUrl = await uploadReportImage(imageUri);
+      }
+
+      const [lon, lat] = coordinate;
+      await floodService.submitReport({ lat, lon, severityLevel: selectedLevel, imageUrl });
+
       Alert.alert('Thành công', 'Báo cáo của bạn đã được gửi. Cảm ơn!');
       setSelectedLevel(null);
       setImageUri(null);
-    }, 1500);
+    } catch (err) {
+      Alert.alert('Lỗi', err instanceof Error ? err.message : 'Không thể gửi báo cáo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,7 +91,7 @@ export default function ReportScreen() {
         </View>
 
         {/* Location */}
-        <LocationCard address={MOCK_ADDRESS} accuracy="±8m" />
+        <LocationCard address={address} accuracy="±8m" />
 
         {/* Flood level selector */}
         <FloodLevelGroup selected={selectedLevel} onSelect={setSelectedLevel} />

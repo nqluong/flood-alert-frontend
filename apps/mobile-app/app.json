@@ -33,6 +33,12 @@
       "expo-dev-client",
       "@maplibre/maplibre-react-native",
       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Ứng dụng cần quyền truy cập vị trí để hiển thị điểm ngập lụt gần bạn."
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "Ứng dụng cần quyền truy cập thư viện ảnh để bạn có thể đính kèm ảnh điểm ngập.",

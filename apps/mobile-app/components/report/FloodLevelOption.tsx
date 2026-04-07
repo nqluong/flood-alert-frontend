@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import type { FloodLevel } from '../../types/flood.types';
 
-export type FloodLevel = 'ankle' | 'half_wheel' | 'engine_off';
+export type { FloodLevel };
 
 interface FloodLevelConfig {
   level: FloodLevel;

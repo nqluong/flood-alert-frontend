@@ -8,10 +8,13 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/FloodZoneMarker.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/report/FloodLevelOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/report/FloodLevelOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/env.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
@@ -19,6 +22,14 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_D:/DoAnTN/frontend/flood-alert-frontend" value="3A7qa8oDzUi4Ytqlem3Uz0TDH5m" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedChatMode">
+    <option name="chatModeId" value="Agent" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -31,28 +42,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "feature-mobile",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.mobile:8000.executor": "Run",
-    "settings.editor.selected.configurable": "settings.typescriptcompiler",
-    "ts.external.directory.path": "D:\\DoAnTN\\frontend\\flood-alert-frontend\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature-mobile&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.mobile:8000.executor&quot;: &quot;Run&quot;,
+    &quot;npm.web.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\DoAnTN\\frontend\\flood-alert-frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="npm.web">
     <configuration name="mobile:8000" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -63,8 +75,19 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="web" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="web" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.web" />
         <item itemvalue="npm.mobile:8000" />
       </list>
     </recent_temporary>
@@ -85,10 +108,23 @@
       <updated>1771954020013</updated>
       <workItem from="1771954022434" duration="272000" />
       <workItem from="1772770484020" duration="2522000" />
+      <workItem from="1775202531470" duration="18000" />
+      <workItem from="1775493587856" duration="961000" />
+      <workItem from="1775529690812" duration="779000" />
+      <workItem from="1775534091003" duration="119000" />
+      <workItem from="1775534227756" duration="544000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>
