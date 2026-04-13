@@ -17,6 +17,7 @@ import { SettingsSliderRow } from '../../components/settings/SettingsSliderRow';
 import { SettingsInfoBox } from '../../components/settings/SettingsInfoBox';
 import { authService } from '../../services/auth.service';
 import { useAlert } from '../../hooks/useAlert';
+import { LocationTrackingToggle } from '../../components/LocationTrackingToggle';
 
 export default function SettingsScreen() {
   const [pushEnabled, setPushEnabled] = useState(true);
@@ -83,6 +84,11 @@ export default function SettingsScreen() {
           />
         </View>
         <SettingsInfoBox message="Bạn sẽ nhận được cảnh báo về các điểm ngập lụt trong phạm vi này xung quanh vị trí của bạn." />
+
+        {/* ── Theo dõi vị trí ─────────────────────── */}
+        <SettingsSectionHeader title="Theo dõi vị trí" />
+        <LocationTrackingToggle autoStart={true} />
+        <SettingsInfoBox message="Bật để nhận cảnh báo ngập lụt theo vị trí của bạn ngay cả khi không mở ứng dụng." />
 
         {/* ── Tài khoản ─────────────────────────── */}
         <SettingsSectionHeader title="Tài khoản" />

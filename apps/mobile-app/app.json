@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "floodalert",
+    "scheme": "fb1879576962744886",
     "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -22,7 +22,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.nqluong14.mobileapp"
+      "package": "com.nqluong14.mobileapp",
+      "googleServicesFile": "./google-services.json",
+      "facebookAppId": "1879576962744886",
+      "facebookDisplayName": "floodalert",
+      "facebookScheme": "fb1879576962744886"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,7 +39,12 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Ứng dụng cần quyền truy cập vị trí để hiển thị điểm ngập lụt gần bạn."
+          "locationAlwaysAndWhenInUsePermission": "Ứng dụng cần quyền truy cập vị trí để hiển thị điểm ngập lụt gần bạn.",
+          "locationWhenInUsePermission": "Ứng dụng cần quyền truy cập vị trí để hiển thị điểm ngập lụt gần bạn.",
+          "locationAlwaysPermission": "FloodGuard cần quyền truy cập vị trí liên tục để gửi cảnh báo ngập lụt kịp thời ngay cả khi bạn không mở ứng dụng.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ],
       [
@@ -43,6 +52,29 @@
         {
           "photosPermission": "Ứng dụng cần quyền truy cập thư viện ảnh để bạn có thể đính kèm ảnh điểm ngập.",
           "cameraPermission": "Ứng dụng cần quyền truy cập camera để bạn có thể chụp ảnh điểm ngập."
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "1879576962744886",
+          "clientToken": "7da867a091689f2df5c9a90b42fbd84f",
+          "displayName": "floodalert",
+          "scheme": "fb1879576962744886",
+          "advertiserIDCollectionEnabled": false,
+          "autoLogAppEventsEnabled": false,
+          "isAutoInitEnabled": true,
+          "iosUserTrackingPermission": "Ứng dụng cần quyền..."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25"
+          }
         }
       ]
     ]

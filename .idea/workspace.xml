@@ -4,19 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="add giao dien ban do">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/.env.example" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/FloodZoneMarker.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/report/FloodLevelOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/report/FloodLevelOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/apiClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/apiClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/firebase.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/auth.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/auth.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,8 +37,17 @@
   <component name="CopilotUserSelectedChatMode">
     <option name="chatModeId" value="Agent" />
   </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="chat-panel" value="GPT-5.3-Codex" />
+      <entry key="agent-panel" value="GPT-5.3-Codex" />
+    </selectedModels>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -64,7 +79,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="npm.web">
+  <component name="RunManager" selected="npm.mobile:8000">
     <configuration name="mobile:8000" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -87,8 +102,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.web" />
         <item itemvalue="npm.mobile:8000" />
+        <item itemvalue="npm.web" />
       </list>
     </recent_temporary>
   </component>
@@ -113,6 +128,15 @@
       <workItem from="1775529690812" duration="779000" />
       <workItem from="1775534091003" duration="119000" />
       <workItem from="1775534227756" duration="544000" />
+      <workItem from="1775613153385" duration="6543000" />
+      <workItem from="1775643682995" duration="26000" />
+      <workItem from="1775704107417" duration="6049000" />
+      <workItem from="1775922035604" duration="5802000" />
+      <workItem from="1775978818363" duration="1963000" />
+      <workItem from="1775981135401" duration="1189000" />
+      <workItem from="1776045416530" duration="3695000" />
+      <workItem from="1776063656902" duration="600000" />
+      <workItem from="1776098152102" duration="3201000" />
     </task>
     <servers />
   </component>

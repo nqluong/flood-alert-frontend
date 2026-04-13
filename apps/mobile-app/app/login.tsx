@@ -17,14 +17,19 @@ import { FormInput } from '../components/FormInput';
 import { SocialLoginGroup } from '../components/auth/SocialLoginGroup';
 import { authService } from '../services/auth.service';
 import { useAlert } from '../hooks/useAlert';
+import { useSocialAuth } from '../hooks/useSocialAuth';
+import { autoStartLocationTracking } from '../utils/autoStartLocationTracking';
 
-export default function LoginScreen() {
+function LoginScreen() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [identifierError, setIdentifierError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const { showError } = useAlert();
+  const { handleGoogleLogin, handleFacebookLogin, isLoading: socialLoading } = useSocialAuth();
+
+  const isAnyLoading = loading || socialLoading;
 
   function validate(): boolean {
     let valid = true;
@@ -48,6 +53,10 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await authService.login(identifier, password);
+      
+      // Auto-start location tracking nếu đã có quyền
+      await autoStartLocationTracking();
+      
       router.replace('/(tabs)/home');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Sai tài khoản hoặc mật khẩu.';
@@ -56,6 +65,22 @@ export default function LoginScreen() {
       setLoading(false);
     }
   }
+
+  const onGoogleLoginPress = async () => {
+    const result = await handleGoogleLogin();
+    if (result) {
+      await autoStartLocationTracking();
+      router.replace('/(tabs)/home');
+    }
+  };
+
+  const onFacebookLoginPress = async () => {
+    const result = await handleFacebookLogin();
+    if (result) {
+      await autoStartLocationTracking();
+      router.replace('/(tabs)/home');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -82,7 +107,7 @@ export default function LoginScreen() {
           </View>
 
           {/* Form */}
-          <View style={styles.form}>
+          <View pointerEvents={isAnyLoading ? 'none' : 'auto'} style={styles.form}>
             <FormInput
               value={identifier}
               onChangeText={(t) => { setIdentifier(t); if (identifierError) setIdentifierError(''); }}
@@ -135,8 +160,14 @@ export default function LoginScreen() {
           </TouchableOpacity>
 
           {/* Social login */}
-          <SocialLoginGroup />
-
+          {socialLoading ? (
+            <ActivityIndicator style={{ marginVertical: 20 }} color="#009688" size="large" />
+          ) : (
+            <SocialLoginGroup
+              onGooglePress={onGoogleLoginPress}
+              onFacebookPress={onFacebookLoginPress}
+            />
+          )}
           {/* Register link */}
           <View style={styles.footer}>
             <Text style={styles.footerGray}>Chưa có tài khoản?</Text>
@@ -249,3 +280,5 @@ const styles = StyleSheet.create({
     color: '#009688',
   },
 });
+
+export default LoginScreen;

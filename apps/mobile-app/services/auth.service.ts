@@ -1,9 +1,15 @@
-import type { LoginRequest, LoginApiResponse, LoginData, RegisterRequest, UserResponse } from '../types/auth.types';
+import {
+  LoginRequest,
+  LoginApiResponse,
+  LoginData,
+  RegisterRequest,
+  UserResponse,
+  SocialLoginRequest
+} from '../types/auth.types';
 import type { ApiResponse } from '../types/auth.types';
 import { storageService } from './storage.service';
 import { getBaseUrl } from './apiClient';
 
-/** Phân biệt số điện thoại vs email để xây đúng payload */
 function buildLoginPayload(identifier: string, password: string): LoginRequest {
   const trimmed = identifier.trim();
   const isPhone = /^[0-9+\-()\s]+$/.test(trimmed);
@@ -54,4 +60,23 @@ export const authService = {
 
     return json.data;
   },
+
+ async verifyFirebaseToken (data: SocialLoginRequest): Promise<LoginData> {
+    const response = await fetch(`${getBaseUrl()}/auth/social/login`,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+      });
+
+    const json = (await response.json()) as LoginApiResponse;
+   if (!response.ok || !json.success) {
+     throw new Error(json.message ?? 'Đăng nhập thất bại');
+   }
+
+   await storageService.saveTokens(json.data.accessToken, json.data.refreshToken);
+   await storageService.saveUser(json.data.userResponse);
+
+   return json.data;
+  }
 };

@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AlertProvider } from '../context/AlertContext';
 import { AppAlert } from '../components/ui/AppAlert';
 
+// QUAN TRỌNG: Import để đăng ký Background Location Task
+import '../services/BackgroundLocationTask';
+
 const queryClient = new QueryClient();
 
 export default function RootLayout() {

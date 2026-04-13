@@ -1,15 +1,20 @@
 import { Platform } from 'react-native';
+import * as Device from 'expo-device';
 import { storageService } from './storage.service';
 import type { ApiResponse, RefreshData } from '../types/auth.types';
 
+/**
+ * Lấy Base URL cho API calls
+ * Được sử dụng bởi cả UI components và Background Tasks
+ */
 export function getBaseUrl(): string {
   if (__DEV__) {
-    if (Platform.OS === 'android') {
-      return process.env.EXPO_PUBLIC_API_URL_ANDROID;
+    if (Platform.OS === 'android' && !Device.isDevice) {
+      return process.env.EXPO_PUBLIC_API_URL_ANDROID || '';
     }
-    return process.env.EXPO_PUBLIC_API_URL;
+    return process.env.EXPO_PUBLIC_API_URL || '';
   }
-  return process.env.EXPO_PUBLIC_API_URL;
+  return process.env.EXPO_PUBLIC_API_URL || '';
 }
 
 const REFRESH_THRESHOLD_SECONDS = 60;

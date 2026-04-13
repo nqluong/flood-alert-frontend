@@ -15,6 +15,11 @@ export interface RefreshRequest {
   refreshToken: string;
 }
 
+export interface SocialLoginRequest {
+  idToken: string;
+  provider: string;
+}
+
 export interface UserResponse {
   id: string;
   email: string;

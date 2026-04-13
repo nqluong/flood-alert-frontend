@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "module": "esnext"
   },
   "extends": "expo/tsconfig.base"
 }
