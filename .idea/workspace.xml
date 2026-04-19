@@ -4,25 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="add giao dien ban do">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="tao luong cap nhat vi tri tu dong">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/.env.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/env.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/apiClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/apiClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/LocationTrackingToggle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/LocationTrackingToggle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/report/FloodLevelOption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/report/FloodLevelOption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useSocialAuth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useSocialAuth.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/scripts/verify-location-setup.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/firebase.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/auth.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/auth.types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/flood.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/flood.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/flood.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/flood.types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,12 +129,40 @@
       <workItem from="1775981135401" duration="1189000" />
       <workItem from="1776045416530" duration="3695000" />
       <workItem from="1776063656902" duration="600000" />
-      <workItem from="1776098152102" duration="3201000" />
+      <workItem from="1776098152102" duration="4453000" />
+      <workItem from="1776131272841" duration="392000" />
+      <workItem from="1776268720548" duration="4168000" />
+      <workItem from="1776304429534" duration="29000" />
+      <workItem from="1776328387728" duration="7000" />
     </task>
+    <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
+      <option name="closed" value="true" />
+      <created>1776101437257</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776101437257</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="tao luong cap nhat vi tri tu dong" />
+    <option name="LAST_COMMIT_MESSAGE" value="tao luong cap nhat vi tri tu dong" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 
 import { AppHeader } from '../../components/AppHeader';
@@ -12,6 +12,7 @@ import {
 import { SubmitSection } from '../../components/report/SubmitSection';
 import { showMediaPickerSheet } from '../../hooks/useMediaPicker';
 import { useUserLocation } from '../../hooks/useUserLocation';
+import { useAlert } from '../../hooks/useAlert';
 import { uploadReportImage } from '../../services/firebase';
 import { floodService } from '../../services/flood.service';
 
@@ -22,6 +23,7 @@ export default function ReportScreen() {
   const [address, setAddress] = useState<string>('Đang xác định vị trí...');
 
   const { coordinate } = useUserLocation();
+  const { showSuccess, showError, showWarning } = useAlert();
 
   // Reverse geocode whenever GPS coordinate changes
   useEffect(() => {
@@ -48,29 +50,37 @@ export default function ReportScreen() {
 
   const handleSubmit = async () => {
     if (!selectedLevel) {
-      Alert.alert('Thiếu thông tin', 'Vui lòng chọn mức độ ngập trước khi gửi.');
+      showWarning('Thiếu thông tin', 'Vui lòng chọn mức độ ngập trước khi gửi.');
       return;
     }
     if (!coordinate) {
-      Alert.alert('Chưa có vị trí', 'Vui lòng chờ ứng dụng xác định vị trí GPS.');
+      showWarning('Chưa có vị trí', 'Vui lòng chờ ứng dụng xác định vị trí GPS.');
       return;
     }
 
     setLoading(true);
     try {
       let imageUrl: string | undefined;
+      
+      // Upload ảnh nếu có
       if (imageUri) {
-        imageUrl = await uploadReportImage(imageUri);
+        imageUrl = await uploadReportImage(imageUri, floodService.getUploadUrl);
       }
 
+      // Gửi báo cáo
       const [lon, lat] = coordinate;
-      await floodService.submitReport({ lat, lon, severityLevel: selectedLevel, imageUrl });
+      await floodService.submitReport({ 
+        lat, 
+        lon, 
+        level: selectedLevel, 
+        imageUrl 
+      });
 
-      Alert.alert('Thành công', 'Báo cáo của bạn đã được gửi. Cảm ơn!');
+      showSuccess('Thành công', 'Báo cáo của bạn đã được gửi. Cảm ơn bạn đã đóng góp!');
       setSelectedLevel(null);
       setImageUri(null);
     } catch (err) {
-      Alert.alert('Lỗi', err instanceof Error ? err.message : 'Không thể gửi báo cáo.');
+      showError('Lỗi', err instanceof Error ? err.message : 'Không thể gửi báo cáo. Vui lòng thử lại.');
     } finally {
       setLoading(false);
     }

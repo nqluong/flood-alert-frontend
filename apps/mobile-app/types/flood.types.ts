@@ -1,12 +1,13 @@
 export type SeverityLevel = 'DANGER' | 'WARNING';
 
-export type FloodLevel = 'ankle' | 'half_wheel' | 'engine_off';
+export type FloodLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
 export interface ReportPayload {
   lat: number;
   lon: number;
-  severityLevel: FloodLevel;
+  level: FloodLevel;
   imageUrl?: string;
+  description?: string;
 }
 
 export interface FloodEvent {

@@ -15,11 +15,13 @@ export function LocationTrackingToggle({ autoStart = false }: LocationTrackingTo
     stopTracking,
   } = useLocationTracker();
 
+  // Auto-start chỉ chạy 1 lần khi mount, không chạy lại khi isTracking thay đổi
   useEffect(() => {
     if (autoStart && permissionStatus === 'background-granted' && !isTracking) {
       startTracking();
     }
-  }, [autoStart, permissionStatus, isTracking, startTracking]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart, permissionStatus]); // Bỏ isTracking và startTracking khỏi deps
 
   const handleToggle = async (value: boolean) => {
     if (value) {
