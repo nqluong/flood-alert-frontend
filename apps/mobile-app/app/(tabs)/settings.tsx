@@ -111,7 +111,7 @@ export default function SettingsScreen() {
               icon={<Ionicons name="person" size={18} color="#009688" />}
               iconBg="rgba(0,150,136,0.1)"
               label="Thông tin cá nhân"
-              onPress={() => {}}
+              onPress={() => router.push('/profile')}
             />
             <SettingsNavRow
               icon={<Ionicons name="shield-checkmark" size={18} color="#009688" />}
