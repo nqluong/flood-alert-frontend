@@ -26,7 +26,14 @@
       "googleServicesFile": "./google-services.json",
       "facebookAppId": "1879576962744886",
       "facebookDisplayName": "floodalert",
-      "facebookScheme": "fb1879576962744886"
+      "facebookScheme": "fb1879576962744886",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

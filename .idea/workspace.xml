@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="update bao cao &amp; setting">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="feat thong tin ca nhan &amp; search dia diem">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/.env.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/SearchLocationMarker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/SearchLocationMarker.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useUserLocation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useUserLocation.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +133,8 @@
       <workItem from="1776700502838" duration="4465000" />
       <workItem from="1776751313371" duration="614000" />
       <workItem from="1776763801213" duration="4339000" />
-      <workItem from="1776787904093" duration="3053000" />
+      <workItem from="1776787904093" duration="4930000" />
+      <workItem from="1776822883383" duration="3057000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -152,7 +152,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776618447358</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat thong tin ca nhan &amp; search dia diem">
+      <option name="closed" value="true" />
+      <created>1776791022287</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1776791022287</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,7 +180,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="tao luong cap nhat vi tri tu dong" />
     <MESSAGE value="update bao cao &amp; setting" />
-    <option name="LAST_COMMIT_MESSAGE" value="update bao cao &amp; setting" />
+    <MESSAGE value="feat thong tin ca nhan &amp; search dia diem" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat thong tin ca nhan &amp; search dia diem" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
