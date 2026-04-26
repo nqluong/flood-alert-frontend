@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
-export type NotificationFilter = 'all' | 'urgent' | 'read';
+export type NotificationFilter = 'all' | 'urgent' | 'unread';
 
 interface FilterOption {
   key: NotificationFilter;
@@ -11,15 +11,16 @@ interface FilterOption {
 const FILTERS: FilterOption[] = [
   { key: 'all', label: 'Tất cả' },
   { key: 'urgent', label: 'Khẩn cấp' },
-  { key: 'read', label: 'Đã đọc' },
+  { key: 'unread', label: 'Chưa đọc' },
 ];
 
 interface NotificationFilterTabsProps {
   active: NotificationFilter;
   onChange: (filter: NotificationFilter) => void;
+  unreadCount?: number;
 }
 
-export function NotificationFilterTabs({ active, onChange }: NotificationFilterTabsProps) {
+export function NotificationFilterTabs({ active, onChange, unreadCount = 0 }: NotificationFilterTabsProps) {
   return (
     <View style={styles.wrapper}>
       <ScrollView
@@ -29,6 +30,8 @@ export function NotificationFilterTabs({ active, onChange }: NotificationFilterT
       >
         {FILTERS.map((item) => {
           const isActive = active === item.key;
+          const showBadge = item.key === 'unread' && unreadCount > 0;
+          
           return (
             <TouchableOpacity
               key={item.key}
@@ -39,6 +42,13 @@ export function NotificationFilterTabs({ active, onChange }: NotificationFilterT
               <Text style={[styles.label, isActive && styles.labelActive]}>
                 {item.label}
               </Text>
+              {showBadge && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </Text>
+                </View>
+              )}
             </TouchableOpacity>
           );
         })}
@@ -64,6 +74,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   tabActive: {
     backgroundColor: '#009688',
@@ -76,5 +89,19 @@ const styles = StyleSheet.create({
   },
   labelActive: {
     color: '#ffffff',
+  },
+  badge: {
+    backgroundColor: '#e53935',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    paddingHorizontal: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    color: '#ffffff',
+    fontSize: 11,
+    fontWeight: '700',
   },
 });

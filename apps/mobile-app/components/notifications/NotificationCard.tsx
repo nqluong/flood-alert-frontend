@@ -1,70 +1,81 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-export type NotificationType = 'urgent' | 'warning' | 'safe';
-
-export interface Notification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  description: string;
-  location: string;
-  timeAgo: string;
-  isRead: boolean;
-}
+import type { Notification } from '../../types/notification.types';
+import { formatTimeAgo, formatNotificationLocation } from '../../utils/dateUtils';
 
 interface NotificationCardProps {
   notification: Notification;
+  onPress?: (notification: Notification) => void;
 }
 
 const TYPE_CONFIG = {
-  urgent: {
-    label: 'Khẩn cấp',
-    labelColor: '#e53935',
-    iconBg: '#e53935',
-    borderColor: '#e53935',
-    icon: <Ionicons name="warning" size={20} color="#ffffff" />,
+  FLOOD_ALERT: {
+    label: 'Cảnh báo lũ',
+    icon: 'warning' as const,
   },
-  warning: {
-    label: 'Cảnh báo',
-    labelColor: '#fb8c00',
-    iconBg: '#fb8c00',
-    borderColor: '#fb8c00',
-    icon: <Ionicons name="alert-circle" size={20} color="#ffffff" />,
+  FLOOD_UPDATE: {
+    label: 'Cập nhật',
+    icon: 'information-circle' as const,
   },
-  safe: {
-    label: 'An toàn',
-    labelColor: '#43a047',
-    iconBg: '#43a047',
-    borderColor: 'transparent',
-    icon: <Ionicons name="checkmark" size={20} color="#ffffff" />,
+  SYSTEM_UPDATE: {
+    label: 'Hệ thống',
+    icon: 'notifications' as const,
   },
 };
 
-export function NotificationCard({ notification }: NotificationCardProps) {
-  const { type, title, description, location, timeAgo, isRead } = notification;
-  const config = TYPE_CONFIG[type];
+const PRIORITY_CONFIG = {
+  HIGH: {
+    labelColor: '#e53935',
+    iconBg: '#e53935',
+    borderColor: '#e53935',
+  },
+  NORMAL: {
+    labelColor: '#fb8c00',
+    iconBg: '#fb8c00',
+    borderColor: '#fb8c00',
+  },
+  LOW: {
+    labelColor: '#43a047',
+    iconBg: '#43a047',
+    borderColor: 'transparent',
+  },
+};
+
+export function NotificationCard({ notification, onPress }: NotificationCardProps) {
+  const { title, body, notificationType, priority, data, isRead, createdAt } = notification;
+  
+  const typeConfig = TYPE_CONFIG[notificationType];
+  const priorityConfig = PRIORITY_CONFIG[priority];
   const isUnread = !isRead;
+  
+  const timeAgo = formatTimeAgo(createdAt);
+  const location = formatNotificationLocation(data);
+
+  const handlePress = () => {
+    onPress?.(notification);
+  };
 
   return (
-    <View
+    <TouchableOpacity
       style={[
         styles.card,
-        isUnread && { borderLeftColor: config.borderColor, borderLeftWidth: 4 },
+        isUnread && { borderLeftColor: priorityConfig.borderColor, borderLeftWidth: 4 },
       ]}
+      onPress={handlePress}
+      activeOpacity={0.7}
     >
       {/* Icon */}
-      <View style={[styles.iconCircle, { backgroundColor: config.iconBg }]}>
-        {config.icon}
+      <View style={[styles.iconCircle, { backgroundColor: priorityConfig.iconBg }]}>
+        <Ionicons name={typeConfig.icon} size={20} color="#ffffff" />
       </View>
 
       {/* Content */}
       <View style={styles.content}>
         {/* Type + time row */}
         <View style={styles.metaRow}>
-          <Text style={[styles.typeLabel, { color: config.labelColor }]}>
-            {config.label}
+          <Text style={[styles.typeLabel, { color: priorityConfig.labelColor }]}>
+            {typeConfig.label}
           </Text>
           <Text style={[styles.timeAgo, isRead && styles.timeAgoRead]}>
             {timeAgo}
@@ -75,35 +86,45 @@ export function NotificationCard({ notification }: NotificationCardProps) {
         <Text style={[styles.title, isRead && styles.titleRead]}>{title}</Text>
 
         {/* Description */}
-        <Text style={[styles.description, isRead && styles.descriptionRead]}>
-          {description}
+        <Text style={[styles.description, isRead && styles.descriptionRead]} numberOfLines={2}>
+          {body}
         </Text>
 
         {/* Location */}
-        <View style={styles.locationRow}>
-          <Ionicons
-            name="location-sharp"
-            size={12}
-            color={isRead ? '#9ca3af' : '#6b7280'}
-          />
-          <Text style={[styles.location, isRead && styles.locationRead]}>
-            {location}
-          </Text>
-        </View>
+        {location && (
+          <View style={styles.locationRow}>
+            <Ionicons
+              name="location-sharp"
+              size={12}
+              color={isRead ? '#9ca3af' : '#6b7280'}
+            />
+            <Text style={[styles.location, isRead && styles.locationRead]} numberOfLines={1}>
+              {location}
+            </Text>
+          </View>
+        )}
       </View>
-    </View>
+
+      {/* Unread indicator */}
+      {isUnread && <View style={styles.unreadDot} />}
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#eef2f7',
+    backgroundColor: '#ffffff',
     borderRadius: 16,
     flexDirection: 'row',
     alignItems: 'flex-start',
     padding: 16,
     borderLeftWidth: 0,
     borderLeftColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   iconCircle: {
     width: 44,
@@ -167,8 +188,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6b7280',
     letterSpacing: -0.3,
+    flex: 1,
   },
   locationRead: {
     color: '#9ca3af',
+  },
+  unreadDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#009688',
+    position: 'absolute',
+    top: 20,
+    right: 16,
   },
 });
