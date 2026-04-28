@@ -4,15 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix gps may ao">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="add giao dien notification">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/components/Sidebar/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/components/Sidebar/Sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/sensors/SensorsPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/sensors/SensorsPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/sensors/SensorsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/sensors/SensorsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/services/sensor.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/services/sensor.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/types/sensor.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/types/sensor.types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/.env.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/notifications.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/notifications.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationFilterTabs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationFilterTabs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/notification.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/notification.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,13 +31,25 @@
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
-      <entry key="chat-panel" value="GPT-5.3-Codex" />
-      <entry key="agent-panel" value="GPT-5.3-Codex" />
+      <entry key="chat-panel" value="GPT-5.2-Codex" />
+      <entry key="agent-panel" value="GPT-5.2-Codex" />
     </selectedModels>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;nqluong&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/nqluong/flood-alert-frontend.git&quot;,
+    &quot;accountId&quot;: &quot;d3cd27d1-7693-4ed3-9cdb-e3e91a9f360c&quot;
+  }
+}</component>
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
@@ -69,7 +83,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="npm.mobile:8000">
+  <component name="RunManager" selected="npm.web">
     <configuration name="mobile:8000" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -92,8 +106,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.mobile:8000" />
         <item itemvalue="npm.web" />
+        <item itemvalue="npm.mobile:8000" />
       </list>
     </recent_temporary>
   </component>
@@ -138,7 +152,11 @@
       <workItem from="1776763801213" duration="4339000" />
       <workItem from="1776787904093" duration="4930000" />
       <workItem from="1776822883383" duration="7632000" />
-      <workItem from="1777216077113" duration="1287000" />
+      <workItem from="1777216077113" duration="4968000" />
+      <workItem from="1777283743920" duration="676000" />
+      <workItem from="1777297901948" duration="5464000" />
+      <workItem from="1777341092474" duration="12228000" />
+      <workItem from="1777390825642" duration="2580000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -172,7 +190,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776826223889</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add giao dien notification">
+      <option name="closed" value="true" />
+      <created>1777219645340</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1777219645340</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,7 +220,8 @@
     <MESSAGE value="update bao cao &amp; setting" />
     <MESSAGE value="feat thong tin ca nhan &amp; search dia diem" />
     <MESSAGE value="fix gps may ao" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix gps may ao" />
+    <MESSAGE value="add giao dien notification" />
+    <option name="LAST_COMMIT_MESSAGE" value="add giao dien notification" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

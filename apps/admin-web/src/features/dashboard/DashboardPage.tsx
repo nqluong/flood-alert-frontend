@@ -5,6 +5,8 @@ import { StatsGrid } from './components/StatsCard/StatsCard';
 import SensorMap from './components/SensorMap/SensorMap';
 import RecentActivity from './components/RecentActivity/RecentActivity';
 import SensorsPage from '../sensors/SensorsPage';
+import ReportsPage from '../reports/ReportsPage';
+import UsersPage from '../users/UsersPage';
 import type { AuthSession } from '../../types/auth.types';
 import { useFloodWebSocket } from './hooks/useFloodWebSocket';
 
@@ -23,7 +25,7 @@ const PAGE_META: Record<string, PageMeta> = {
   sensors:   { title: 'Quản lý Cảm biến' },
   alerts:    { title: 'Cảnh báo' },
   map:       { title: 'Bản đồ' },
-  reports:   { title: 'Báo cáo' },
+  reports:   { title: 'Kiểm duyệt báo cáo người dùng', subtitle: 'Xem xét và phê duyệt các báo cáo lũ lụt từ cộng đồng' },
   users:     { title: 'Người dùng' },
   config:    { title: 'Cấu hình' },
   support:   { title: 'Hỗ trợ' },
@@ -76,6 +78,8 @@ export default function DashboardPage({ session, onLogout }: DashboardPageProps)
     switch (activeNav) {
       case 'dashboard': return <DashboardView />;
       case 'sensors':   return <SensorsPage />;
+      case 'reports':   return <ReportsPage />;
+      case 'users':     return <UsersPage />;
       default:          return <PlaceholderPage title={meta.title} />;
     }
   };

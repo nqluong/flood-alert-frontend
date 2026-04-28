@@ -1,0 +1,381 @@
+.reports-page {
+  padding: 0;
+}
+
+.reports-page__header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.reports-page__actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.reports-page__filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.reports-page__filter-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.reports-page__filter-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.reports-page__pending-badge {
+  display: flex;
+  align-items: center;
+  padding: 9px 16px;
+  background: #ffedd5;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9a3412;
+  letter-spacing: -0.5px;
+}
+
+.reports-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.reports-page__load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.reports-page__load-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reports-page__load-more-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Report Card */
+.report-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.report-card__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 24px;
+}
+
+/* Evidence Section */
+.report-card__evidence {
+  display: flex;
+  flex-direction: column;
+}
+
+.report-card__section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 16px 0;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+}
+
+.report-card__image {
+  width: 100%;
+  height: 256px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.report-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.report-card__location {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  text-align: center;
+  min-height: 128px;
+}
+
+.report-card__location-icon {
+  margin-bottom: 8px;
+  color: #4b5563;
+}
+
+.report-card__location-address {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 0 0 4px 0;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+}
+
+.report-card__location-coords {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 16px;
+  letter-spacing: -0.5px;
+}
+
+/* Analysis Section */
+.report-card__analysis {
+  display: flex;
+  flex-direction: column;
+}
+
+.report-card__info-box {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.report-card__info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.report-card__info-row:last-child {
+  margin-bottom: 0;
+}
+
+.report-card__info-label {
+  color: #6b7280;
+}
+
+.report-card__info-value {
+  font-weight: 500;
+  color: #111827;
+  text-align: right;
+}
+
+.report-card__info-description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-card__info-description .report-card__info-value {
+  text-align: left;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+/* AI Verification Box */
+.report-card__ai-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.report-card__ai-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.report-card__ai-icon {
+  color: #1e3a8a;
+}
+
+.report-card__ai-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e3a8a;
+  margin: 0;
+  line-height: 24px;
+  letter-spacing: -0.5px;
+}
+
+.report-card__ai-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-card__ai-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+}
+
+.report-card__ai-label {
+  color: #1e40af;
+}
+
+.report-card__ai-percentage {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.report-card__ai-progress {
+  width: 100%;
+  height: 8px;
+  background: #bfdbfe;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.report-card__ai-progress-bar {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.report-card__ai-description {
+  font-size: 12px;
+  color: #1d4ed8;
+  line-height: 16px;
+  letter-spacing: -0.5px;
+}
+
+/* Weather Box */
+.report-card__weather-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.report-card__weather-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.report-card__weather-icon {
+  color: #14532d;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.report-card__weather-text h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #14532d;
+  margin: 0 0 4px 0;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+}
+
+.report-card__weather-text p {
+  font-size: 12px;
+  color: #15803d;
+  margin: 0;
+  line-height: 16px;
+  letter-spacing: -0.5px;
+}
+
+/* Actions */
+.report-card__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.report-card__action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 16px;
+  letter-spacing: -0.5px;
+}
+
+.report-card__action-btn--approve {
+  background: #16a34a;
+  color: white;
+}
+
+.report-card__action-btn--approve:hover {
+  background: #15803d;
+}
+
+.report-card__action-btn--reject {
+  background: #dc2626;
+  color: white;
+}
+
+.report-card__action-btn--reject:hover {
+  background: #b91c1c;
+}
+
+.report-card__action-btn svg {
+  width: 16px;
+  height: 16px;
+}

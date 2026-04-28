@@ -2,7 +2,6 @@ import './Sidebar.css';
 import {
   LayoutDashboard,
   Radio,
-  AlertTriangle,
   FileText,
   Users,
   Settings,
@@ -28,7 +27,6 @@ interface SidebarProps {
 const mainNavItems: NavItem[] = [
   { id: 'dashboard', label: 'Tổng quan',   icon: <LayoutDashboard size={16} /> },
   { id: 'sensors',   label: 'Cảm biến',    icon: <Radio size={16} /> },
-  { id: 'alerts',    label: 'Cảnh báo',    icon: <AlertTriangle size={16} /> },
   { id: 'reports',   label: 'Báo cáo',     icon: <FileText size={16} /> },
   { id: 'users',     label: 'Người dùng',  icon: <Users size={16} /> },
 ];

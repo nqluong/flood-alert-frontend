@@ -16,6 +16,7 @@ import RestoreConfirmModal from './components/RestoreConfirmModal/RestoreConfirm
 const SensorDetailModal = lazy(
   () => import('./components/SensorDetailModal/SensorDetailModal'),
 );
+import Pagination from '../../components/Pagination/Pagination';
 import { Plus } from 'lucide-react';
 
 const DEFAULT_FILTERS: SensorFilters = {
@@ -49,7 +50,6 @@ export default function SensorsPage() {
     return () => { if (searchTimer.current) clearTimeout(searchTimer.current); };
   }, [filters.search]);
 
-  // Reset về trang 0 khi filter thay đổi
   useEffect(() => { setPage(0); }, [filters.status, filters.region, debouncedSearch]);
 
   // Fetch dữ liệu
@@ -76,7 +76,6 @@ export default function SensorsPage() {
 
   useEffect(() => { void fetchSensors(); }, [fetchSensors]);
 
-  // Stats từ trang hiện tại
   const sensors = pageData?.content ?? [];
   const totalActive      = sensors.filter((s) => s.status === 'ACTIVE').length;
   const totalOffline     = sensors.filter((s) => s.status === 'OFFLINE').length;
@@ -158,39 +157,15 @@ export default function SensorsPage() {
         />
 
         {/* ---- Pagination ---- */}
-        {pageData && pageData.totalPages > 1 && (
-          <div className="sensors-page__pagination">
-            <button
-              className="sensors-page__page-btn"
-              disabled={pageData.first}
-              onClick={() => setPage((p) => p - 1)}
-            >
-              Trước
-            </button>
-
-            {Array.from({ length: pageData.totalPages }, (_, i) => i).map((i) => (
-              <button
-                key={i}
-                className={`sensors-page__page-btn ${i === page ? 'sensors-page__page-btn--active' : ''}`}
-                onClick={() => setPage(i)}
-              >
-                {i + 1}
-              </button>
-            ))}
-
-            <button
-              className="sensors-page__page-btn"
-              disabled={pageData.last}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              Tiếp
-            </button>
-
-            <span className="sensors-page__page-info">
-              Trang {page + 1} / {pageData.totalPages} &nbsp;·&nbsp; {pageData.totalElements} cảm biến
-            </span>
-          </div>
-        )}
+        <Pagination
+          currentPage={page}
+          totalPages={pageData?.totalPages ?? 0}
+          totalElements={pageData?.totalElements ?? 0}
+          isFirstPage={pageData?.first ?? true}
+          isLastPage={pageData?.last ?? true}
+          onPageChange={setPage}
+          itemLabel="cảm biến"
+        />
       </div>
 
       {/* ---- Sensor Detail Modal ---- */}

@@ -1,10 +1,6 @@
 import type { ApiResponse } from './api.types';
 
-// ---- Enums / Literals ----
-
 export type SensorStatus = 'active' | 'offline' | 'disabled';
-
-// ---- Sub-models ----
 
 export interface SensorThreshold {
   warning: number;
@@ -16,7 +12,6 @@ export interface SensorReading {
   timestamp: string;
 }
 
-// ---- Core model (mock) ----
 
 export interface Sensor {
   id: string;            // e.g. SENS-HN-001
@@ -28,7 +23,6 @@ export interface Sensor {
   coordinates: [number, number];
 }
 
-// ---- Filter shape (aligned with API) ----
 
 export interface SensorFilters {
   search: string;
@@ -38,7 +32,6 @@ export interface SensorFilters {
 
 export type SensorApiStatus = 'ACTIVE' | 'DISABLED' | 'MAINTENANCE' | 'OFFLINE';
 
-/** Kết quả 1 sensor từ API GET /sensors */
 export interface SensorSummaryResponse {
   id: string;
   sensorId: string;
@@ -59,7 +52,6 @@ export interface SensorSummaryResponse {
   updatedAt: string;
 }
 
-/** Envelope phân trang */
 export interface PageResponse<T> {
   content: T[];
   page: number;
@@ -73,7 +65,6 @@ export interface PageResponse<T> {
   sorted: boolean;
 }
 
-/** Params gửi lên API filter */
 export interface SensorApiFilter {
   page?: number;
   size?: number;
@@ -117,7 +108,6 @@ export interface CreateSensorResponse {
 
 export type CreateSensorApiResponse = ApiResponse<CreateSensorResponse | null>;
 
-// ---- Update Sensor ----
 
 export interface UpdateSensorRequest {
   name?: string;
@@ -150,8 +140,6 @@ export interface UpdateSensorResponse {
 
 export type UpdateSensorApiResponse = ApiResponse<UpdateSensorResponse | null>;
 
-// ---- Change Sensor Status ----
-
 export interface ChangeStatusRequest {
   newStatus: SensorApiStatus;
   reason: string;
@@ -173,8 +161,6 @@ export interface ChangeStatusResponse {
 
 export type ChangeStatusApiResponse = ApiResponse<ChangeStatusResponse | null>;
 
-// ---- Delete Sensor ----
-
 export interface DeleteSensorRequest {
   reason: string;
   removeFromMap?: boolean;
@@ -192,8 +178,6 @@ export interface DeleteSensorResponse {
 }
 
 export type DeleteSensorApiResponse = ApiResponse<DeleteSensorResponse | null>;
-
-// ---- Sensor Detail ----
 
 export interface SensorLog {
   id: string;

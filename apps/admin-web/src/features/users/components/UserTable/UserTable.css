@@ -1,0 +1,216 @@
+.user-table {
+  overflow-x: auto;
+}
+
+.user-table__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table__table thead {
+  background: var(--color-bg-subtle, #f9fafb);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.user-table__table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-table__table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  font-size: 14px;
+  color: var(--color-text, #111827);
+}
+
+.user-table__table tbody tr:hover {
+  background: var(--color-bg-hover, #f9fafb);
+}
+
+/* User Info */
+.user-table__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-table__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-table__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-table__user-name {
+  font-weight: 500;
+  color: var(--color-text, #111827);
+  margin: 0;
+}
+
+.user-table__user-id {
+  font-size: 12px;
+  color: var(--color-text-muted, #9ca3af);
+  margin: 0;
+}
+
+/* Contact */
+.user-table__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-table__contact p {
+  margin: 0;
+}
+
+.user-table__phone {
+  font-size: 13px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+/* Badge */
+.user-table__badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.user-table__badge--active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.user-table__badge--locked {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.user-table__badge--pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.user-table__badge--admin {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.user-table__badge--user {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.user-table__roles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+/* Date */
+.user-table__date {
+  color: var(--color-text-muted, #6b7280);
+  font-size: 13px;
+}
+
+/* Actions */
+.user-table__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.user-table__action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.user-table__action-btn:hover {
+  background: var(--color-bg-hover, #f9fafb);
+}
+
+.user-table__action-btn--view {
+  color: var(--color-primary, #3b82f6);
+}
+
+.user-table__action-btn--view:hover {
+  border-color: var(--color-primary, #3b82f6);
+  background: #eff6ff;
+}
+
+.user-table__action-btn--role {
+  color: var(--color-purple, #8b5cf6);
+}
+
+.user-table__action-btn--role:hover {
+  border-color: var(--color-purple, #8b5cf6);
+  background: #f5f3ff;
+}
+
+.user-table__action-btn--lock {
+  color: var(--color-danger, #ef4444);
+}
+
+.user-table__action-btn--lock:hover {
+  border-color: var(--color-danger, #ef4444);
+  background: #fef2f2;
+}
+
+.user-table__action-btn--unlock {
+  color: var(--color-success, #10b981);
+}
+
+.user-table__action-btn--unlock:hover {
+  border-color: var(--color-success, #10b981);
+  background: #f0fdf4;
+}
+
+/* Loading & Empty States */
+.user-table__loading,
+.user-table__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.user-table__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border, #e5e7eb);
+  border-top-color: var(--color-primary, #3b82f6);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
