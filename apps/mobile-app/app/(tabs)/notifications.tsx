@@ -44,10 +44,8 @@ export default function NotificationsScreen() {
       await markAsRead(notification.id);
     }
 
-    // Navigate based on notification type and data
     if (notification.data.eventId) {
-      // Navigate to flood detail screen
-      // router.push(`/flood/${notification.data.eventId}`);
+
       console.log('Navigate to flood detail:', notification.data.eventId);
     }
   };

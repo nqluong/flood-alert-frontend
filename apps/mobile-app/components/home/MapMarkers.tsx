@@ -8,7 +8,7 @@ interface MapMarkersProps {
   floodsGeoJSON: GeoJSON.FeatureCollection;
   searchedLocationGeoJSON?: GeoJSON.FeatureCollection;
   onFloodPress: (e: OnPressEvent) => void;
-  onClearSearch?: () => void;
+  onClearSearch?: () => void; // Keep for compatibility but not used
 }
 
 export function MapMarkers({
@@ -16,7 +16,6 @@ export function MapMarkers({
   floodsGeoJSON,
   searchedLocationGeoJSON,
   onFloodPress,
-  onClearSearch,
 }: MapMarkersProps) {
   // Extract searched location coordinate
   const searchedCoordinate = searchedLocationGeoJSON?.features[0]?.geometry.type === 'Point'
@@ -54,8 +53,6 @@ export function MapMarkers({
         <SearchLocationMarker 
           coordinate={searchedCoordinate} 
           name={searchedName}
-          onClose={onClearSearch}
-          showDirections={true}
         />
       )}
 

@@ -38,4 +38,17 @@ export const storageService = {
       SecureStore.deleteItemAsync(KEYS.USER),
     ]);
   },
+
+  // Generic helpers for FCM token cache
+  async setItem(key: string, value: string): Promise<void> {
+    await SecureStore.setItemAsync(key, value);
+  },
+
+  async getItem(key: string): Promise<string | null> {
+    return SecureStore.getItemAsync(key);
+  },
+
+  async removeItem(key: string): Promise<void> {
+    await SecureStore.deleteItemAsync(key);
+  },
 };

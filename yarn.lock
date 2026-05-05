@@ -3271,6 +3271,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/messaging@npm:^24.0.0":
+  version: 24.0.0
+  resolution: "@react-native-firebase/messaging@npm:24.0.0"
+  peerDependencies:
+    "@react-native-firebase/app": 24.0.0
+    expo: ">=47.0.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: 10c0/5be8b1e50d4f04ff6ead57503c506537c034e7e19c1e4515003eed535c5e8d54a976302fed459bffb62e6413640225bd2c28982c4083e9216c7bda7f768f0336
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/storage@npm:^24.0.0":
   version: 24.0.0
   resolution: "@react-native-firebase/storage@npm:24.0.0"
@@ -8809,6 +8822,7 @@ __metadata:
     "@maplibre/maplibre-react-native": "npm:^10.4.2"
     "@react-native-firebase/app": "npm:^24.0.0"
     "@react-native-firebase/auth": "npm:^24.0.0"
+    "@react-native-firebase/messaging": "npm:^24.0.0"
     "@react-native-google-signin/google-signin": "npm:^16.1.2"
     "@tanstack/react-query": "npm:^5.90.21"
     "@types/lodash": "npm:^4.17.24"

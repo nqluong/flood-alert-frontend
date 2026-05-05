@@ -12,7 +12,7 @@ interface MapOverlayProps {
   userLocation: [number, number] | null;
   locationError: string | null;
   onSelectLocation: (result: GeocodingResult) => void;
-  onClearSearch: () => void; // Thêm prop
+  onClearSearch: () => void;
   onLocateUser: () => void;
   onCameraPress: () => void;
 }
@@ -44,6 +44,7 @@ export function MapOverlay({
           hasLocation={!!userLocation}
           error={locationError}
         />
+        
         <MapControlButton>
           <MaterialIcons name="layers" size={22} color="#374151" />
         </MapControlButton>

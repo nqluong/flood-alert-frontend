@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -10,10 +10,16 @@ import { useMapViewport } from '../../hooks/useMapViewport';
 import { useMapCamera } from '../../hooks/useMapCamera';
 import { useSearchLocation } from '../../hooks/useSearchLocation';
 import { useFloodMarkers } from '../../hooks/useFloodMarkers';
+import { useSafeRoute } from '../../hooks/useSafeRoute';
 
 import { MapMarkers } from '../../components/home/MapMarkers';
 import { MapOverlay } from '../../components/home/MapOverlay';
 import { FloodDetailSheet } from '../../components/home/FloodDetailSheet';
+import { DirectionsButton } from '../../components/home/DirectionsButton';
+import { RouteInfoPanel } from '../../components/home/RouteInfoPanel';
+import { RouteLayer } from '../../components/home/RouteLayer';
+
+import type { VehicleType } from '../../types/route.types';
 
 const MAPTILER_KEY = process.env.EXPO_PUBLIC_MAPTILER_KEY;
 const MAP_STYLE = `https://api.maptiler.com/maps/streets-v4/style.json?key=${MAPTILER_KEY}`;
@@ -22,6 +28,12 @@ const HANOI_CENTER: [number, number] = [105.8342, 21.0278];
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+
+  // State for map tap location
+  const [tappedLocation, setTappedLocation] = useState<{
+    coordinate: [number, number];
+    name: string;
+  } | null>(null);
 
   // Hooks
   const { coordinate: userCoordinate, error: locationError } = useUserLocation();
@@ -32,6 +44,17 @@ export default function HomeScreen() {
   const { data: floods = [] } = useNearbyFloods(viewport);
   const { floodsGeoJSON, selectedFlood, handleFloodPress, clearSelectedFlood } =
     useFloodMarkers(floods);
+
+  // Safe route hook
+  const {
+    routeGeoJSON,
+    isLoading: isRoutingLoading,
+    error: routingError,
+    avoidedFloodsCount,
+    message: routingMessage,
+    findRoute,
+    clearRoute,
+  } = useSafeRoute();
 
   useEffect(() => {
     flyToUserLocation(userCoordinate);
@@ -69,23 +92,25 @@ export default function HomeScreen() {
     [userCoordinate],
   );
 
-  // GeoJSON for searched location
+  // GeoJSON for searched location or tapped location
   const searchedLocationGeoJSON = useMemo(
-    (): GeoJSON.FeatureCollection | undefined =>
-      searchedLocation
+    (): GeoJSON.FeatureCollection | undefined => {
+      const location = searchedLocation || tappedLocation;
+      return location
         ? {
             type: 'FeatureCollection',
             features: [
               {
                 type: 'Feature',
                 id: 'searched',
-                geometry: { type: 'Point', coordinates: searchedLocation.coordinate },
-                properties: { name: searchedLocation.name },
+                geometry: { type: 'Point', coordinates: location.coordinate },
+                properties: { name: location.name },
               },
             ],
           }
-        : undefined,
-    [searchedLocation],
+        : undefined;
+    },
+    [searchedLocation, tappedLocation],
   );
 
   // Handlers
@@ -97,6 +122,43 @@ export default function HomeScreen() {
 
   const handleSelectLocationWithMarker = (result: any) => {
     handleSelectLocation(result);
+    setTappedLocation(null); // Clear tapped location khi search
+  };
+
+  // Directions handler - Tìm đường từ vị trí hiện tại đến địa điểm đã chọn
+  const handleGetDirections = async (vehicleType: VehicleType) => {
+    const destination = searchedLocation || tappedLocation;
+    if (!userCoordinate || !destination) return;
+
+    await findRoute({
+      startLat: userCoordinate[1], // latitude
+      startLon: userCoordinate[0], // longitude
+      endLat: destination.coordinate[1],
+      endLon: destination.coordinate[0],
+      vehicleType,
+    });
+  };
+
+  const handleClearDirections = () => {
+    clearRoute();
+    clearSearchedLocation();
+    setTappedLocation(null);
+  };
+
+  // Handle map tap
+  const handleMapPress = (event: any) => {
+    const { geometry } = event;
+    if (!geometry || !geometry.coordinates) return;
+
+    const [lon, lat] = geometry.coordinates;
+    
+    setTappedLocation({
+      coordinate: [lon, lat],
+      name: `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+    });
+    
+    // Clear searched location khi tap vào map
+    clearSearchedLocation();
   };
 
   return (
@@ -108,6 +170,7 @@ export default function HomeScreen() {
         logoEnabled={false}
         attributionEnabled={false}
         onRegionDidChange={onRegionDidChange}
+        onPress={handleMapPress}
       >
         <Camera
           ref={cameraRef}
@@ -124,6 +187,9 @@ export default function HomeScreen() {
           onFloodPress={handleFloodPress}
           onClearSearch={clearSearchedLocation}
         />
+
+        {/* Route Layer */}
+        <RouteLayer routeGeoJSON={routeGeoJSON} />
       </MapView>
 
       <KeyboardAvoidingView
@@ -136,7 +202,7 @@ export default function HomeScreen() {
           userLocation={userCoordinate}
           locationError={locationError}
           onSelectLocation={handleSelectLocationWithMarker}
-          onClearSearch={clearSearchedLocation}
+          onClearSearch={handleClearDirections}
           onLocateUser={handleLocateUser}
           onCameraPress={() => router.push('/(tabs)/report')}
         />
@@ -144,6 +210,24 @@ export default function HomeScreen() {
 
       {/* Flood Detail Sheet */}
       <FloodDetailSheet flood={selectedFlood} onClose={clearSelectedFlood} />
+
+      {/* Directions Button - Hiện khi chưa có route */}
+      <DirectionsButton
+        visible={!!(searchedLocation || tappedLocation) && !routeGeoJSON && !!userCoordinate}
+        destinationName={(searchedLocation || tappedLocation)?.name || ''}
+        destinationCoordinate={(searchedLocation || tappedLocation)?.coordinate || [0, 0]}
+        onDirections={handleGetDirections}
+        onClose={handleClearDirections}
+      />
+
+      {/* Route Info Panel - Hiện khi đã có route */}
+      <RouteInfoPanel
+        visible={!!routeGeoJSON}
+        destinationName={(searchedLocation || tappedLocation)?.name || ''}
+        avoidedFloodsCount={avoidedFloodsCount}
+        message={routingMessage}
+        onClose={handleClearDirections}
+      />
     </View>
   );
 }

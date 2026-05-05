@@ -9,6 +9,7 @@ import {
 import type { ApiResponse } from '../types/auth.types';
 import { storageService } from './storage.service';
 import { getBaseUrl } from './apiClient';
+import { fcmTokenManager } from '../utils/fcmTokenManager';
 
 function buildLoginPayload(identifier: string, password: string): LoginRequest {
   const trimmed = identifier.trim();
@@ -38,10 +39,22 @@ export const authService = {
     await storageService.saveTokens(json.data.accessToken, json.data.refreshToken);
     await storageService.saveUser(json.data.userResponse);
 
+    try {
+      await fcmTokenManager.initializeAfterLogin();
+    } catch (error) {
+      console.warn('[Auth] FCM initialization failed, but login succeeded:', error);
+    }
+
     return json.data;
   },
 
   async logout(): Promise<void> {
+    try {
+      await fcmTokenManager.deactivateTokenOnLogout();
+    } catch (error) {
+      console.warn('[Auth] FCM deactivation failed during logout:', error);
+    }
+
     await storageService.clearAll();
   },
 
@@ -74,8 +87,16 @@ export const authService = {
      throw new Error(json.message ?? 'Đăng nhập thất bại');
    }
 
+   // Lưu tokens và user info
    await storageService.saveTokens(json.data.accessToken, json.data.refreshToken);
    await storageService.saveUser(json.data.userResponse);
+
+   // Khởi tạo FCM Token (không chặn login nếu thất bại)
+   try {
+     await fcmTokenManager.initializeAfterLogin();
+   } catch (error) {
+     console.warn('[Auth] FCM initialization failed, but social login succeeded:', error);
+   }
 
    return json.data;
   }
