@@ -24,7 +24,6 @@ export function SettingsNavRow({
   const wrapperProps = onPress && !value ? { onPress, activeOpacity: 0.7 } : {};
 
   return (
-    // @ts-ignore dynamic wrapper props
     <Wrapper style={[styles.row, !last && styles.divider]} {...wrapperProps}>
       <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>{icon}</View>
       <Text style={styles.label}>{label}</Text>
