@@ -19,14 +19,11 @@ export interface FloodWebSocketState {
   recentActivities: ActivityItemData[];
   wsStatus:         WsStatus;
   wsError:          string | null;
-  /** Số lần đã thử kết nối lại thất bại */
   wsRetryCount:     number;
-  /** Số giây còn lại trước lần thử tiếp theo (null nếu không đang chờ) */
   wsRetryIn:        number | null;
   loading:          boolean;
   apiError:         string | null;
   clearWsError:     () => void;
-  /** Thử kết nối lại ngay lập tức (dùng khi đã đạt MAX_RETRIES) */
   reconnect:        () => void;
 }
 
@@ -34,9 +31,8 @@ const WS_URL =
   (import.meta.env.VITE_WS_BASE_URL as string | undefined) ??
   'http://localhost:8080/flood-alert/ws-admin';
 
-const MAX_RECENT_EVENTS = 30;
+const MAX_RECENT_EVENTS = 50; // Giới hạn 50 events gần nhất
 
-// ---- Backoff config ----
 const MAX_RETRIES     = 7;      // Sau 7 lần thất bại liên tiếp dừng tự động retry
 const BASE_DELAY_MS   = 2_000;  // Delay đầu tiên: 2s
 const MAX_DELAY_MS    = 60_000; // Delay tối đa: 60s
@@ -65,14 +61,12 @@ export function useFloodWebSocket(): FloodWebSocketState {
   const stompClientRef   = useRef<Client | null>(null);
   const destroyedRef     = useRef(false);
 
-  // ---- Dọn dẹp timer ----
   const clearTimers = useCallback(() => {
     if (retryTimerRef.current)  { clearTimeout(retryTimerRef.current);   retryTimerRef.current  = null; }
     if (countdownRef.current)   { clearInterval(countdownRef.current);   countdownRef.current   = null; }
     setWsRetryIn(null);
   }, []);
 
-  // ---- Tạo và kích hoạt STOMP client ----
   const connect = useCallback(() => {
     if (destroyedRef.current) return;
 
@@ -86,7 +80,7 @@ export function useFloodWebSocket(): FloodWebSocketState {
 
     const client = new Client({
       webSocketFactory: () => new SockJS(WS_URL) as WebSocket,
-      reconnectDelay: 0, // Tắt auto-reconnect, tự quản lý bên dưới
+      reconnectDelay: 0,
 
       onConnect: () => {
         if (destroyedRef.current) return;
@@ -100,7 +94,21 @@ export function useFloodWebSocket(): FloodWebSocketState {
         client.subscribe('/topic/admin/map/telemetry', (msg) => {
           try {
             const data = JSON.parse(msg.body) as ProcessedSensorData;
-            setSensors((prev) => ({ ...prev, [data.sensorId]: data }));
+            
+            // Tính status dựa trên waterLevel và thresholds
+            let status = 'NORMAL';
+            if (data.waterLevel >= data.dangerThreshold) {
+              status = 'DANGER';
+            } else if (data.waterLevel >= data.warningThreshold) {
+              status = 'WARNING';
+            }
+            
+            setSensors((prev) => ({ 
+              ...prev, 
+              [data.sensorId]: { ...data, status } 
+            }));
+            
+            // Cập nhật activeFloods nếu có flood tại vị trí này
             setActiveFloods((prev) => {
               const entry = Object.entries(prev).find(
                 ([, f]) => f.lat === data.lat && f.lon === data.lon,
@@ -112,7 +120,7 @@ export function useFloodWebSocket(): FloodWebSocketState {
                 [eventId]: {
                   ...flood,
                   waterLevel: data.waterLevel,
-                  updatedAt:  data.recordedAt ?? new Date().toISOString(),
+                  updatedAt:  data.timestamp,
                 },
               };
             });
@@ -125,13 +133,17 @@ export function useFloodWebSocket(): FloodWebSocketState {
         client.subscribe('/topic/admin/alerts', (msg) => {
           try {
             const event = JSON.parse(msg.body) as FloodLifecycleEvent;
+            
+            // Xử lý theo loại event
             if (event.type === 'RESOLVED') {
+              // Xóa flood khỏi danh sách active
               setActiveFloods((prev) => {
                 const next = { ...prev };
                 delete next[event.eventId];
                 return next;
               });
-            } else {
+            } else if (event.type === 'CREATED' || event.type === 'ESCALATED' || event.type === 'DE_ESCALATED') {
+              // Thêm hoặc cập nhật flood
               setActiveFloods((prev) => ({
                 ...prev,
                 [event.eventId]: {
@@ -142,10 +154,26 @@ export function useFloodWebSocket(): FloodWebSocketState {
                   waterLevel:    event.waterLevel,
                   severityLevel: event.severityLevel,
                   status:        'CONFIRMED',
-                  updatedAt:     new Date().toISOString(),
+                  updatedAt:     event.timestamp,
                 },
               }));
+            } else if (event.type === 'UPDATED') {
+              // Chỉ cập nhật thông tin, không thay đổi severity
+              setActiveFloods((prev) => {
+                if (!prev[event.eventId]) return prev;
+                return {
+                  ...prev,
+                  [event.eventId]: {
+                    ...prev[event.eventId],
+                    waterLevel: event.waterLevel,
+                    location:   event.location,
+                    updatedAt:  event.timestamp,
+                  },
+                };
+              });
             }
+            
+            // Thêm vào recent activities
             setRecentActivities((prev) =>
               [eventToActivity(event), ...prev].slice(0, MAX_RECENT_EVENTS),
             );
@@ -182,8 +210,6 @@ export function useFloodWebSocket(): FloodWebSocketState {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clearTimers]);
 
-  // ---- Lên lịch retry với exponential backoff ----
-  // Dùng ref wrapper để tránh dependency cycle
   const scheduleRetryRef = useRef<(errorMsg: string) => void>(() => {});
 
   scheduleRetryRef.current = (errorMsg: string) => {

@@ -1,6 +1,7 @@
 import './SensorMarkers.css';
 import { Marker, Tooltip, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
+import { Radio } from 'lucide-react';
 import type { ProcessedSensorData, SensorMapItem } from '../../../../types/flood.types';
 import { createSensorIcon, createSensorClusterIcon } from './constants';
 import type { ActionType } from './constants';
@@ -35,16 +36,21 @@ export default function SensorMarkers({
         <Marker
           key={sensor.sensorId}
           position={[sensor.lat, sensor.lon]}
-          icon={createSensorIcon(sensor.status)}
+          icon={createSensorIcon(sensor.status || 'NORMAL')}
         >
           <Tooltip direction="top" offset={[0, -6]} opacity={0.92}>
             <div className="sensor-map__tooltip">
-              <strong>📡 {sensor.sensorId}</strong>
-              <span>Mực nước: {sensor.waterLevel.toFixed(2)} cm</span>
-              <span>Trạng thái: {sensor.status}</span>
-              {sensor.recordedAt && (
+              <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Radio size={14} />
+                {sensor.sensorId}
+              </strong>
+              <span>{sensor.locationName}</span>
+              <span>Mực nước: {sensor.waterLevel.toFixed(1)} cm</span>
+              <span>Trạng thái: {sensor.status || 'NORMAL'}</span>
+              <span>Pin: {sensor.battery}%</span>
+              {sensor.timestamp && (
                 <span style={{ color: '#9ca3af', fontSize: 10 }}>
-                  {new Date(sensor.recordedAt).toLocaleTimeString('vi-VN')}
+                  {new Date(sensor.timestamp).toLocaleTimeString('vi-VN')}
                 </span>
               )}
             </div>
@@ -52,9 +58,13 @@ export default function SensorMarkers({
           <Popup className="smap-popup-wrap" closeButton={false} minWidth={220} maxWidth={280}>
             <SensorActionPopup
               sensorId={sensor.sensorId}
-              status={sensor.status}
+              status={sensor.status || 'NORMAL'}
               waterLevel={sensor.waterLevel}
-              recordedAt={sensor.recordedAt}
+              batteryLevel={sensor.battery}
+              timestamp={sensor.timestamp}
+              locationName={sensor.locationName}
+              warningThreshold={sensor.warningThreshold}
+              dangerThreshold={sensor.dangerThreshold}
               fetchingId={fetchingId}
               onAction={onAction}
             />
@@ -71,7 +81,10 @@ export default function SensorMarkers({
         >
           <Tooltip direction="top" offset={[0, -6]} opacity={0.92}>
             <div className="sensor-map__tooltip">
-              <strong>📡 {sensor.sensorId}</strong>
+              <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Radio size={14} />
+                {sensor.sensorId}
+              </strong>
               <span>{sensor.name}</span>
               <span>Trạng thái: {sensor.status}</span>
               <span>Pin: {sensor.batteryLevel}%</span>

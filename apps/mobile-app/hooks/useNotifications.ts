@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { notificationService } from '../services/notification.service';
+import { useUnreadNotificationsContext } from '../background/UnreadNotificationsContext';
 import type { Notification } from '../types/notification.types';
 
 export type NotificationFilter = 'all' | 'urgent' | 'unread';
@@ -23,7 +24,6 @@ interface UseNotificationsReturn {
 
 export function useNotifications(): UseNotificationsReturn {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -31,6 +31,9 @@ export function useNotifications(): UseNotificationsReturn {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [activeFilter, setActiveFilter] = useState<NotificationFilter>('all');
+
+  // Sử dụng context để quản lý unread count globally
+  const { unreadCount, decrementCount, updateCount } = useUnreadNotificationsContext();
 
   // Filter notifications based on active filter
   const filteredNotifications = notifications.filter((n) => {
@@ -53,7 +56,8 @@ export function useNotifications(): UseNotificationsReturn {
         setNotifications((prev) =>
           append ? [...prev, ...response.notifications] : response.notifications
         );
-        setUnreadCount(response.unreadCount);
+        // Cập nhật unread count trong context
+        updateCount(response.unreadCount);
         setHasMore(response.hasNext);
         setCurrentPage(page);
         setError(null);
@@ -101,11 +105,12 @@ export function useNotifications(): UseNotificationsReturn {
           n.id === notificationId ? { ...n, isRead: true, clickedAt: new Date().toISOString() } : n
         )
       );
-      setUnreadCount((prev) => Math.max(0, prev - 1));
+      // Giảm unread count trong context
+      decrementCount(1);
     } catch (err) {
       console.error('Failed to mark notification as read:', err);
     }
-  }, []);
+  }, [decrementCount]);
 
   // Mark all notifications as read
   const markAllAsRead = useCallback(async () => {
@@ -116,11 +121,12 @@ export function useNotifications(): UseNotificationsReturn {
       setNotifications((prev) =>
         prev.map((n) => ({ ...n, isRead: true, clickedAt: n.clickedAt || new Date().toISOString() }))
       );
-      setUnreadCount(0);
+      // Set unread count về 0 trong context
+      updateCount(0);
     } catch (err) {
       console.error('Failed to mark all as read:', err);
     }
-  }, []);
+  }, [updateCount]);
 
   return {
     notifications,

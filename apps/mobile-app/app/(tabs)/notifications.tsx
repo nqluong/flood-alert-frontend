@@ -44,10 +44,25 @@ export default function NotificationsScreen() {
       await markAsRead(notification.id);
     }
 
-    if (notification.data.eventId) {
-
-      console.log('Navigate to flood detail:', notification.data.eventId);
-    }
+    // Navigate to notification detail với data
+    router.push({
+      pathname: '/notification-detail',
+      params: {
+        id: notification.id,
+        title: notification.title,
+        body: notification.body,
+        eventId: notification.data.eventId || '',
+        lat: notification.data.lat?.toString() || '0',
+        lon: notification.data.lon?.toString() || '0',
+        severityLevel: notification.data.severityLevel || '',
+        waterLevel: notification.data.waterLevel?.toString() || '',
+        affectedZones: notification.data.affectedZones || '',
+        location: notification.data.location || '',
+        staticDistance: notification.data.staticDistance || '',
+        timestamp: notification.data.timestamp || notification.createdAt,
+        notificationType: notification.notificationType,
+      },
+    });
   };
 
   const handleMarkAllRead = async () => {

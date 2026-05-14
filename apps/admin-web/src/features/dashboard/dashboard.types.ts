@@ -1,6 +1,6 @@
 import type { FloodLifecycleEvent } from '../../types/flood.types';
 
-export type ActivityColor = 'red' | 'orange' | 'green' | 'blue';
+export type ActivityColor = 'critical' | 'danger' | 'warning' | 'success' | 'info';
 
 export interface ActivityItemData {
   id:          string;
@@ -8,46 +8,38 @@ export interface ActivityItemData {
   description: string;
   time:        string;
   color:       ActivityColor;
+  alertLevel:  string;
 }
 
 export function eventToActivity(event: FloodLifecycleEvent): ActivityItemData {
-  const timeStr = new Date().toLocaleTimeString('vi-VN', {
+  const timeStr = new Date(event.timestamp).toLocaleTimeString('vi-VN', {
     hour: '2-digit', minute: '2-digit', second: '2-digit',
   });
-  const loc = event.location || event.eventId;
 
-  switch (event.type) {
-    case 'CREATED':
-      return {
-        id:          `${event.eventId}-created-${Date.now()}`,
-        title:       'Phát hiện điểm ngập mới',
-        description: `${loc} — Mực nước: ${event.waterLevel.toFixed(2)} cm`,
-        time:        timeStr,
-        color:       event.severityLevel === 'DANGER' ? 'red' : 'orange',
-      };
-    case 'ESCALATED':
-      return {
-        id:          `${event.eventId}-escalated-${Date.now()}`,
-        title:       `Mức độ ngập tăng lên ${event.severityLevel}`,
-        description: `${loc} — Mực nước: ${event.waterLevel.toFixed(2)} cm`,
-        time:        timeStr,
-        color:       event.severityLevel === 'DANGER' ? 'red' : 'orange',
-      };
-    case 'RESOLVED':
-      return {
-        id:          `${event.eventId}-resolved-${Date.now()}`,
-        title:       'Điểm ngập đã được giải quyết',
-        description: loc,
-        time:        timeStr,
-        color:       'green',
-      };
-    default:
-      return {
-        id:          `${event.eventId}-unknown-${Date.now()}`,
-        title:       'Sự kiện lũ lụt',
-        description: loc,
-        time:        timeStr,
-        color:       'blue',
-      };
-  }
+  // Map alertLevel to color
+  const colorMap: Record<string, ActivityColor> = {
+    CRITICAL: 'critical',
+    DANGER:   'danger',
+    WARNING:  'warning',
+    SUCCESS:  'success',
+    INFO:     'info',
+  };
+
+  const color = colorMap[event.alertLevel] || 'info';
+
+  const message = event.alertMessage;
+  const parts = message.split(' - ');
+  const title = parts[0] || message;
+  const description = parts.length > 1 
+    ? `${parts.slice(1).join(' - ')} — Mực nước: ${event.waterLevel.toFixed(1)} cm`
+    : `${event.location} — Mực nước: ${event.waterLevel.toFixed(1)} cm`;
+
+  return {
+    id:          `${event.eventId}-${event.type.toLowerCase()}-${Date.now()}`,
+    title,
+    description,
+    time:        timeStr,
+    color,
+    alertLevel:  event.alertLevel,
+  };
 }

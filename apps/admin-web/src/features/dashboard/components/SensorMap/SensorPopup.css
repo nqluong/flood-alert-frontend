@@ -60,6 +60,8 @@
 .smap-popup__chip {
   font-size: 11px;
   color: #6b7280;
+  display: flex;
+  align-items: center;
 }
 
 /* ---- Timestamp ---- */

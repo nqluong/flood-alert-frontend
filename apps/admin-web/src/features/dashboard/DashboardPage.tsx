@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './DashboardPage.css';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { StatsGrid } from './components/StatsCard/StatsCard';
+// import { StatsGrid } from './components/StatsCard/StatsCard';
 import SensorMap from './components/SensorMap/SensorMap';
 import RecentActivity from './components/RecentActivity/RecentActivity';
 import SensorsPage from '../sensors/SensorsPage';
@@ -35,7 +35,7 @@ function DashboardView() {
   const ws = useFloodWebSocket();
   return (
     <>
-      <StatsGrid />
+      {/*<StatsGrid />*/}
       <div className="dashboard-page__widgets">
         <SensorMap
           activeFloods={ws.activeFloods}

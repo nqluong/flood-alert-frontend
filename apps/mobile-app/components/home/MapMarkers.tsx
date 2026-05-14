@@ -8,7 +8,7 @@ interface MapMarkersProps {
   floodsGeoJSON: GeoJSON.FeatureCollection;
   searchedLocationGeoJSON?: GeoJSON.FeatureCollection;
   onFloodPress: (e: OnPressEvent) => void;
-  onClearSearch?: () => void; // Keep for compatibility but not used
+  onClearSearch?: () => void;
 }
 
 export function MapMarkers({

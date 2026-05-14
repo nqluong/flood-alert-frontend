@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import './SensorMap.css';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import type {
@@ -107,7 +108,10 @@ export default function SensorMap({
       {/* Canvas bản đồ */}
       <div className="sensor-map__canvas" ref={canvasRef}>
         {apiError && (
-          <div className="sensor-map__error"><span>⚠ {apiError}</span></div>
+          <div className="sensor-map__error">
+            <AlertTriangle size={16} style={{ marginRight: '6px' }} />
+            <span>{apiError}</span>
+          </div>
         )}
 
         <MapContainer

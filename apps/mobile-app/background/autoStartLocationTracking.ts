@@ -1,7 +1,7 @@
 
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { LOCATION_TASK_NAME } from '../services/BackgroundLocationTask';
+import { LOCATION_TASK_NAME } from './BackgroundLocationTask';
 
 export async function autoStartLocationTracking(): Promise<boolean> {
   try {

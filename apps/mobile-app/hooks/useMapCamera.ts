@@ -4,6 +4,7 @@ import type { CameraRef } from '@maplibre/maplibre-react-native';
 interface FlyToOptions {
   zoomLevel?: number;
   animationDuration?: number;
+  pitch?: number;
 }
 
 export function useMapCamera() {
@@ -14,11 +15,12 @@ export function useMapCamera() {
     coordinate: [number, number],
     options: FlyToOptions = {},
   ) => {
-    const { zoomLevel = 15, animationDuration = 800 } = options;
+    const { zoomLevel = 15, animationDuration = 800, pitch } = options;
     cameraRef.current?.setCamera({
       centerCoordinate: coordinate,
       zoomLevel,
       animationDuration,
+      ...(pitch !== undefined && { pitch }),
     });
   };
 

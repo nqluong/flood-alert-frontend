@@ -1,23 +1,26 @@
 import './SensorPopup.css';
 import { useMap } from 'react-leaflet';
-import { Eye, Pencil, ToggleLeft, Trash2 } from 'lucide-react';
+import { Eye, Pencil, ToggleLeft, Trash2, Battery, Droplet, AlertTriangle, AlertCircle } from 'lucide-react';
 import { SENSOR_STATUS_LABEL, SENSOR_STATUS_STYLE } from './constants';
 import type { ActionType } from './constants';
 
 interface SensorActionPopupProps {
-  sensorId:      string;
-  name?:         string;
-  status:        string;
-  batteryLevel?: number;
-  waterLevel?:   number;
-  recordedAt?:   string | null;
-  fetchingId:    string | null;
-  onAction:      (id: string, action: ActionType) => void;
+  sensorId:         string;
+  name?:            string;
+  status:           string;
+  batteryLevel?:    number;
+  waterLevel?:      number;
+  timestamp?:       string;           // Thay recordedAt bằng timestamp
+  locationName?:    string;           // Tên địa điểm
+  warningThreshold?: number;          // Ngưỡng cảnh báo
+  dangerThreshold?:  number;          // Ngưỡng nguy hiểm
+  fetchingId:       string | null;
+  onAction:         (id: string, action: ActionType) => void;
 }
 
 export default function SensorActionPopup({
-  sensorId, name, status, batteryLevel, waterLevel, recordedAt,
-  fetchingId, onAction,
+  sensorId, name, status, batteryLevel, waterLevel, timestamp, locationName,
+  warningThreshold, dangerThreshold, fetchingId, onAction,
 }: SensorActionPopupProps) {
   const map = useMap();
   const loading = fetchingId === sensorId;
@@ -32,7 +35,7 @@ export default function SensorActionPopup({
     <div className="smap-popup">
       {/* Header: tên + id */}
       <div className="smap-popup__head">
-        <span className="smap-popup__name">{name || sensorId}</span>
+        <span className="smap-popup__name">{name || locationName || sensorId}</span>
         <code className="smap-popup__sid">{sensorId}</code>
       </div>
 
@@ -42,16 +45,31 @@ export default function SensorActionPopup({
           {SENSOR_STATUS_LABEL[status] ?? status}
         </span>
         {batteryLevel != null && (
-          <span className="smap-popup__chip">🔋 {batteryLevel}%</span>
+          <span className="smap-popup__chip">
+            <Battery size={12} style={{ marginRight: '4px' }} />
+            {batteryLevel}%
+          </span>
         )}
         {waterLevel != null && (
-          <span className="smap-popup__chip">💧 {waterLevel.toFixed(1)} cm</span>
+          <span className="smap-popup__chip">
+            <Droplet size={12} style={{ marginRight: '4px' }} />
+            {waterLevel.toFixed(1)} cm
+            {warningThreshold != null && waterLevel >= warningThreshold && (
+              <>
+                {waterLevel >= (dangerThreshold ?? 999) ? (
+                  <AlertCircle size={12} style={{ marginLeft: '4px', color: '#dc2626' }} />
+                ) : (
+                  <AlertTriangle size={12} style={{ marginLeft: '4px', color: '#f59e0b' }} />
+                )}
+              </>
+            )}
+          </span>
         )}
       </div>
 
-      {recordedAt && (
+      {timestamp && (
         <p className="smap-popup__time">
-          {new Date(recordedAt).toLocaleTimeString('vi-VN')}
+          {new Date(timestamp).toLocaleString('vi-VN')}
         </p>
       )}
 

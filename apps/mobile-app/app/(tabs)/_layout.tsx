@@ -4,6 +4,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useUnreadNotifications } from '../../hooks/useUnreadNotifications';
 
 export default function TabLayout() {
+  // Giờ không cần options nữa, context sẽ tự quản lý polling
   const { unreadCount } = useUnreadNotifications();
 
   return (

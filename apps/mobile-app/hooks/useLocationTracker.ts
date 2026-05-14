@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { LOCATION_TASK_NAME } from '../services/BackgroundLocationTask';
+import { LOCATION_TASK_NAME } from '../background/BackgroundLocationTask';
 
 export type LocationPermissionStatus = 
   | 'not-requested'

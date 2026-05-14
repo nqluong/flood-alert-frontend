@@ -18,7 +18,7 @@ import { SocialLoginGroup } from '../components/auth/SocialLoginGroup';
 import { authService } from '../services/auth.service';
 import { useAlert } from '../hooks/useAlert';
 import { useSocialAuth } from '../hooks/useSocialAuth';
-import { autoStartLocationTracking } from '../utils/autoStartLocationTracking';
+import { autoStartLocationTracking } from '../background/autoStartLocationTracking';
 
 function LoginScreen() {
   const [identifier, setIdentifier] = useState('');

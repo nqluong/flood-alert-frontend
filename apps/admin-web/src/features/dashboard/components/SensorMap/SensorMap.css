@@ -77,6 +77,8 @@
   padding: 6px 14px;
   border-radius: 6px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
 /* ---- Shared tooltip (used by FloodMarkers & SensorMarkers) ---- */

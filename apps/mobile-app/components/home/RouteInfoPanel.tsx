@@ -8,6 +8,7 @@ interface RouteInfoPanelProps {
   avoidedFloodsCount: number;
   message: string | null;
   onClose: () => void;
+  onStartNavigation?: () => void;
 }
 
 /**
@@ -19,6 +20,7 @@ export function RouteInfoPanel({
   avoidedFloodsCount,
   message,
   onClose,
+  onStartNavigation,
 }: RouteInfoPanelProps) {
   if (!visible) {
     return null;
@@ -76,6 +78,18 @@ export function RouteInfoPanel({
             <View style={styles.routeLine} />
             <Text style={styles.routeText}>Đường đi màu xanh trên bản đồ</Text>
           </View>
+
+          {/* Start Navigation Button */}
+          {onStartNavigation && (
+            <TouchableOpacity
+              style={styles.navigationButton}
+              onPress={onStartNavigation}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="navigate-circle" size={24} color="#ffffff" />
+              <Text style={styles.navigationButtonText}>Bắt đầu điều hướng</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -180,5 +194,26 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#00695c',
     fontWeight: '600',
+  },
+  navigationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: '#009688',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    marginTop: 4,
+    shadowColor: '#009688',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  navigationButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#ffffff',
   },
 });

@@ -1,20 +1,48 @@
 import { useRef } from 'react';
+import { 
+  AlertTriangle, 
+  AlertOctagon, 
+  AlertCircle, 
+  CheckCircle, 
+  Info 
+} from 'lucide-react';
 import './RecentActivity.css';
 import type { ActivityItemData } from '../../dashboard.types';
 import type { WsStatus } from '../../hooks/useFloodWebSocket';
 
-// ---- ActivityItem sub-component ----
 interface ActivityItemProps {
   item: ActivityItemData;
   isNew?: boolean;
 }
+
+// Icon component theo alertLevel
+const AlertIcon = ({ level }: { level: string }) => {
+  const iconProps = { size: 16, strokeWidth: 2.5 };
+  
+  switch (level) {
+    case 'CRITICAL':
+      return <AlertOctagon {...iconProps} className="activity-item__icon activity-item__icon--critical" />;
+    case 'DANGER':
+      return <AlertTriangle {...iconProps} className="activity-item__icon activity-item__icon--danger" />;
+    case 'WARNING':
+      return <AlertCircle {...iconProps} className="activity-item__icon activity-item__icon--warning" />;
+    case 'SUCCESS':
+      return <CheckCircle {...iconProps} className="activity-item__icon activity-item__icon--success" />;
+    case 'INFO':
+    default:
+      return <Info {...iconProps} className="activity-item__icon activity-item__icon--info" />;
+  }
+};
 
 function ActivityItem({ item, isNew }: ActivityItemProps) {
   return (
     <div className={`activity-item${isNew ? ' activity-item--new' : ''}`}>
       <span className={`activity-item__dot activity-item__dot--${item.color}`} />
       <div className="activity-item__body">
-        <p className="activity-item__title">{item.title}</p>
+        <p className="activity-item__title">
+          <AlertIcon level={item.alertLevel} />
+          {item.title}
+        </p>
         <p className="activity-item__description">{item.description}</p>
         <p className="activity-item__time">{item.time}</p>
       </div>
@@ -36,9 +64,9 @@ export default function RecentActivity({ recentActivities, wsStatus }: RecentAct
   }
 
   const wsLabel =
-    wsStatus === 'connected'  ? { text: '● Live',           cls: 'recent-activity__badge--ws-on'  } :
-    wsStatus === 'connecting' ? { text: '◌ Đang kết nối…', cls: 'recent-activity__badge--loading' } :
-                                { text: '○ Offline',         cls: 'recent-activity__badge--ws-off'  };
+    wsStatus === 'connected'  ? { text: 'Live',           cls: 'recent-activity__badge--ws-on'  } :
+    wsStatus === 'connecting' ? { text: 'Đang kết nối…', cls: 'recent-activity__badge--loading' } :
+                                { text: 'Offline',         cls: 'recent-activity__badge--ws-off'  };
 
   return (
     <div className="recent-activity">

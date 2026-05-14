@@ -18,16 +18,22 @@ export type ActiveFloodsResponse = ApiResponse<ActiveFloodEvent[]>;
 
 // ---- WebSocket: Telemetry từ cảm biến ----
 export interface ProcessedSensorData {
-  sensorId:   string;
-  lat:        number;
-  lon:        number;
-  waterLevel: number;
-  status:     string; // "NORMAL" | "WARNING" | "DANGER" | ...
-  recordedAt: string | null;
+  sensorId:         string;
+  lat:              number;
+  lon:              number;
+  waterLevel:       number;
+  battery:          number;           // % pin còn lại (0-100)
+  warningThreshold: number;           // Ngưỡng cảnh báo (cm)
+  dangerThreshold:  number;           // Ngưỡng nguy hiểm (cm)
+  timestamp:        string;           // ISO 8601 format
+  locationName:     string;           // Tên địa điểm
+  status?:          string;           // Optional: "NORMAL" | "WARNING" | "DANGER"
+  recordedAt?:      string | null;    // Deprecated, dùng timestamp
 }
 
 // ---- WebSocket: Sự kiện vòng đời điểm ngập ----
-export type FloodLifecycleType = 'CREATED' | 'ESCALATED' | 'RESOLVED';
+export type FloodLifecycleType = 'CREATED' | 'ESCALATED' | 'DE_ESCALATED' | 'RESOLVED' | 'UPDATED';
+export type AlertLevel = 'CRITICAL' | 'DANGER' | 'WARNING' | 'SUCCESS' | 'INFO';
 
 export interface FloodLifecycleEvent {
   eventId:       string;
@@ -37,6 +43,9 @@ export interface FloodLifecycleEvent {
   location:      string;
   waterLevel:    number;
   severityLevel: SeverityLevel;
+  timestamp:     string;
+  alertMessage:  string;
+  alertLevel:    AlertLevel;
 }
 
 export interface SensorMapItem {
