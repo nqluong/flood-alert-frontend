@@ -38,7 +38,7 @@ export function MapOverlay({
       </View>
 
       {/* Map Controls */}
-      <View style={[styles.mapControls, { top: topInset + 72 }]}>
+      <View style={[styles.mapControls, { top: topInset + 80 }]}>
         <UserLocationButton
           onPress={onLocateUser}
           hasLocation={!!userLocation}

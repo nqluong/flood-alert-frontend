@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { LogBox } from 'react-native';
 import MapLibreGL from '@maplibre/maplibre-react-native';
@@ -7,23 +6,20 @@ import { AlertProvider } from '../context/AlertContext';
 import { UnreadNotificationsProvider } from '../background/UnreadNotificationsContext';
 import { AppAlert } from '../components/ui/AppAlert';
 
-// QUAN TRỌNG: Import để đăng ký Background Location Task
 import '../background/BackgroundLocationTask';
+
+// Must be called at module level before any MapView renders
+MapLibreGL.setAccessToken(null);
+
+LogBox.ignoreLogs([
+  'MapLibre',
+  'Mbgl-HttpRequest',
+  'Request failed due to a permanent error',
+]);
 
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  useEffect(() => {
-    // Must be called after the native bridge is ready, not at module level.
-    MapLibreGL.setAccessToken(null);
-    
-    // Ignore MapLibre warnings
-    LogBox.ignoreLogs([
-      'MapLibre',
-      'Mbgl-HttpRequest',
-      'Request failed due to a permanent error',
-    ]);
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

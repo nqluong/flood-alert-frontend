@@ -1,9 +1,4 @@
-/**
- * useNavigationTracking Hook
- * Xử lý GPS tracking thời gian thực với Snapping, Slicing, Off-route Detection
- */
-
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as Location from 'expo-location';
 import type { Feature, LineString } from 'geojson';
 import {
@@ -12,27 +7,26 @@ import {
   isOffRoute,
   hasArrived,
   isValidRouteGeoJSON,
-  type SnappedPosition,
 } from '../utils/navigationHelpers';
 
 interface NavigationTrackingOptions {
   routeGeoJSON: Feature<LineString> | null;
-  destinationCoordinate: [number, number]; // [lon, lat]
-  onOffRoute?: () => void; // Callback khi đi lạc
-  onArrival?: () => void; // Callback khi đến đích
-  offRouteThreshold?: number; // Ngưỡng lệch đường (meters)
-  offRouteCountThreshold?: number; // Số lần lệch liên tiếp để báo off-route
-  arrivalThreshold?: number; // Ngưỡng đến đích (meters)
+  destinationCoordinate: [number, number];
+  onOffRoute?: () => void;
+  onArrival?: () => void;
+  offRouteThreshold?: number;
+  offRouteCountThreshold?: number;
+  arrivalThreshold?: number;
 }
 
 interface NavigationTrackingState {
-  snappedCoordinate: [number, number] | null; // Tọa độ đã bám đường
-  rawCoordinate: [number, number] | null; // Tọa độ GPS thô
-  remainingRouteGeoJSON: Feature<LineString> | null; // Đoạn đường còn lại
-  progressPercent: number; // % tiến độ
-  isOffRoute: boolean; // Có đang đi lạc không
-  hasArrived: boolean; // Đã đến đích chưa
-  distanceFromRoute: number; // Khoảng cách từ GPS đến đường
+  snappedCoordinate: [number, number] | null;
+  rawCoordinate: [number, number] | null;
+  remainingRouteGeoJSON: Feature<LineString> | null;
+  progressPercent: number;
+  isOffRoute: boolean;
+  hasArrived: boolean;
+  distanceFromRoute: number;
 }
 
 export function useNavigationTracking({
@@ -44,7 +38,6 @@ export function useNavigationTracking({
   offRouteCountThreshold = 3,
   arrivalThreshold = 20,
 }: NavigationTrackingOptions): NavigationTrackingState {
-  // State cho UI
   const [snappedCoordinate, setSnappedCoordinate] = useState<[number, number] | null>(null);
   const [rawCoordinate, setRawCoordinate] = useState<[number, number] | null>(null);
   const [remainingRouteGeoJSON, setRemainingRouteGeoJSON] = useState<Feature<LineString> | null>(
@@ -55,12 +48,27 @@ export function useNavigationTracking({
   const [hasArrivedState, setHasArrivedState] = useState(false);
   const [distanceFromRoute, setDistanceFromRoute] = useState(0);
 
-  // Refs cho logic không cần render
+  const destinationRef = useRef(destinationCoordinate);
+  const onOffRouteRef = useRef(onOffRoute);
+  const onArrivalRef = useRef(onArrival);
+
   const offRouteCounterRef = useRef(0);
   const hasNotifiedOffRouteRef = useRef(false);
   const hasNotifiedArrivalRef = useRef(false);
 
-  // Reset khi route thay đổi
+  useEffect(() => {
+    destinationRef.current = destinationCoordinate;
+  }, [destinationCoordinate]);
+
+  useEffect(() => {
+    onOffRouteRef.current = onOffRoute;
+  }, [onOffRoute]);
+
+  useEffect(() => {
+    onArrivalRef.current = onArrival;
+  }, [onArrival]);
+
+  // Reset state khi route thay đổi (start nav mới hoặc reroute)
   useEffect(() => {
     if (routeGeoJSON) {
       setRemainingRouteGeoJSON(routeGeoJSON);
@@ -70,10 +78,17 @@ export function useNavigationTracking({
       offRouteCounterRef.current = 0;
       hasNotifiedOffRouteRef.current = false;
       hasNotifiedArrivalRef.current = false;
+    } else {
+      setSnappedCoordinate(null);
+      setRawCoordinate(null);
+      setRemainingRouteGeoJSON(null);
+      setProgressPercent(0);
+      setIsOffRouteState(false);
+      setDistanceFromRoute(0);
     }
   }, [routeGeoJSON]);
 
-  // GPS Tracking
+  // GPS Tracking — CHỈ subscribe lại khi route đổi (hoặc threshold thay đổi)
   useEffect(() => {
     if (!routeGeoJSON || !isValidRouteGeoJSON(routeGeoJSON)) {
       return;
@@ -84,19 +99,17 @@ export function useNavigationTracking({
 
     (async () => {
       try {
-        // Kiểm tra quyền
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-          console.warn('Location permission not granted');
+          console.warn('[Navigation] Location permission not granted');
           return;
         }
 
-        // Lắng nghe GPS liên tục
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.BestForNavigation,
-            timeInterval: 1000, // Cập nhật mỗi 1 giây
-            distanceInterval: 5, // Hoặc khi di chuyển 5 mét
+            timeInterval: 1000,
+            distanceInterval: 2,
           },
           (location) => {
             if (cancelled) return;
@@ -105,80 +118,64 @@ export function useNavigationTracking({
               location.coords.longitude,
               location.coords.latitude,
             ];
-
             setRawCoordinate(rawGPS);
 
-            // 1. SNAPPING - Bám đường
+            // SNAPPING - Bám đường
             const snapped = snapToRoute(rawGPS, routeGeoJSON);
             setSnappedCoordinate(snapped.snappedCoordinate);
             setDistanceFromRoute(snapped.distanceFromRoute);
 
-            // 2. ROUTE SLICING - Cắt đường đã đi
+            // ROUTE SLICING - Cắt đường đã đi
             const sliced = sliceRemainingRoute(
               snapped.snappedCoordinate,
               routeGeoJSON,
-              destinationCoordinate,
+              destinationRef.current,
             );
             setRemainingRouteGeoJSON(sliced.remainingRoute);
             setProgressPercent(sliced.progressPercent);
 
-            // 3. OFF-ROUTE DETECTION - Phát hiện đi lạc
+            // OFF-ROUTE DETECTION
             const isCurrentlyOffRoute = isOffRoute(snapped.distanceFromRoute, offRouteThreshold);
 
             if (isCurrentlyOffRoute) {
               offRouteCounterRef.current += 1;
-
-              // Nếu lệch liên tiếp > threshold lần
               if (
                 offRouteCounterRef.current >= offRouteCountThreshold &&
                 !hasNotifiedOffRouteRef.current
               ) {
                 setIsOffRouteState(true);
                 hasNotifiedOffRouteRef.current = true;
-                onOffRoute?.();
+                onOffRouteRef.current?.();
               }
-            } else {
-              // Quay lại đường đúng -> reset counter
-              if (offRouteCounterRef.current > 0) {
-                offRouteCounterRef.current = 0;
-                setIsOffRouteState(false);
-                hasNotifiedOffRouteRef.current = false;
-              }
+            } else if (offRouteCounterRef.current > 0) {
+              offRouteCounterRef.current = 0;
+              setIsOffRouteState(false);
+              hasNotifiedOffRouteRef.current = false;
             }
 
-            // 4. ARRIVAL DETECTION - Phát hiện đến đích
+            // ARRIVAL DETECTION
             const arrived = hasArrived(
               snapped.snappedCoordinate,
-              destinationCoordinate,
+              destinationRef.current,
               arrivalThreshold,
             );
-
             if (arrived && !hasNotifiedArrivalRef.current) {
               setHasArrivedState(true);
               hasNotifiedArrivalRef.current = true;
-              onArrival?.();
+              onArrivalRef.current?.();
             }
           },
         );
       } catch (error) {
-        console.error('Navigation tracking error:', error);
+        console.error('[Navigation] Tracking error:', error);
       }
     })();
 
-    // Cleanup - QUAN TRỌNG để tránh memory leak
     return () => {
       cancelled = true;
       subscription?.remove();
     };
-  }, [
-    routeGeoJSON,
-    destinationCoordinate,
-    onOffRoute,
-    onArrival,
-    offRouteThreshold,
-    offRouteCountThreshold,
-    arrivalThreshold,
-  ]);
+  }, [routeGeoJSON, offRouteThreshold, offRouteCountThreshold, arrivalThreshold]);
 
   return {
     snappedCoordinate,

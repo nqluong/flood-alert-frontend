@@ -6,7 +6,11 @@ export const addressService = {
    * Lấy danh sách địa chỉ của user hiện tại
    */
   async getUserAddresses(): Promise<UserAddressResponse[]> {
-    return apiFetch<UserAddressResponse[]>('/users/addresses/current');
+    return apiFetch<UserAddressResponse[]>('/users/addresses');
+  },
+
+  async getPrimaryAddress(): Promise<UserAddressResponse> {
+    return apiFetch<UserAddressResponse>('/users/addresses/current');
   },
 
   /**
@@ -52,8 +56,8 @@ export const addressService = {
    * Đặt địa chỉ làm địa chỉ chính
    */
   async setPrimaryAddress(addressId: string): Promise<UserAddressResponse> {
-    return apiFetch<UserAddressResponse>(`/users/addresses/${addressId}/primary`, {
-      method: 'PUT',
+    return apiFetch<UserAddressResponse>(`/users/addresses/${addressId}/set-primary`, {
+      method: 'PATCH',
     });
   },
 };
