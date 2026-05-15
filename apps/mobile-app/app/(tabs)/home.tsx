@@ -1,26 +1,26 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRouter, useLocalSearchParams} from 'expo-router';
-import {MapView, Camera} from '@maplibre/maplibre-react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { MapView, Camera } from '@maplibre/maplibre-react-native';
 
-import {useNearbyFloods} from '../../hooks/useNearbyFloods';
-import {useUserLocation} from '../../hooks/useUserLocation';
-import {useMapViewport} from '../../hooks/useMapViewport';
-import {useMapCamera} from '../../hooks/useMapCamera';
-import {useSearchLocation} from '../../hooks/useSearchLocation';
-import {useFloodMarkers} from '../../hooks/useFloodMarkers';
-import {useSafeRoute} from '../../hooks/useSafeRoute';
-import {useNavigationTracking} from '../../hooks/useNavigationTracking';
+import { useNearbyFloods } from '../../hooks/useNearbyFloods';
+import { useUserLocation } from '../../hooks/useUserLocation';
+import { useMapViewport } from '../../hooks/useMapViewport';
+import { useMapCamera } from '../../hooks/useMapCamera';
+import { useSearchLocation } from '../../hooks/useSearchLocation';
+import { useFloodMarkers } from '../../hooks/useFloodMarkers';
+import { useSafeRoute } from '../../hooks/useSafeRoute';
+import { useNavigationTracking } from '../../hooks/useNavigationTracking';
 
-import {MapMarkers} from '../../components/home/MapMarkers';
-import {MapOverlay} from '../../components/home/MapOverlay';
-import {FloodDetailSheet} from '../../components/home/FloodDetailSheet';
-import {DirectionsButton} from '../../components/home/DirectionsButton';
-import {RouteInfoPanel} from '../../components/home/RouteInfoPanel';
-import {RouteLayer} from '../../components/home/RouteLayer';
+import { MapMarkers } from '../../components/home/MapMarkers';
+import { MapOverlay } from '../../components/home/MapOverlay';
+import { FloodDetailSheet } from '../../components/home/FloodDetailSheet';
+import { DirectionsButton } from '../../components/home/DirectionsButton';
+import { RouteInfoPanel } from '../../components/home/RouteInfoPanel';
+import { RouteLayer } from '../../components/home/RouteLayer';
 
-import type {VehicleType} from '../../types/route.types';
+import type { VehicleType } from '../../types/route.types';
 
 const MAPTILER_KEY = process.env.EXPO_PUBLIC_MAPTILER_KEY;
 const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -59,13 +59,13 @@ export default function HomeScreen() {
   const lastRerouteAtRef = useRef(0);
 
   // Hooks
-  const {coordinate: userCoordinate, error: locationError, isRealLocation} = useUserLocation();
-  const {viewport, onRegionDidChange} = useMapViewport();
-  const {cameraRef, flyToLocation, flyToUserLocation} = useMapCamera();
-  const {searchedLocation, handleSelectLocation, clearSearchedLocation} = useSearchLocation();
+  const { coordinate: userCoordinate, error: locationError, isRealLocation } = useUserLocation();
+  const { viewport, onRegionDidChange } = useMapViewport();
+  const { cameraRef, flyToLocation, flyToUserLocation } = useMapCamera();
+  const { searchedLocation, handleSelectLocation, clearSearchedLocation } = useSearchLocation();
 
-  const {data: floods = []} = useNearbyFloods(viewport);
-  const {floodsGeoJSON, selectedFlood, handleFloodPress, clearSelectedFlood} =
+  const { data: floods = [] } = useNearbyFloods(viewport);
+  const { floodsGeoJSON, selectedFlood, handleFloodPress, clearSelectedFlood } =
     useFloodMarkers(floods);
 
   // Safe route hook
@@ -182,7 +182,7 @@ export default function HomeScreen() {
 
         // Clear params sau khi focus để không bị focus lại
         setTimeout(() => {
-          router.setParams({focusLat: undefined, focusLon: undefined});
+          router.setParams({ focusLat: undefined, focusLon: undefined });
         }, 100);
       }
     }
@@ -220,7 +220,7 @@ export default function HomeScreen() {
             {
               type: 'Feature',
               id: 'user',
-              geometry: {type: 'Point', coordinates: coords},
+              geometry: { type: 'Point', coordinates: coords },
               properties: {
                 isNavigating,
                 isOffRoute: isNavigating ? isOffRoute : false,
@@ -243,8 +243,8 @@ export default function HomeScreen() {
             {
               type: 'Feature',
               id: 'searched',
-              geometry: {type: 'Point', coordinates: destination.coordinate},
-              properties: {name: destination.name},
+              geometry: { type: 'Point', coordinates: destination.coordinate },
+              properties: { name: destination.name },
             },
           ],
         }
@@ -256,7 +256,7 @@ export default function HomeScreen() {
   // Handlers
   const handleLocateUser = () => {
     if (isRealLocation && userCoordinate) {
-      flyToLocation(userCoordinate, {zoomLevel: 15, animationDuration: 800});
+      flyToLocation(userCoordinate, { zoomLevel: 15, animationDuration: 800 });
     } else if (locationError) {
       Alert.alert('Không thể định vị', locationError);
     }
@@ -313,7 +313,7 @@ export default function HomeScreen() {
   const handleMapPress = (event: any) => {
     if (isNavigating) return;
 
-    const {geometry} = event;
+    const { geometry } = event;
     if (!geometry || !geometry.coordinates) return;
 
     const [lon, lat] = geometry.coordinates;
@@ -378,7 +378,7 @@ export default function HomeScreen() {
         <RouteLayer
           routeGeoJSON={
             isNavigating && remainingRouteGeoJSON
-              ? {type: 'FeatureCollection', features: [remainingRouteGeoJSON]}
+              ? { type: 'FeatureCollection', features: [remainingRouteGeoJSON] }
               : routeGeoJSON
           }
         />
@@ -404,7 +404,7 @@ export default function HomeScreen() {
       </KeyboardAvoidingView>
 
       {/* Flood Detail Sheet */}
-      <FloodDetailSheet flood={selectedFlood} onClose={clearSelectedFlood}/>
+      <FloodDetailSheet flood={selectedFlood} onClose={clearSelectedFlood} />
 
       {/* Directions Button - Hiện khi chưa có route */}
       <DirectionsButton
@@ -427,11 +427,11 @@ export default function HomeScreen() {
 
       {/* Navigation Info - Hiện khi đang navigation */}
       {isNavigating && (
-        <View style={[styles.navigationInfo, {top: insets.top + 10}]}>
+        <View style={[styles.navigationInfo, { top: insets.top + 10 }]}>
           <View style={styles.navHeader}>
             <View style={styles.navHeaderLeft}>
               <View style={styles.navIcon}>
-                <View style={styles.navIconInner}/>
+                <View style={styles.navIconInner} />
               </View>
               <View>
                 <Text style={styles.navLabel}>Đang đi đến</Text>
@@ -447,7 +447,7 @@ export default function HomeScreen() {
                   'Dừng điều hướng',
                   'Bạn có chắc muốn dừng điều hướng?',
                   [
-                    {text: 'Hủy', style: 'cancel'},
+                    { text: 'Hủy', style: 'cancel' },
                     {
                       text: 'Dừng',
                       style: 'destructive',
@@ -475,7 +475,7 @@ export default function HomeScreen() {
           {/* Banner thông báo đang tìm lại đường (auto re-route khi lệch) */}
           {isRerouting && (
             <View style={styles.rerouteBanner}>
-              <ActivityIndicator size="small" color="#FFC107"/>
+              <ActivityIndicator size="small" color="#FFC107" />
               <Text style={styles.rerouteText}>Đang tìm lại đường đi mới...</Text>
             </View>
           )}
@@ -519,7 +519,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
