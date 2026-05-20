@@ -73,6 +73,6 @@ export function useSafeRoute(): UseSafeRouteReturn {
     avoidedFloodsCount,
     message,
     findRoute,
-    clearRoute,
+    clearRoute
   };
 }

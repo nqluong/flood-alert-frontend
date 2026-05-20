@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Modal, Pressable, StyleSheet } from 'react-native';
 import { FloodPointCard } from './FloodPointCard';
-import type { FloodEvent } from '../../types/flood.types';
+import type { FloodEvent } from '../../../types/flood.types';
 
 interface FloodDetailSheetProps {
   flood: FloodEvent | null;

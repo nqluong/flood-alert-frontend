@@ -7,6 +7,7 @@ import RecentActivity from './components/RecentActivity/RecentActivity';
 import SensorsPage from '../sensors/SensorsPage';
 import ReportsPage from '../reports/ReportsPage';
 import UsersPage from '../users/UsersPage';
+import SupportPage from '../support/SupportPage';
 import type { AuthSession } from '../../types/auth.types';
 import { useFloodWebSocket } from './hooks/useFloodWebSocket';
 
@@ -80,6 +81,7 @@ export default function DashboardPage({ session, onLogout }: DashboardPageProps)
       case 'sensors':   return <SensorsPage />;
       case 'reports':   return <ReportsPage />;
       case 'users':     return <UsersPage />;
+      case 'support':   return <SupportPage onNavChange={setActiveNav} />;
       default:          return <PlaceholderPage title={meta.title} />;
     }
   };

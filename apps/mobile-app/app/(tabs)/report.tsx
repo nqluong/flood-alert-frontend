@@ -10,6 +10,7 @@ import {
   FloodLevel,
 } from '../../components/report/FloodLevelOption';
 import { SubmitSection } from '../../components/report/SubmitSection';
+import { DescriptionInput } from '../../components/report/DescriptionInput';
 import { showMediaPickerSheet } from '../../hooks/useMediaPicker';
 import { useUserLocation } from '../../hooks/useUserLocation';
 import { useAlert } from '../../hooks/useAlert';
@@ -19,6 +20,7 @@ import { floodService } from '../../services/flood.service';
 export default function ReportScreen() {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<FloodLevel | null>(null);
+  const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState<string>('Đang xác định vị trí...');
 
@@ -69,16 +71,18 @@ export default function ReportScreen() {
 
       // Gửi báo cáo
       const [lon, lat] = coordinate;
-      await floodService.submitReport({ 
-        lat, 
-        lon, 
-        level: selectedLevel, 
-        imageUrl 
+      await floodService.submitReport({
+        lat,
+        lon,
+        level: selectedLevel,
+        imageUrl,
+        description: description.trim() || undefined,
       });
 
       showSuccess('Thành công', 'Báo cáo của bạn đã được gửi. Cảm ơn bạn đã đóng góp!');
       setSelectedLevel(null);
       setImageUri(null);
+      setDescription('');
     } catch (err) {
       showError('Lỗi', err instanceof Error ? err.message : 'Không thể gửi báo cáo. Vui lòng thử lại.');
     } finally {
@@ -102,6 +106,9 @@ export default function ReportScreen() {
 
         {/* Location */}
         <LocationCard address={address} accuracy="±8m" />
+
+        {/* Description */}
+        <DescriptionInput value={description} onChange={setDescription} />
 
         {/* Flood level selector */}
         <FloodLevelGroup selected={selectedLevel} onSelect={setSelectedLevel} />

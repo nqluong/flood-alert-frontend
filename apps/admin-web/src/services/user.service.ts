@@ -117,6 +117,22 @@ export const userService = {
   },
 
   /**
+   * Lấy map userId → fullName cho một danh sách ID (1 lần gọi)
+   * POST /api/v1/users/batch-names
+   */
+  async getUserNamesByIds(ids: string[]): Promise<Record<string, string>> {
+    if (ids.length === 0) return {};
+    const body = await apiClient.post<ApiResponse<Record<string, string>>>(
+      '/users/batch-names',
+      ids,
+    );
+    if (!body.success) {
+      throw new ApiError(body.message ?? 'Không thể lấy tên người dùng.', body.code);
+    }
+    return body.data;
+  },
+
+  /**
    * Xóa người dùng (soft delete)
    * DELETE /api/v1/admin/users/{id}
    */

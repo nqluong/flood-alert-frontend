@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, View, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import type { VehicleType } from '../../types/route.types';
+import type { VehicleType } from '../../../types/route.types';
 
 interface DirectionsButtonProps {
   visible: boolean;

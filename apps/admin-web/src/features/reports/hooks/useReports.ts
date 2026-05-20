@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { reportService } from '../../../services/report.service';
+import { userService } from '../../../services/user.service';
 import { reverseGeocode } from '../../../utils/geocoding';
 import type {
   UserReport,
@@ -39,7 +40,7 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
             month: '2-digit',
             year: 'numeric',
           }),
-          description: apiReport.description || 'Không có mô tả',
+          description: apiReport.description || null,
           location: {
             address: 'Đang tải địa chỉ...',
             coordinates: {
@@ -75,27 +76,36 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
         if (apiReport.lat && apiReport.lon) {
           try {
             const geocodingResult = await reverseGeocode(apiReport.lat, apiReport.lon);
-            
-            // Cập nhật địa chỉ cho report này
-            setReports(prev => prev.map(report => 
-              report.id === apiReport.id 
+
+            setReports(prev => prev.map(report =>
+              report.id === apiReport.id
                 ? { ...report, location: { ...report.location, address: geocodingResult.address } }
                 : report
             ));
-            
-            // Delay 1 giây giữa các request để tránh rate limit
+
             if (i < response.content.length - 1) {
               await new Promise(resolve => setTimeout(resolve, 1000));
             }
           } catch (error) {
             console.error('Geocoding error for report', apiReport.id, error);
-            // Cập nhật với fallback
-            setReports(prev => prev.map(report => 
-              report.id === apiReport.id 
+            setReports(prev => prev.map(report =>
+              report.id === apiReport.id
                 ? { ...report, location: { ...report.location, address: 'TP.HCM' } }
                 : report
             ));
           }
+        }
+      }
+
+      const uniqueUserIds = [...new Set(response.content.map(r => r.userId).filter(Boolean))];
+      if (uniqueUserIds.length > 0) {
+        try {
+          const nameMap = await userService.getUserNamesByIds(uniqueUserIds);
+          setReports(prev => prev.map(report => ({
+            ...report,
+            userName: nameMap[report.userId] || undefined,
+          })));
+        } catch {
         }
       }
     } catch (err) {
@@ -112,7 +122,6 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
   const approveReport = async (reportId: string) => {
     try {
       await reportService.approveFloodEvent(reportId);
-      // Xóa report khỏi danh sách sau khi approve
       setReports(prev => prev.filter(r => r.id !== reportId));
       setTotalElements(prev => prev - 1);
     } catch (err) {

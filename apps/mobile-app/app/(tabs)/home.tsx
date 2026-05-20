@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MapView, Camera } from '@maplibre/maplibre-react-native';
@@ -12,19 +12,23 @@ import { useSearchLocation } from '../../hooks/useSearchLocation';
 import { useFloodMarkers } from '../../hooks/useFloodMarkers';
 import { useSafeRoute } from '../../hooks/useSafeRoute';
 import { useNavigationTracking } from '../../hooks/useNavigationTracking';
+import { useNavigationCamera } from '../../hooks/useNavigationCamera';
 
-import { MapMarkers } from '../../components/home/MapMarkers';
-import { MapOverlay } from '../../components/home/MapOverlay';
-import { FloodDetailSheet } from '../../components/home/FloodDetailSheet';
-import { DirectionsButton } from '../../components/home/DirectionsButton';
-import { RouteInfoPanel } from '../../components/home/RouteInfoPanel';
-import { RouteLayer } from '../../components/home/RouteLayer';
+import { MapMarkers } from '../../components/home/map/MapMarkers';
+import { RouteLayer } from '../../components/home/map/RouteLayer';
+import { MapOverlay } from '../../components/home/overlay/MapOverlay';
+import { FloodDetailSheet } from '../../components/home/sheet/FloodDetailSheet';
+import { DirectionsButton } from '../../components/home/route/DirectionsButton';
+import { RouteInfoPanel } from '../../components/home/route/RouteInfoPanel';
+import { NavigationPanel } from '../../components/home/navigation/NavigationPanel';
+import {
+  type CameraMode,
+  nextCameraMode,
+} from '../../components/home/navigation/CameraModeButton';
 
 import type { VehicleType } from '../../types/route.types';
 
-const MAPTILER_KEY = process.env.EXPO_PUBLIC_MAPTILER_KEY;
 const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
-const MAPTILER_STYLE = `https://api.maptiler.com/maps/streets-v4/style.json?key=${MAPTILER_KEY}`;
 
 const HANOI_CENTER: [number, number] = [105.8342, 21.0278];
 const FALLBACK_COORD: [number, number] = [0, 0];
@@ -34,17 +38,6 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const params = useLocalSearchParams();
-
-  const [mapStyle, setMapStyle] = useState<string>(OPENFREEMAP_STYLE);
-
-  const handleMapFinishedLoading = () => {
-  };
-
-  const handleMapLoadFailed = () => {
-    if (mapStyle === OPENFREEMAP_STYLE) {
-      setMapStyle(MAPTILER_STYLE);
-    }
-  };
 
   // State for map tap location
   const [tappedLocation, setTappedLocation] = useState<{
@@ -56,6 +49,7 @@ export default function HomeScreen() {
   const [isNavigating, setIsNavigating] = useState(false);
   const [currentVehicleType, setCurrentVehicleType] = useState<VehicleType>('MOTORBIKE');
   const [isRerouting, setIsRerouting] = useState(false);
+  const [cameraMode, setCameraMode] = useState<CameraMode>('follow_3d');
   const lastRerouteAtRef = useRef(0);
 
   // Hooks
@@ -79,7 +73,6 @@ export default function HomeScreen() {
     clearRoute,
   } = useSafeRoute();
 
-  // Destination (search hoặc tap) — memoize để giữ tham chiếu ổn định
   const destination = useMemo(
     () => searchedLocation || tappedLocation,
     [searchedLocation, tappedLocation],
@@ -149,9 +142,12 @@ export default function HomeScreen() {
     snappedCoordinate,
     rawCoordinate,
     remainingRouteGeoJSON,
-    progressPercent,
     isOffRoute,
     distanceFromRoute,
+    currentStep,
+    nextStep,
+    distanceToNextStep,
+    totalRemainingDistance,
   } = useNavigationTracking({
     routeGeoJSON: trackingRouteFeature,
     destinationCoordinate,
@@ -326,38 +322,48 @@ export default function HomeScreen() {
     clearSearchedLocation();
   };
 
-  // Camera bám theo vị trí khi đang navigation
-  // - On-route: bám snappedCoordinate (mượt theo đường)
-  // - Off-route: bám rawCoordinate (vị trí thật) để user thấy mình đang đâu
+  useNavigationCamera({
+    cameraRef,
+    isNavigating,
+    cameraMode,
+    snappedCoordinate,
+    rawCoordinate,
+    userCoordinate,
+    isOffRoute,
+    remainingRouteGeoJSON,
+  });
+
+  // Khi rời chế độ navigation, reset camera mode về mặc định
   useEffect(() => {
-    if (!isNavigating || !cameraRef.current) return;
+    if (!isNavigating) setCameraMode('follow_3d');
+  }, [isNavigating]);
 
-    const followCoord = isOffRoute
-      ? rawCoordinate || snappedCoordinate || userCoordinate
-      : snappedCoordinate || userCoordinate;
+  const cycleCameraMode = useCallback(() => {
+    setCameraMode((prev) => nextCameraMode(prev));
+  }, []);
 
-    if (!followCoord) return;
-
-    cameraRef.current.setCamera({
-      centerCoordinate: followCoord,
-      zoomLevel: 17,
-      animationDuration: 500,
-      pitch: 60,
-    });
-  }, [isNavigating, snappedCoordinate, rawCoordinate, userCoordinate, isOffRoute]);
+  const handleStopNavigation = useCallback(() => {
+    setIsNavigating(false);
+    if (cameraRef.current && userCoordinate) {
+      cameraRef.current.setCamera({
+        centerCoordinate: userCoordinate,
+        zoomLevel: 15,
+        pitch: 0,
+        animationDuration: 800,
+      });
+    }
+  }, [cameraRef, userCoordinate]);
 
   return (
     <View style={styles.container}>
       {/* Map */}
       <MapView
         style={StyleSheet.absoluteFill}
-        mapStyle={mapStyle}
+        mapStyle={OPENFREEMAP_STYLE}
         logoEnabled={false}
         attributionEnabled={false}
         onRegionDidChange={onRegionDidChange}
         onPress={handleMapPress}
-        onDidFinishLoadingMap={handleMapFinishedLoading}
-        onDidFailLoadingMap={handleMapLoadFailed}
       >
         <Camera
           ref={cameraRef}
@@ -425,78 +431,22 @@ export default function HomeScreen() {
         onStartNavigation={handleStartNavigation}
       />
 
-      {/* Navigation Info - Hiện khi đang navigation */}
+      {/* Navigation Panel - Hiện khi đang navigation */}
       {isNavigating && (
-        <View style={[styles.navigationInfo, { top: insets.top + 10 }]}>
-          <View style={styles.navHeader}>
-            <View style={styles.navHeaderLeft}>
-              <View style={styles.navIcon}>
-                <View style={styles.navIconInner} />
-              </View>
-              <View>
-                <Text style={styles.navLabel}>Đang đi đến</Text>
-                <Text style={styles.navDestination} numberOfLines={1}>
-                  {destination?.name || 'Đích đến'}
-                </Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={styles.navCloseButton}
-              onPress={() => {
-                Alert.alert(
-                  'Dừng điều hướng',
-                  'Bạn có chắc muốn dừng điều hướng?',
-                  [
-                    { text: 'Hủy', style: 'cancel' },
-                    {
-                      text: 'Dừng',
-                      style: 'destructive',
-                      onPress: () => {
-                        setIsNavigating(false);
-                        // Reset camera về góc nhìn bình thường
-                        if (cameraRef.current && userCoordinate) {
-                          cameraRef.current.setCamera({
-                            centerCoordinate: userCoordinate,
-                            zoomLevel: 15,
-                            pitch: 0,
-                            animationDuration: 800,
-                          });
-                        }
-                      },
-                    },
-                  ],
-                );
-              }}
-            >
-              <Text style={styles.navCloseText}>✕</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Banner thông báo đang tìm lại đường (auto re-route khi lệch) */}
-          {isRerouting && (
-            <View style={styles.rerouteBanner}>
-              <ActivityIndicator size="small" color="#FFC107" />
-              <Text style={styles.rerouteText}>Đang tìm lại đường đi mới...</Text>
-            </View>
-          )}
-
-          <View style={styles.navStats}>
-            <View style={styles.navStat}>
-              <Text style={styles.navStatLabel}>Tiến độ</Text>
-              <Text style={styles.navStatValue}>{progressPercent.toFixed(0)}%</Text>
-            </View>
-            <View style={styles.navStat}>
-              <Text style={styles.navStatLabel}>Trạng thái</Text>
-              <Text style={[styles.navStatValue, isOffRoute && styles.navStatError]}>
-                {isOffRoute ? 'Lệch đường' : 'Đúng đường'}
-              </Text>
-            </View>
-            <View style={styles.navStat}>
-              <Text style={styles.navStatLabel}>Khoảng cách</Text>
-              <Text style={styles.navStatValue}>{distanceFromRoute.toFixed(0)}m</Text>
-            </View>
-          </View>
-        </View>
+        <NavigationPanel
+          topInset={insets.top}
+          destinationName={destination?.name || ''}
+          isRerouting={isRerouting}
+          currentStep={currentStep}
+          nextStep={nextStep}
+          distanceToNextStep={distanceToNextStep}
+          isOffRoute={isOffRoute}
+          distanceFromRoute={distanceFromRoute}
+          totalRemainingDistance={totalRemainingDistance}
+          cameraMode={cameraMode}
+          onCycleCameraMode={cycleCameraMode}
+          onStop={handleStopNavigation}
+        />
       )}
     </View>
   );
@@ -510,110 +460,5 @@ const styles = StyleSheet.create({
   overlayContainer: {
     ...StyleSheet.absoluteFillObject,
     pointerEvents: 'box-none',
-  },
-  navigationInfo: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    borderRadius: 16,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  navHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  navHeaderLeft: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  navIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(33, 150, 243, 0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navIconInner: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#2196F3',
-  },
-  navLabel: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
-    marginBottom: 2,
-  },
-  navDestination: {
-    fontSize: 16,
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-  navCloseButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(244, 67, 54, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navCloseText: {
-    color: '#F44336',
-    fontSize: 20,
-    fontWeight: '600',
-  },
-  navStats: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-  navStat: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  navStatLabel: {
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.6)',
-    marginBottom: 4,
-  },
-  navStatValue: {
-    fontSize: 16,
-    color: '#4CAF50',
-    fontWeight: '700',
-  },
-  navStatError: {
-    color: '#F44336',
-  },
-  rerouteBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: 'rgba(255, 193, 7, 0.18)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 193, 7, 0.45)',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    marginBottom: 12,
-  },
-  rerouteText: {
-    color: '#FFC107',
-    fontSize: 13,
-    fontWeight: '600',
-    flex: 1,
   },
 });

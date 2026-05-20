@@ -18,7 +18,7 @@ const LEVEL_CONFIGS: FloodLevelConfig[] = [
   {
     level: 'LOW',
     label: 'Ngập nhẹ',
-    description: 'Mức nước 5-15cm, xe có thể di chuyển chậm',
+    description: 'Mức nước 0–10cm, xe có thể di chuyển chậm',
     iconBg: 'rgba(251,140,0,0.1)',
     borderColor: '#fb8c00',
     icon: <MaterialCommunityIcons name="waves" size={24} color="#fb8c00" />,
@@ -26,7 +26,7 @@ const LEVEL_CONFIGS: FloodLevelConfig[] = [
   {
     level: 'MEDIUM',
     label: 'Ngập trung bình',
-    description: 'Mức nước 15-30cm, nguy cơ hỏng xe cao',
+    description: 'Mức nước 10–20cm, nguy cơ hỏng xe cao',
     iconBg: 'rgba(251,140,0,0.15)',
     borderColor: '#f57c00',
     icon: <FontAwesome5 name="motorcycle" size={22} color="#f57c00" />,
@@ -34,7 +34,7 @@ const LEVEL_CONFIGS: FloodLevelConfig[] = [
   {
     level: 'HIGH',
     label: 'Ngập cao',
-    description: 'Mức nước 30-50cm, rất nguy hiểm',
+    description: 'Mức nước 20–30cm, rất nguy hiểm',
     iconBg: 'rgba(229,57,53,0.1)',
     borderColor: '#e53935',
     icon: <Ionicons name="warning" size={24} color="#e53935" />,
@@ -42,7 +42,7 @@ const LEVEL_CONFIGS: FloodLevelConfig[] = [
   {
     level: 'CRITICAL',
     label: 'Ngập nghiêm trọng',
-    description: 'Mức nước >50cm, không thể di chuyển',
+    description: 'Mức nước >30cm, không thể di chuyển',
     iconBg: 'rgba(198,40,40,0.15)',
     borderColor: '#c62828',
     icon: <Ionicons name="alert-circle" size={24} color="#c62828" />,

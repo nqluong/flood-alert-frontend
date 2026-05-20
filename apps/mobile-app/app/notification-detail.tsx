@@ -17,8 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { MapView, Camera, ShapeSource, CircleLayer } from '@maplibre/maplibre-react-native';
 
-const MAPTILER_KEY = process.env.EXPO_PUBLIC_MAPTILER_KEY;
-const MAP_STYLE = `https://api.maptiler.com/maps/streets-v4/style.json?key=${MAPTILER_KEY}`;
+const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 const { width } = Dimensions.get('window');
 
 export default function NotificationDetailScreen() {

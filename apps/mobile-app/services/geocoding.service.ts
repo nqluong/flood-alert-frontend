@@ -1,5 +1,6 @@
-const MAPTILER_KEY = process.env.EXPO_PUBLIC_MAPTILER_KEY;
-const GEOCODING_BASE_URL = 'https://api.maptiler.com/geocoding';
+const PHOTON_BASE_URL = 'https://photon.komoot.io/api';
+
+const VIETNAM_BBOX: [number, number, number, number] = [102.14, 8.18, 109.46, 23.39];
 
 export interface GeocodingResult {
   id: string;
@@ -7,82 +8,107 @@ export interface GeocodingResult {
   center: [number, number]; // [lon, lat]
   place_type: string[];
   text: string;
-  context?: Array<{ id: string; text: string }>;
 }
 
-export interface GeocodingResponse {
-  features: GeocodingResult[];
+function resolveDisplayName(props: any): { text: string; place_name: string } {
+  const addressLine =
+    props.housenumber && props.street
+      ? `${props.housenumber} ${props.street}`
+      : props.street || undefined;
+
+  // Title: ưu tiên tên địa điểm, fallback về địa chỉ đường
+  const text = props.name || addressLine || '';
+
+  // Subtitle: chuỗi đầy đủ, bỏ trùng lặp
+  const rawParts = [props.name, addressLine, props.district || props.city, props.state, props.country];
+  const seen = new Set<string>();
+  const parts = rawParts.filter((p): p is string => {
+    if (!p) return false;
+    if (seen.has(p)) return false;
+    seen.add(p);
+    return true;
+  });
+
+  return {
+    text,
+    place_name: parts.join(', ') || text,
+  };
+}
+
+function resolvePlaceType(props: any): string[] {
+  const osmKey = props.osm_key || '';
+  const osmValue = props.osm_value || '';
+  const type = props.type || '';
+
+  if (['amenity', 'shop', 'tourism', 'leisure', 'office'].includes(osmKey)) return ['poi'];
+  if (type === 'house' || osmKey === 'address' || osmValue === 'house') return ['address'];
+  if (osmKey === 'place' || ['city', 'town', 'village', 'suburb'].includes(type)) return ['place'];
+  if (osmKey === 'boundary' || ['county', 'state', 'country'].includes(type)) return ['region'];
+  return ['place'];
+}
+
+function mapPhotonFeature(feature: any, index: number): GeocodingResult {
+  const props = feature.properties || {};
+  const [lon, lat] = feature.geometry.coordinates;
+  const osmType = String(props.osm_type || '').toLowerCase();
+  const typePrefix = osmType === 'n' ? 'node' : osmType === 'w' ? 'way' : 'relation';
+  const { text, place_name } = resolveDisplayName(props);
+
+  return {
+    id: `${typePrefix}_${props.osm_id ?? index}`,
+    text: text || `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+    place_name: place_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+    center: [lon, lat],
+    place_type: resolvePlaceType(props),
+  };
 }
 
 export const geocodingService = {
-  /**
-   * Tìm kiếm địa điểm theo text
-   * @param query - Từ khóa tìm kiếm
-   * @param options - Tùy chọn tìm kiếm
-   */
   async search(
     query: string,
     options?: {
-      proximity?: [number, number]; // [lon, lat] - ưu tiên kết quả gần vị trí này
-      bbox?: [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
+      proximity?: [number, number]; // [lon, lat]
+      bbox?: [number, number, number, number];
       limit?: number;
-      language?: string;
     },
   ): Promise<GeocodingResult[]> {
     if (!query.trim()) return [];
 
     const params = new URLSearchParams({
-      key: MAPTILER_KEY || '',
-      country: 'VN',
-      limit: String(options?.limit || 5),
-      language: options?.language || 'vi',
+      q: query,
+      limit: String(options?.limit ?? 5),
+      lang: 'en',
     });
 
     if (options?.proximity) {
-      params.append('proximity', options.proximity.join(','));
+      params.append('lon', String(options.proximity[0]));
+      params.append('lat', String(options.proximity[1]));
     }
 
-    if (options?.bbox) {
-      params.append('bbox', options.bbox.join(','));
-    }
+    const bbox = options?.bbox ?? VIETNAM_BBOX;
+    params.append('bbox', bbox.join(','));
 
     try {
-      const response = await fetch(`${GEOCODING_BASE_URL}/${encodeURIComponent(query)}.json?${params.toString()}`);
-      
-      if (!response.ok) {
-        throw new Error(`Geocoding API error: ${response.status}`);
-      }
-
-      const data: GeocodingResponse = await response.json();
-      return data.features || [];
+      const response = await fetch(`${PHOTON_BASE_URL}?${params.toString()}`);
+      if (!response.ok) throw new Error(`Photon API error: ${response.status}`);
+      const data = await response.json();
+      return (data.features ?? []).map(mapPhotonFeature);
     } catch (error) {
       console.error('Geocoding search error:', error);
       return [];
     }
   },
 
-  /**
-   * Reverse geocoding - lấy địa chỉ từ tọa độ
-   * @param lon - Kinh độ
-   * @param lat - Vĩ độ
-   */
   async reverse(lon: number, lat: number): Promise<GeocodingResult | null> {
     try {
-      const params = new URLSearchParams({
-        key: MAPTILER_KEY || '',
-        language: 'vi',
-      });
-
       const response = await fetch(
-        `${GEOCODING_BASE_URL}/${lon},${lat}.json?${params}`,
+        `${PHOTON_BASE_URL}/reverse?lon=${lon}&lat=${lat}&lang=en`,
       );
-
-      if (!response.ok) {
-        throw new Error(`Reverse geocoding error: ${response.status}`);
-      }
-
-      const data: GeocodingResponse = await response.json();
-      return data.features[0] || null;
+      if (!response.ok) throw new Error(`Reverse geocoding error: ${response.status}`);
+      const data = await response.json();
+      const features = data.features ?? [];
+      if (!features[0]) return null;
+      return mapPhotonFeature(features[0], 0);
     } catch (error) {
       console.error('Reverse geocoding error:', error);
       return null;

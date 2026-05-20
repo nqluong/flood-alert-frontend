@@ -4,7 +4,6 @@ import {
   Radio,
   FileText,
   Users,
-  Settings,
   HelpCircle,
   ShieldCheck,
   LogOut,
@@ -25,16 +24,13 @@ interface SidebarProps {
 }
 
 const mainNavItems: NavItem[] = [
-  { id: 'dashboard', label: 'Tổng quan',   icon: <LayoutDashboard size={16} /> },
-  { id: 'sensors',   label: 'Cảm biến',    icon: <Radio size={16} /> },
-  { id: 'reports',   label: 'Báo cáo',     icon: <FileText size={16} /> },
-  { id: 'users',     label: 'Người dùng',  icon: <Users size={16} /> },
+  { id: 'dashboard', label: 'Tổng quan', icon: <LayoutDashboard size={16} /> },
+  { id: 'sensors', label: 'Cảm biến', icon: <Radio size={16} /> },
+  { id: 'reports', label: 'Báo cáo', icon: <FileText size={16} /> },
+  { id: 'users', label: 'Người dùng', icon: <Users size={16} /> },
+  { id: 'support', label: 'Hỗ trợ', icon: <HelpCircle size={16} /> },
 ];
 
-const settingsNavItems: NavItem[] = [
-  { id: 'config',  label: 'Cấu hình', icon: <Settings size={16} /> },
-  { id: 'support', label: 'Hỗ trợ',   icon: <HelpCircle size={16} /> },
-];
 
 const DEFAULT_AVATAR = 'https://ui-avatars.com/api/?background=0ea5e9&color=fff&name=';
 
@@ -62,20 +58,6 @@ export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout
           </button>
         ))}
 
-        {/* Settings section */}
-        <div className="sidebar__settings">
-          <p className="sidebar__section-label">Cài đặt</p>
-          {settingsNavItems.map((item) => (
-            <button
-              key={item.id}
-              className={`sidebar__nav-item ${activeNav === item.id ? 'sidebar__nav-item--active' : ''}`}
-              onClick={() => onNavChange?.(item.id)}
-            >
-              {item.icon}
-              {item.label}
-            </button>
-          ))}
-        </div>
       </nav>
 
       {/* User Profile */}

@@ -20,7 +20,7 @@ export function RouteInfoPanel({
   avoidedFloodsCount,
   message,
   onClose,
-  onStartNavigation,
+  onStartNavigation
 }: RouteInfoPanelProps) {
   if (!visible) {
     return null;
@@ -90,6 +90,8 @@ export function RouteInfoPanel({
               <Text style={styles.navigationButtonText}>Bắt đầu điều hướng</Text>
             </TouchableOpacity>
           )}
+
+
         </View>
       </View>
     </View>
@@ -215,5 +217,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#ffffff',
-  },
+  }
 });

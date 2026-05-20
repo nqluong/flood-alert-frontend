@@ -19,7 +19,6 @@ import { SettingsInfoBox } from '../../components/settings/SettingsInfoBox';
 import { authService } from '../../services/auth.service';
 import { useAlert } from '../../hooks/useAlert';
 import { useNotificationPreferences } from '../../hooks/useNotificationPreferences';
-import { LocationTrackingToggle } from '../../components/LocationTrackingToggle';
 
 export default function SettingsScreen() {
   const { showConfirm } = useAlert();
@@ -66,7 +65,7 @@ export default function SettingsScreen() {
             <SettingsToggleRow
               icon={<Ionicons name="notifications" size={18} color="#009688" />}
               iconBg="rgba(0,150,136,0.1)"
-              label="Nhận thông báo Push"
+              label="Nhận thông báo"
               description="Nhận cảnh báo ngập lụt ngay lập tức"
               value={pushEnabled}
               onValueChange={handlePushEnabledChange}
@@ -74,15 +73,15 @@ export default function SettingsScreen() {
             <SettingsToggleRow
               icon={<Ionicons name="warning" size={18} color="#e53935" />}
               iconBg="rgba(229,57,53,0.1)"
-              label="Chỉ báo động ngập sâu"
-              description="Chỉ nhận cảnh báo mức độ nguy hiểm"
+              label="Chỉ báo động ngập"
+              description="Chỉ nhận cảnh báo mức trung bình trở lên"
               value={severeOnly}
               onValueChange={handleSevereOnlyChange}
+              disabled={!pushEnabled}
               last
             />
           </View>
 
-          {/* ── Vùng cảnh báo ─────────────────────── */}
           <SettingsSectionHeader title="Vùng cảnh báo" />
           <View style={styles.card}>
             <SettingsSliderRow
@@ -99,11 +98,6 @@ export default function SettingsScreen() {
           </View>
           <SettingsInfoBox message="Bạn sẽ nhận được cảnh báo về các điểm ngập lụt trong phạm vi này xung quanh vị trí của bạn." />
 
-          {/* ── Theo dõi vị trí ─────────────────────── */}
-          <SettingsSectionHeader title="Theo dõi vị trí" />
-          <LocationTrackingToggle autoStart={true} />
-          <SettingsInfoBox message="Bật để nhận cảnh báo ngập lụt theo vị trí của bạn ngay cả khi không mở ứng dụng." />
-
           {/* ── Tài khoản ─────────────────────────── */}
           <SettingsSectionHeader title="Tài khoản" />
           <View style={styles.card}>
@@ -117,7 +111,7 @@ export default function SettingsScreen() {
               icon={<Ionicons name="shield-checkmark" size={18} color="#009688" />}
               iconBg="rgba(0,150,136,0.1)"
               label="Quyền riêng tư"
-              onPress={() => {}}
+              onPress={() => router.push('/privacy')}
               last
             />
           </View>
@@ -128,13 +122,13 @@ export default function SettingsScreen() {
               icon={<Ionicons name="help-circle" size={18} color="#009688" />}
               iconBg="rgba(0,150,136,0.1)"
               label="Trợ giúp & Hỗ trợ"
-              onPress={() => {}}
+              onPress={() => router.push('/help')}
             />
             <SettingsNavRow
               icon={<Ionicons name="document-text" size={18} color="#009688" />}
               iconBg="rgba(0,150,136,0.1)"
               label="Điều khoản sử dụng"
-              onPress={() => {}}
+              onPress={() => router.push('/terms')}
             />
             <SettingsNavRow
               icon={<Ionicons name="phone-portrait-outline" size={18} color="#009688" />}

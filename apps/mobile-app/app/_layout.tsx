@@ -33,6 +33,9 @@ export default function RootLayout() {
             <Stack.Screen name="addresses" options={{ headerShown: false }} />
             <Stack.Screen name="profile" options={{ headerShown: false }} />
             <Stack.Screen name="notification-detail" options={{ headerShown: false }} />
+            <Stack.Screen name="privacy" options={{ headerShown: false }} />
+            <Stack.Screen name="terms" options={{ headerShown: false }} />
+            <Stack.Screen name="help" options={{ headerShown: false }} />
           </Stack>
           <AppAlert />
         </UnreadNotificationsProvider>

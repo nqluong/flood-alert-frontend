@@ -11,7 +11,7 @@ interface NotificationCardProps {
 
 const TYPE_CONFIG = {
   FLOOD_ALERT: {
-    label: 'Cảnh báo lũ',
+    label: 'Cảnh báo ngập',
     icon: 'warning' as const,
   },
   FLOOD_UPDATE: {

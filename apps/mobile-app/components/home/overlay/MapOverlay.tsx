@@ -5,7 +5,7 @@ import { SearchBarWithAutocomplete } from './SearchBarWithAutocomplete';
 import { UserLocationButton } from './UserLocationButton';
 import { MapControlButton } from './MapControlButton';
 import { FABCamera } from './FABCamera';
-import type { GeocodingResult } from '../../services/geocoding.service';
+import type { GeocodingResult } from '../../../services/geocoding.service';
 
 interface MapOverlayProps {
   topInset: number;

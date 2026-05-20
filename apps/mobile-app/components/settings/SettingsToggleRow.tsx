@@ -10,6 +10,7 @@ interface SettingsToggleRowProps {
   onValueChange: (val: boolean) => void;
   /** Hide bottom divider on last item */
   last?: boolean;
+  disabled?: boolean;
 }
 
 export function SettingsToggleRow({
@@ -20,12 +21,13 @@ export function SettingsToggleRow({
   value,
   onValueChange,
   last = false,
+  disabled = false,
 }: SettingsToggleRowProps) {
   return (
-    <View style={[styles.row, !last && styles.divider]}>
+    <View style={[styles.row, !last && styles.divider, disabled && styles.rowDisabled]}>
       <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>{icon}</View>
       <View style={styles.text}>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[styles.label, disabled && styles.labelDisabled]}>{label}</Text>
         {description ? (
           <Text style={styles.description}>{description}</Text>
         ) : null}
@@ -35,6 +37,7 @@ export function SettingsToggleRow({
         onValueChange={onValueChange}
         trackColor={{ false: '#d1d5db', true: '#009688' }}
         thumbColor="#ffffff"
+        disabled={disabled}
       />
     </View>
   );
@@ -65,11 +68,17 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 2,
   },
+  rowDisabled: {
+    opacity: 0.45,
+  },
   label: {
     fontSize: 15,
     fontWeight: '600',
     color: '#111827',
     letterSpacing: -0.3,
+  },
+  labelDisabled: {
+    color: '#9ca3af',
   },
   description: {
     fontSize: 12,

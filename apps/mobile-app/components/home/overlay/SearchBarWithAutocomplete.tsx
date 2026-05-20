@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { debounce } from 'lodash';
-import { geocodingService, type GeocodingResult } from '../../services/geocoding.service';
+import { geocodingService, type GeocodingResult } from '../../../services/geocoding.service';
 
 interface SearchBarWithAutocompleteProps {
   placeholder?: string;

@@ -2,8 +2,9 @@ export interface UserReport {
   id: string;
   reportId: string;
   userId: string;
+  userName?: string;
   timestamp: string;
-  description: string;
+  description: string | null;
   location: {
     address: string;
     coordinates: {

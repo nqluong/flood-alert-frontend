@@ -67,8 +67,14 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
           {/* Info Box */}
           <div className="report-card__info-box">
             <div className="report-card__info-row">
-              <span className="report-card__info-label">ID người dùng:</span>
-              <span className="report-card__info-value">{report.userId}</span>
+              <span className="report-card__info-label">Người dùng:</span>
+              <span className="report-card__info-value">
+                {report.userName ?? (
+                  <span style={{ color: '#9ca3af', fontStyle: 'italic', fontSize: 12 }}>
+                    {report.userId.slice(0, 8)}…
+                  </span>
+                )}
+              </span>
             </div>
             <div className="report-card__info-row">
               <span className="report-card__info-label">Thời gian:</span>
@@ -94,7 +100,13 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
             </div>
             <div className="report-card__info-row report-card__info-description">
               <span className="report-card__info-label">Mô tả:</span>
-              <span className="report-card__info-value">"{report.description}"</span>
+              {report.description ? (
+                <span className="report-card__info-value">{report.description}</span>
+              ) : (
+                <span className="report-card__info-value" style={{ color: '#9ca3af', fontStyle: 'italic' }}>
+                  Không có mô tả
+                </span>
+              )}
             </div>
           </div>
 
