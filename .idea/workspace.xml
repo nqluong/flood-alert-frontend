@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix navigation &amp; admin">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix build admin">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +189,7 @@
       <workItem from="1778922211939" duration="3657000" />
       <workItem from="1779158211729" duration="1386000" />
       <workItem from="1779164361114" duration="2878000" />
-      <workItem from="1779252991757" duration="1517000" />
+      <workItem from="1779252991757" duration="2441000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -268,7 +271,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779255528290</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fix build admin">
+      <option name="closed" value="true" />
+      <created>1779256588330</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1779256588330</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -308,7 +319,8 @@
     <MESSAGE value="update gps hien thi vs nagivation" />
     <MESSAGE value="fix navigation" />
     <MESSAGE value="fix navigation &amp; admin" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix navigation &amp; admin" />
+    <MESSAGE value="fix build admin" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix build admin" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
