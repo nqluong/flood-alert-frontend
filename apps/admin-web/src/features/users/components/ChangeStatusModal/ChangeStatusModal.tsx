@@ -25,7 +25,7 @@ export default function ChangeStatusModal({ user, onClose, onSuccess }: ChangeSt
 
     setLoading(true);
     try {
-      await userService.changeUserStatus(user.id, {
+      await userService.changeUserStatus(user.userId, {
         status: newStatus,
         reason: reason.trim() || undefined,
       });
@@ -62,8 +62,8 @@ export default function ChangeStatusModal({ user, onClose, onSuccess }: ChangeSt
           </h3>
           <p className="change-status-modal__message">
             {isLocking
-              ? `Bạn có chắc chắn muốn khóa tài khoản của "${user.name}"? Người dùng sẽ không thể đăng nhập sau khi bị khóa.`
-              : `Bạn có chắc chắn muốn mở khóa tài khoản của "${user.name}"? Người dùng sẽ có thể đăng nhập trở lại.`}
+              ? `Bạn có chắc chắn muốn khóa tài khoản của "${user.fullName}"? Người dùng sẽ không thể đăng nhập sau khi bị khóa.`
+              : `Bạn có chắc chắn muốn mở khóa tài khoản của "${user.fullName}"? Người dùng sẽ có thể đăng nhập trở lại.`}
           </p>
 
           {/* User Info */}
@@ -71,9 +71,9 @@ export default function ChangeStatusModal({ user, onClose, onSuccess }: ChangeSt
             <p>
               <strong>Email:</strong> {user.email}
             </p>
-            {user.phoneNumber && (
+            {user.phone && (
               <p>
-                <strong>Số điện thoại:</strong> {user.phoneNumber}
+                <strong>Số điện thoại:</strong> {user.phone}
               </p>
             )}
           </div>
