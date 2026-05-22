@@ -1,6 +1,5 @@
-const PHOTON_BASE_URL = 'https://photon.komoot.io/api';
-
-const VIETNAM_BBOX: [number, number, number, number] = [102.14, 8.18, 109.46, 23.39];
+const GOONG_BASE_URL = 'https://rsapi.goong.io';
+const API_KEY = process.env.EXPO_PUBLIC_GOONG_API_KEY ?? '';
 
 export interface GeocodingResult {
   id: string;
@@ -10,57 +9,22 @@ export interface GeocodingResult {
   text: string;
 }
 
-function resolveDisplayName(props: any): { text: string; place_name: string } {
-  const addressLine =
-    props.housenumber && props.street
-      ? `${props.housenumber} ${props.street}`
-      : props.street || undefined;
-
-  // Title: ưu tiên tên địa điểm, fallback về địa chỉ đường
-  const text = props.name || addressLine || '';
-
-  // Subtitle: chuỗi đầy đủ, bỏ trùng lặp
-  const rawParts = [props.name, addressLine, props.district || props.city, props.state, props.country];
-  const seen = new Set<string>();
-  const parts = rawParts.filter((p): p is string => {
-    if (!p) return false;
-    if (seen.has(p)) return false;
-    seen.add(p);
-    return true;
-  });
-
-  return {
-    text,
-    place_name: parts.join(', ') || text,
-  };
+async function fetchWithTimeout(url: string, timeoutMs = 5000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(id);
+  }
 }
 
-function resolvePlaceType(props: any): string[] {
-  const osmKey = props.osm_key || '';
-  const osmValue = props.osm_value || '';
-  const type = props.type || '';
-
-  if (['amenity', 'shop', 'tourism', 'leisure', 'office'].includes(osmKey)) return ['poi'];
-  if (type === 'house' || osmKey === 'address' || osmValue === 'house') return ['address'];
-  if (osmKey === 'place' || ['city', 'town', 'village', 'suburb'].includes(type)) return ['place'];
-  if (osmKey === 'boundary' || ['county', 'state', 'country'].includes(type)) return ['region'];
+function mapGoongTypes(types: string[]): string[] {
+  if (!types?.length) return ['place'];
+  if (types.some((t) => ['street_address', 'route', 'premise'].includes(t))) return ['address'];
+  if (types.some((t) => ['establishment', 'point_of_interest', 'food', 'store'].includes(t))) return ['poi'];
+  if (types.some((t) => ['administrative_area_level_1', 'administrative_area_level_2', 'country'].includes(t))) return ['region'];
   return ['place'];
-}
-
-function mapPhotonFeature(feature: any, index: number): GeocodingResult {
-  const props = feature.properties || {};
-  const [lon, lat] = feature.geometry.coordinates;
-  const osmType = String(props.osm_type || '').toLowerCase();
-  const typePrefix = osmType === 'n' ? 'node' : osmType === 'w' ? 'way' : 'relation';
-  const { text, place_name } = resolveDisplayName(props);
-
-  return {
-    id: `${typePrefix}_${props.osm_id ?? index}`,
-    text: text || `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
-    place_name: place_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
-    center: [lon, lat],
-    place_type: resolvePlaceType(props),
-  };
 }
 
 export const geocodingService = {
@@ -68,47 +32,86 @@ export const geocodingService = {
     query: string,
     options?: {
       proximity?: [number, number]; // [lon, lat]
-      bbox?: [number, number, number, number];
       limit?: number;
     },
   ): Promise<GeocodingResult[]> {
     if (!query.trim()) return [];
 
     const params = new URLSearchParams({
-      q: query,
-      limit: String(options?.limit ?? 5),
-      lang: 'en',
+      input: query,
+      api_key: API_KEY,
     });
 
     if (options?.proximity) {
-      params.append('lon', String(options.proximity[0]));
-      params.append('lat', String(options.proximity[1]));
+      params.append('location', `${options.proximity[1]},${options.proximity[0]}`);
+      params.append('radius', '50000');
     }
 
-    const bbox = options?.bbox ?? VIETNAM_BBOX;
-    params.append('bbox', bbox.join(','));
-
     try {
-      const response = await fetch(`${PHOTON_BASE_URL}?${params.toString()}`);
-      if (!response.ok) throw new Error(`Photon API error: ${response.status}`);
-      const data = await response.json();
-      return (data.features ?? []).map(mapPhotonFeature);
+      const res = await fetchWithTimeout(`${GOONG_BASE_URL}/place/autoComplete?${params}`);
+      if (!res.ok) throw new Error(`Goong AutoComplete error: ${res.status}`);
+      const data = await res.json();
+      const predictions: any[] = data.predictions ?? [];
+
+      return predictions.slice(0, options?.limit ?? 5).map((p: any) => ({
+        id: p.place_id,
+        text: p.structured_formatting?.main_text || p.description || '',
+        place_name: p.description || p.structured_formatting?.main_text || '',
+        center: [0, 0] as [number, number],
+        place_type: mapGoongTypes(p.types ?? []),
+      }));
     } catch (error) {
       console.error('Geocoding search error:', error);
       return [];
     }
   },
 
+  async getDetail(placeId: string): Promise<GeocodingResult | null> {
+    try {
+      const res = await fetchWithTimeout(
+        `${GOONG_BASE_URL}/place/detail?place_id=${placeId}&api_key=${API_KEY}`,
+      );
+      if (!res.ok) throw new Error(`Goong Place Detail error: ${res.status}`);
+      const data = await res.json();
+      const r = data.result;
+      if (!r) return null;
+
+      const lat = r.geometry?.location?.lat ?? 0;
+      const lng = r.geometry?.location?.lng ?? 0;
+
+      return {
+        id: placeId,
+        text: r.name || r.formatted_address || '',
+        place_name: r.formatted_address || r.name || '',
+        center: [lng, lat],
+        place_type: mapGoongTypes(r.types ?? []),
+      };
+    } catch (error) {
+      console.error('Goong Place Detail error:', error);
+      return null;
+    }
+  },
+
   async reverse(lon: number, lat: number): Promise<GeocodingResult | null> {
     try {
-      const response = await fetch(
-        `${PHOTON_BASE_URL}/reverse?lon=${lon}&lat=${lat}&lang=en`,
+      const res = await fetchWithTimeout(
+        `${GOONG_BASE_URL}/geocode?latlng=${lat},${lon}&api_key=${API_KEY}`,
       );
-      if (!response.ok) throw new Error(`Reverse geocoding error: ${response.status}`);
-      const data = await response.json();
-      const features = data.features ?? [];
-      if (!features[0]) return null;
-      return mapPhotonFeature(features[0], 0);
+      if (!res.ok) throw new Error(`Goong Reverse Geocode error: ${res.status}`);
+      const data = await res.json();
+      const results: any[] = data.results ?? [];
+      if (!results[0]) return null;
+
+      const r = results[0];
+      const location = r.geometry?.location;
+
+      return {
+        id: r.place_id || `reverse_${lat}_${lon}`,
+        text: r.name || r.formatted_address || '',
+        place_name: r.formatted_address || '',
+        center: [location?.lng ?? lon, location?.lat ?? lat],
+        place_type: mapGoongTypes(r.types ?? []),
+      };
     } catch (error) {
       console.error('Reverse geocoding error:', error);
       return null;

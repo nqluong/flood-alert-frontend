@@ -28,13 +28,11 @@ export const floodService = {
    * @param extension Đuôi file (jpg, png, etc.)
    */
   getUploadUrl: async (extension: string): Promise<FileUploadResponse> => {
-    console.log('[FloodService] Getting upload URL for extension:', extension);
     try {
       const response = await apiFetch<FileUploadBackendResponse>(
         `/reports/upload-url?extension=${extension}`
       );
-      console.log('[FloodService] Backend response:', JSON.stringify(response, null, 2));
-      
+
       // Map snake_case to camelCase
       const mapped: FileUploadResponse = {
         uploadUrl: response.upload_url,
@@ -47,12 +45,6 @@ export const floodService = {
       if (!mapped.uploadUrl || !mapped.fileUrl) {
         throw new Error('Invalid response from server: missing uploadUrl or fileUrl');
       }
-      
-      console.log('[FloodService] Mapped response:', {
-        hasUploadUrl: !!mapped.uploadUrl,
-        hasFileUrl: !!mapped.fileUrl,
-        expiresInMinutes: mapped.expiresInMinutes,
-      });
       
       return mapped;
     } catch (error) {

@@ -3,12 +3,12 @@ import type { FloodLifecycleEvent } from '../../types/flood.types';
 export type ActivityColor = 'critical' | 'danger' | 'warning' | 'success' | 'info';
 
 export interface ActivityItemData {
-  id:          string;
-  title:       string;
+  id: string;
+  title: string;
   description: string;
-  time:        string;
-  color:       ActivityColor;
-  alertLevel:  string;
+  time: string;
+  color: ActivityColor;
+  alertLevel: string;
 }
 
 export function eventToActivity(event: FloodLifecycleEvent): ActivityItemData {
@@ -31,15 +31,15 @@ export function eventToActivity(event: FloodLifecycleEvent): ActivityItemData {
   const parts = message.split(' - ');
   const title = parts[0] || message;
   const description = parts.length > 1 
-    ? `${parts.slice(1).join(' - ')} — Mực nước: ${event.waterLevel.toFixed(1)} cm`
-    : `${event.location} — Mực nước: ${event.waterLevel.toFixed(1)} cm`;
+    ? `${parts.slice(1).join(' - ')} - Mực nước: ${event.waterLevel.toFixed(1)} cm`
+    : `${event.location} - Mực nước: ${event.waterLevel.toFixed(1)} cm`;
 
   return {
-    id:          `${event.eventId}-${event.type.toLowerCase()}-${Date.now()}`,
+    id: `${event.eventId}-${event.type.toLowerCase()}-${Date.now()}`,
     title,
     description,
-    time:        timeStr,
+    time: timeStr,
     color,
-    alertLevel:  event.alertLevel,
+    alertLevel: event.alertLevel,
   };
 }

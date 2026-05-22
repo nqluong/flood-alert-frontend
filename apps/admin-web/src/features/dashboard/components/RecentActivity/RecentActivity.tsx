@@ -37,7 +37,6 @@ const AlertIcon = ({ level }: { level: string }) => {
 function ActivityItem({ item, isNew }: ActivityItemProps) {
   return (
     <div className={`activity-item${isNew ? ' activity-item--new' : ''}`}>
-      <span className={`activity-item__dot activity-item__dot--${item.color}`} />
       <div className="activity-item__body">
         <p className="activity-item__title">
           <AlertIcon level={item.alertLevel} />

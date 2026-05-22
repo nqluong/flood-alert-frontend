@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, View, Modal } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, Text, StyleSheet, View, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { VehicleType } from '../../../types/route.types';
 
@@ -7,6 +7,7 @@ interface DirectionsButtonProps {
   visible: boolean;
   destinationName: string;
   destinationCoordinate: [number, number];
+  isLoadingAddress?: boolean;
   onDirections: (vehicleType: VehicleType) => void;
   onClose: () => void;
 }
@@ -18,6 +19,7 @@ export function DirectionsButton({
   visible,
   destinationName,
   destinationCoordinate,
+  isLoadingAddress = false,
   onDirections,
   onClose,
 }: DirectionsButtonProps) {
@@ -54,12 +56,16 @@ export function DirectionsButton({
             <View style={styles.headerLeft}>
               <Ionicons name="location" size={24} color="#009688" />
               <View style={styles.headerText}>
-                <Text style={styles.locationName} numberOfLines={1}>
-                  {destinationName}
-                </Text>
-                <Text style={styles.coordinates}>
-                  {destinationCoordinate[1].toFixed(6)}, {destinationCoordinate[0].toFixed(6)}
-                </Text>
+                {isLoadingAddress ? (
+                  <View style={styles.loadingRow}>
+                    <ActivityIndicator size="small" color="#7c3aed" />
+                    <Text style={styles.loadingText}>Đang lấy địa chỉ...</Text>
+                  </View>
+                ) : (
+                  <Text style={styles.locationName} numberOfLines={2}>
+                    {destinationName}
+                  </Text>
+                )}
               </View>
             </View>
             
@@ -187,10 +193,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#111827',
   },
-  coordinates: {
-    fontSize: 13,
+  loadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  loadingText: {
+    fontSize: 14,
     color: '#6b7280',
-    fontFamily: 'monospace',
+    fontStyle: 'italic',
   },
   closeButton: {
     padding: 4,

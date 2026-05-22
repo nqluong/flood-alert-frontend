@@ -31,9 +31,7 @@ export function useSafeRoute(): UseSafeRouteReturn {
       console.log('[SafeRoute] Finding route:', request);
       
       const response = await routeService.findSafeRoute(request);
-      
-      console.log('[SafeRoute] Response:', response);
-      
+
       // Backend trả về geoJson có thể là string hoặc object
       let geoJSON: GeoJSON.FeatureCollection;
       

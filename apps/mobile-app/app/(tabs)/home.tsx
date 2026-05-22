@@ -26,6 +26,7 @@ import {
   nextCameraMode,
 } from '../../components/home/navigation/CameraModeButton';
 
+import { geocodingService } from '../../services/geocoding.service';
 import type { VehicleType } from '../../types/route.types';
 
 const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -44,6 +45,7 @@ export default function HomeScreen() {
     coordinate: [number, number];
     name: string;
   } | null>(null);
+  const [isFetchingAddress, setIsFetchingAddress] = useState(false);
 
   // State for navigation mode
   const [isNavigating, setIsNavigating] = useState(false);
@@ -156,13 +158,11 @@ export default function HomeScreen() {
   });
 
   useEffect(() => {
-    // Chỉ auto-fly khi có GPS thật, không fly đến fallback location
     if (isRealLocation) {
       flyToUserLocation(userCoordinate);
     }
   }, [userCoordinate, isRealLocation, flyToUserLocation]);
 
-  // Focus vào vị trí từ notification - CHỈ 1 LẦN
   const hasFocusedFromNotification = React.useRef(false);
   useEffect(() => {
     if (params.focusLat && params.focusLon && !hasFocusedFromNotification.current) {
@@ -306,20 +306,29 @@ export default function HomeScreen() {
     });
   };
 
-  const handleMapPress = (event: any) => {
+  const handleMapPress = async (event: any) => {
     if (isNavigating) return;
 
     const { geometry } = event;
     if (!geometry || !geometry.coordinates) return;
 
     const [lon, lat] = geometry.coordinates;
+    const fallbackName = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
 
-    setTappedLocation({
-      coordinate: [lon, lat],
-      name: `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
-    });
-
+    setTappedLocation({ coordinate: [lon, lat], name: fallbackName });
+    setIsFetchingAddress(true);
     clearSearchedLocation();
+
+    try {
+      const result = await geocodingService.reverse(lon, lat);
+      if (result?.place_name) {
+        setTappedLocation({ coordinate: [lon, lat], name: result.place_name });
+      }
+    } catch {
+      // giữ fallback tọa độ nếu API lỗi hoặc timeout
+    } finally {
+      setIsFetchingAddress(false);
+    }
   };
 
   useNavigationCamera({
@@ -417,6 +426,7 @@ export default function HomeScreen() {
         visible={!!destination && !routeGeoJSON && !!userCoordinate}
         destinationName={destination?.name || ''}
         destinationCoordinate={destinationCoordinate}
+        isLoadingAddress={isFetchingAddress}
         onDirections={handleGetDirections}
         onClose={handleClearDirections}
       />

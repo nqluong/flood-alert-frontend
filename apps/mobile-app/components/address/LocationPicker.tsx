@@ -4,7 +4,9 @@ import MapLibreGL from '@maplibre/maplibre-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 
-MapLibreGL.setAccessToken(null);
+const DEFAULT_CENTER = { lat: 21.0278, lon: 105.8342 };
+const DEFAULT_ZOOM = 11;
+const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 
 interface LocationPickerProps {
   lat: number | null;
@@ -12,39 +14,16 @@ interface LocationPickerProps {
   onChange: (lat: number, lon: number) => void;
 }
 
-const DEFAULT_CENTER = { lat: 21.0278, lon: 105.8342 }; // Hà Nội
-const DEFAULT_ZOOM = 11;
-
-const OSM_STYLE = {
-  version: 8,
-  sources: {
-    osm: {
-      type: 'raster',
-      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors',
-    },
-  },
-  layers: [
-    {
-      id: 'osm',
-      type: 'raster',
-      source: 'osm',
-      minzoom: 0,
-      maxzoom: 19,
-    },
-  ],
-};
-
 export function LocationPicker({ lat, lon, onChange }: LocationPickerProps) {
   const [loading, setLoading] = useState(false);
   const hasPosition = lat !== null && lon !== null;
 
   const handleMapPress = (feature: any) => {
     const coordinates = feature.geometry.coordinates;
-    const newLat = Math.round(coordinates[1] * 1e6) / 1e6;
-    const newLon = Math.round(coordinates[0] * 1e6) / 1e6;
-    onChange(newLat, newLon);
+    onChange(
+      Math.round(coordinates[1] * 1e6) / 1e6,
+      Math.round(coordinates[0] * 1e6) / 1e6,
+    );
   };
 
   const handleGetCurrentLocation = async () => {
@@ -55,16 +34,14 @@ export function LocationPicker({ lat, lon, onChange }: LocationPickerProps) {
         Alert.alert('Lỗi', 'Vui lòng cấp quyền truy cập vị trí');
         return;
       }
-
       const location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
-
-      const newLat = Math.round(location.coords.latitude * 1e6) / 1e6;
-      const newLon = Math.round(location.coords.longitude * 1e6) / 1e6;
-      onChange(newLat, newLon);
-    } catch (error) {
-      console.error('Error getting location:', error);
+      onChange(
+        Math.round(location.coords.latitude * 1e6) / 1e6,
+        Math.round(location.coords.longitude * 1e6) / 1e6,
+      );
+    } catch {
       Alert.alert('Lỗi', 'Không thể lấy vị trí hiện tại');
     } finally {
       setLoading(false);
@@ -78,16 +55,18 @@ export function LocationPicker({ lat, lon, onChange }: LocationPickerProps) {
   return (
     <View style={styles.container}>
       <View style={styles.hintContainer}>
-        <Text style={styles.hintText}>
-          Chạm vào bản đồ để chọn vị trí
-          {hasPosition && (
-            <Text style={styles.coordsText}>
-              {'\n'}Đã chọn: {lat}, {lon}
-            </Text>
+        <View style={styles.hintTextWrapper}>
+          {hasPosition ? (
+            <>
+              <Text style={styles.hintSelected}>Vị trí đã chọn</Text>
+              <Text style={styles.hintCoords}>{lat}, {lon}</Text>
+            </>
+          ) : (
+            <Text style={styles.hintIdle}>Chạm vào bản đồ để chọn vị trí</Text>
           )}
-        </Text>
+        </View>
         <TouchableOpacity
-          style={styles.currentLocationButton}
+          style={styles.locateButton}
           onPress={handleGetCurrentLocation}
           disabled={loading}
           activeOpacity={0.7}
@@ -103,30 +82,27 @@ export function LocationPicker({ lat, lon, onChange }: LocationPickerProps) {
       <View style={styles.mapContainer}>
         <MapLibreGL.MapView
           style={styles.map}
+          styleURL={OPENFREEMAP_STYLE}
           onPress={handleMapPress}
         >
           <MapLibreGL.Camera
-            zoomLevel={hasPosition ? 14 : DEFAULT_ZOOM}
+            zoomLevel={hasPosition ? 15 : DEFAULT_ZOOM}
             centerCoordinate={centerCoordinate}
             animationMode="flyTo"
             animationDuration={600}
           />
 
-          <MapLibreGL.RasterSource
-            id="osm-source"
-            tileUrlTemplates={['https://tile.openstreetmap.org/{z}/{x}/{y}.png']}
-            tileSize={256}
-          >
-            <MapLibreGL.RasterLayer id="osm-layer" sourceID="osm-source" />
-          </MapLibreGL.RasterSource>
-
           {hasPosition && (
             <MapLibreGL.PointAnnotation
               id="selected-location"
               coordinate={[lon!, lat!]}
+              anchor={{ x: 0.5, y: 1 }}
             >
-              <View style={styles.marker}>
-                <Ionicons name="location" size={32} color="#ef5350" />
+              <View style={styles.pinWrapper}>
+                <View style={styles.pinBubble}>
+                  <Ionicons name="location-sharp" size={22} color="#ffffff" />
+                </View>
+                <View style={styles.pinTail} />
               </View>
             </MapLibreGL.PointAnnotation>
           )}
@@ -140,28 +116,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
+  // Hint bar
   hintContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     backgroundColor: '#f9fafb',
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
+    minHeight: 52,
   },
-  hintText: {
+  hintTextWrapper: {
     flex: 1,
+  },
+  hintIdle: {
     fontSize: 13,
     color: '#6b7280',
-    lineHeight: 18,
   },
-  coordsText: {
-    fontSize: 12,
+  hintSelected: {
+    fontSize: 13,
+    fontWeight: '600',
     color: '#009688',
-    fontWeight: '500',
   },
-  currentLocationButton: {
+  hintCoords: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginTop: 2,
+  },
+  locateButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -172,6 +157,8 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     marginLeft: 8,
   },
+
+  // Map
   mapContainer: {
     flex: 1,
     overflow: 'hidden',
@@ -179,8 +166,35 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  marker: {
+
+  // Pin marker — anchor={x:0.5, y:1} khiến đuôi pin trỏ đúng vào tọa độ
+  pinWrapper: {
+    alignItems: 'center',
+  },
+  pinBubble: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#009688',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: '#ffffff',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.35,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  pinTail: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderTopWidth: 12,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#009688',
+    marginTop: -2,
   },
 });

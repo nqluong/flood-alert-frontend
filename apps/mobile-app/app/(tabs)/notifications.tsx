@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   View,
   FlatList,
@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 
 import { AppHeader } from '../../components/AppHeader';
 import { NotificationCard } from '../../components/notifications/NotificationCard';
@@ -37,6 +37,18 @@ export default function NotificationsScreen() {
     markAsRead,
     markAllAsRead,
   } = useNotifications();
+
+  // Refresh khi quay lại màn này (bỏ qua lần mount đầu vì useNotifications đã tự load)
+  const isFirstFocus = useRef(true);
+  useFocusEffect(
+    useCallback(() => {
+      if (isFirstFocus.current) {
+        isFirstFocus.current = false;
+        return;
+      }
+      refresh();
+    }, [refresh]),
+  );
 
   const handleNotificationPress = async (notification: Notification) => {
     // Mark as read if unread

@@ -79,12 +79,21 @@ export function SearchBarWithAutocomplete({
   );
 
   const handleSelectResult = useCallback(
-    (result: GeocodingResult) => {
+    async (result: GeocodingResult) => {
       setQuery(result.place_name);
       setShowResults(false);
       setResults([]);
       Keyboard.dismiss();
-      onSelectLocation?.(result);
+
+      setLoading(true);
+      try {
+        const detail = await geocodingService.getDetail(result.id);
+        onSelectLocation?.(detail ?? result);
+      } catch {
+        onSelectLocation?.(result);
+      } finally {
+        setLoading(false);
+      }
     },
     [onSelectLocation],
   );

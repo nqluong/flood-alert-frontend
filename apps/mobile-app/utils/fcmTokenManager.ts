@@ -162,6 +162,10 @@ export class FcmTokenManager {
     try {
       console.log('[FCM] Initializing FCM after login...');
 
+      // Clear stale cache so syncTokenWithBackend always re-syncs on login,
+      // even if the app was killed before logout could clear it.
+      await this.clearCachedToken();
+
       const token = await this.requestPermissionAndGetToken();
       
       if (!token) {

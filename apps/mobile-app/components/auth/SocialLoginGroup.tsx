@@ -62,7 +62,9 @@ export function SocialLoginGroup({
       {/* Buttons */}
       <View style={styles.buttonsRow}>
         <SocialLoginButton provider="google" onPress={onGooglePress} />
+        {/* Facebook — tạm ẩn
         <SocialLoginButton provider="facebook" onPress={onFacebookPress} />
+        */}
       </View>
     </View>
   );

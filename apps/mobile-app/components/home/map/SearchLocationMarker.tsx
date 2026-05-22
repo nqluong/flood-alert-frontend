@@ -37,7 +37,7 @@ export function SearchLocationMarker({ coordinate, name }: SearchLocationMarkerP
         id="searchMarkerHalo"
         style={{
           circleRadius: 22,
-          circleColor: '#ef4444',
+          circleColor: '#7c3aed',
           circleOpacity: 0.25,
         }}
       />
@@ -52,7 +52,7 @@ export function SearchLocationMarker({ coordinate, name }: SearchLocationMarkerP
         id="searchMarkerDot"
         style={{
           circleRadius: 9,
-          circleColor: '#ef4444',
+          circleColor: '#7c3aed',
           circleStrokeWidth: 2,
           circleStrokeColor: '#ffffff',
         }}

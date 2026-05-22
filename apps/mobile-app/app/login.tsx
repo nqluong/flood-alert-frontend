@@ -134,15 +134,16 @@ function LoginScreen() {
               }
             />
 
-            {/* Forgot password */}
+            {/* Forgot password — tạm ẩn
             <TouchableOpacity
               style={styles.forgotWrapper}
-              onPress={() => {/* TODO: navigate to forgot-password */}}
+              onPress={() => {}}
               activeOpacity={0.7}
               hitSlop={8}
             >
               <Text style={styles.forgotText}>Quên mật khẩu?</Text>
             </TouchableOpacity>
+            */}
           </View>
 
           {/* Login button */}
@@ -165,7 +166,6 @@ function LoginScreen() {
           ) : (
             <SocialLoginGroup
               onGooglePress={onGoogleLoginPress}
-              onFacebookPress={onFacebookLoginPress}
             />
           )}
           {/* Register link */}

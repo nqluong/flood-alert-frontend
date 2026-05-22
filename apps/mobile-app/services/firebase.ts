@@ -20,18 +20,11 @@ export async function uploadReportImage(
   }>
 ): Promise<string> {
   try {
-    console.log('[Firebase] Starting upload for:', uri);
 
     // 1. Lấy signed URL từ Backend
     const extension = uri.split('.').pop()?.toLowerCase() || 'jpg';
-    console.log('[Firebase] Getting upload URL for extension:', extension);
-    
+
     const uploadData = await getUploadUrl(extension);
-    console.log('[Firebase] Got upload data:', {
-      hasUploadUrl: !!uploadData.uploadUrl,
-      hasFileUrl: !!uploadData.fileUrl,
-      uploadUrlPreview: uploadData.uploadUrl?.substring(0, 100),
-    });
 
     if (!uploadData.uploadUrl || !uploadData.fileUrl) {
       throw new Error('Backend did not return valid upload URLs');
@@ -49,7 +42,6 @@ export async function uploadReportImage(
     console.log('[Firebase] File blob size:', blob.size, 'bytes, type:', blob.type);
 
     // 3. Upload lên Firebase Storage qua signed URL
-    console.log('[Firebase] Uploading to Firebase...');
     const uploadResponse = await fetch(uploadData.uploadUrl, {
       method: 'PUT',
       headers: {
@@ -66,13 +58,10 @@ export async function uploadReportImage(
       throw new Error(`Upload failed: ${uploadResponse.status} - ${errorText}`);
     }
 
-    console.log('[Firebase] Upload successful:', uploadData.fileUrl);
-
     // 4. Trả về public URL
     return uploadData.fileUrl;
   } catch (error) {
-    console.error('[Firebase] Upload failed:', error);
-    
+
     if (error instanceof Error) {
       // Network request failed thường do CORS hoặc URL không hợp lệ
       if (error.message.includes('Network request failed')) {
