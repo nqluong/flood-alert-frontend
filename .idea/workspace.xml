@@ -4,25 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix pack admin">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix giao dien mobile, admin">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/notifications.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/notifications.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/auth/SocialLoginGroup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/auth/SocialLoginGroup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/map/SearchLocationMarker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/map/SearchLocationMarker.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/overlay/SearchBarWithAutocomplete.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/overlay/SearchBarWithAutocomplete.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/route/DirectionsButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/route/DirectionsButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useNearbyFloods.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useNearbyFloods.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useSafeRoute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useSafeRoute.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useUnreadNotifications.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useUnreadNotifications.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/metro.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/firebase.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/flood.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/flood.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/geocoding.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/geocoding.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/utils/fcmTokenManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/utils/fcmTokenManager.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +188,7 @@
       <workItem from="1779164361114" duration="2878000" />
       <workItem from="1779252991757" duration="3841000" />
       <workItem from="1779297932625" duration="1451000" />
-      <workItem from="1779476664086" duration="721000" />
+      <workItem from="1779476664086" duration="2094000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -303,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779258911722</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fix giao dien mobile, admin">
+      <option name="closed" value="true" />
+      <created>1779477690388</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1779477690388</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -345,7 +336,8 @@
     <MESSAGE value="fix navigation &amp; admin" />
     <MESSAGE value="fix build admin" />
     <MESSAGE value="fix pack admin" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix pack admin" />
+    <MESSAGE value="fix giao dien mobile, admin" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix giao dien mobile, admin" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

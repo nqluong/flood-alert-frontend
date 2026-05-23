@@ -58,12 +58,12 @@ export default function FloodMarkers({ floodList }: FloodMarkersProps) {
               <div className="sensor-map__tooltip">
                 <strong>{flood.eventId}</strong>
                 {flood.location && <span>{flood.location}</span>}
-                <span>Mực nước: {flood.waterLevel.toFixed(2)} cm</span>
+                <span>Mực nước: {flood.waterLevel != null ? `${flood.waterLevel.toFixed(2)} cm` : '-'}</span>
                 <span
                   className="sensor-map__tooltip-status"
                   style={{ color: SEVERITY_COLOR[flood.severityLevel] }}
                 >
-                  {SEVERITY_LABEL[flood.severityLevel]} — {flood.status}
+                  {SEVERITY_LABEL[flood.severityLevel]} - {flood.status}
                 </span>
                 {flood.updatedAt && (
                   <span style={{ color: '#9ca3af', fontSize: 10 }}>

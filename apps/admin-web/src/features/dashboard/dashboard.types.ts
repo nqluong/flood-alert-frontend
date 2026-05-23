@@ -30,9 +30,10 @@ export function eventToActivity(event: FloodLifecycleEvent): ActivityItemData {
   const message = event.alertMessage;
   const parts = message.split(' - ');
   const title = parts[0] || message;
-  const description = parts.length > 1 
-    ? `${parts.slice(1).join(' - ')} - Mực nước: ${event.waterLevel.toFixed(1)} cm`
-    : `${event.location} - Mực nước: ${event.waterLevel.toFixed(1)} cm`;
+  const wl = event.waterLevel != null ? `${event.waterLevel.toFixed(1)} cm` : '—';
+  const description = parts.length > 1
+    ? `${parts.slice(1).join(' - ')} - Mực nước: ${wl}`
+    : `${event.location} - Mực nước: ${wl}`;
 
   return {
     id: `${event.eventId}-${event.type.toLowerCase()}-${Date.now()}`,

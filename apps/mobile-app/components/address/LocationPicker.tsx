@@ -6,7 +6,20 @@ import * as Location from 'expo-location';
 
 const DEFAULT_CENTER = { lat: 21.0278, lon: 105.8342 };
 const DEFAULT_ZOOM = 11;
-const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
+
+// Inline style JSON — không cần fetch URL ngoài, map luôn load ngay
+const MAP_STYLE = JSON.stringify({
+  version: 8,
+  sources: {
+    osm: {
+      type: 'raster',
+      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: '© OpenStreetMap contributors',
+    },
+  },
+  layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
+});
 
 interface LocationPickerProps {
   lat: number | null;
@@ -82,7 +95,7 @@ export function LocationPicker({ lat, lon, onChange }: LocationPickerProps) {
       <View style={styles.mapContainer}>
         <MapLibreGL.MapView
           style={styles.map}
-          styleURL={OPENFREEMAP_STYLE}
+          styleJSON={MAP_STYLE}
           onPress={handleMapPress}
         >
           <MapLibreGL.Camera

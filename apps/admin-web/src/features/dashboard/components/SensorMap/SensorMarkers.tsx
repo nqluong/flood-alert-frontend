@@ -9,11 +9,11 @@ import SensorActionPopup from './SensorPopup';
 
 interface SensorMarkersProps {
   /** Cảm biến có telemetry real-time (đã loại trừ điểm trùng lũ) */
-  sensorList:    ProcessedSensorData[];
+  sensorList: ProcessedSensorData[];
   /** Cảm biến tĩnh từ /sensors/map chưa có telemetry */
   staticMarkers: SensorMapItem[];
-  fetchingId:    string | null;
-  onAction:      (sensorId: string, action: ActionType) => void;
+  fetchingId: string | null;
+  onAction: (sensorId: string, action: ActionType) => void;
 }
 
 export default function SensorMarkers({
@@ -45,7 +45,7 @@ export default function SensorMarkers({
                 {sensor.sensorId}
               </strong>
               <span>{sensor.locationName}</span>
-              <span>Mực nước: {sensor.waterLevel.toFixed(1)} cm</span>
+              <span>Mực nước: {sensor.waterLevel != null ? `${sensor.waterLevel.toFixed(1)} cm` : '—'}</span>
               <span>Trạng thái: {sensor.status || 'NORMAL'}</span>
               <span>Pin: {sensor.battery}%</span>
               {sensor.timestamp && (
@@ -59,7 +59,7 @@ export default function SensorMarkers({
             <SensorActionPopup
               sensorId={sensor.sensorId}
               status={sensor.status || 'NORMAL'}
-              waterLevel={sensor.waterLevel}
+              waterLevel={sensor.waterLevel ?? undefined}
               batteryLevel={sensor.battery}
               timestamp={sensor.timestamp}
               locationName={sensor.locationName}

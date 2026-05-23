@@ -8,7 +8,7 @@ export interface ActiveFloodEvent {
   lat:           number;
   lon:           number;
   location:      string;
-  waterLevel:    number;
+  waterLevel:    number | null;
   severityLevel: SeverityLevel;
   status:        FloodStatus;
   updatedAt:     string | null;
@@ -21,7 +21,7 @@ export interface ProcessedSensorData {
   sensorId:         string;
   lat:              number;
   lon:              number;
-  waterLevel:       number;
+  waterLevel:       number | null;
   battery:          number;           // % pin còn lại (0-100)
   warningThreshold: number;           // Ngưỡng cảnh báo (cm)
   dangerThreshold:  number;           // Ngưỡng nguy hiểm (cm)
@@ -41,7 +41,7 @@ export interface FloodLifecycleEvent {
   lat:           number;
   lon:           number;
   location:      string;
-  waterLevel:    number;
+  waterLevel:    number | null;
   severityLevel: SeverityLevel;
   timestamp:     string;
   alertMessage:  string;

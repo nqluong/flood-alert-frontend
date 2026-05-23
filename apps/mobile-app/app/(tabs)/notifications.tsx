@@ -106,22 +106,16 @@ export default function NotificationsScreen() {
     </TouchableOpacity>
   );
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <AppHeader title="Thông báo cảnh báo" rightSlot={MarkAllButton} />
+  return (
+    <View style={styles.container}>
+      <AppHeader title="Thông báo cảnh báo" rightSlot={MarkAllButton} />
+
+      {isLoading ? (
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color="#009688" />
           <Text style={styles.loadingText}>Đang tải thông báo...</Text>
         </View>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <AppHeader title="Thông báo cảnh báo" rightSlot={MarkAllButton} />
+      ) : error ? (
         <View style={styles.centerContainer}>
           <Ionicons name="alert-circle-outline" size={64} color="#e53935" />
           <Text style={styles.errorTitle}>Có lỗi xảy ra</Text>
@@ -130,65 +124,58 @@ export default function NotificationsScreen() {
             <Text style={styles.retryButtonText}>Thử lại</Text>
           </TouchableOpacity>
         </View>
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.container}>
-      <AppHeader title="Thông báo cảnh báo" rightSlot={MarkAllButton} />
-
-      <NotificationFilterTabs
-        active={activeFilter}
-        onChange={setActiveFilter}
-        unreadCount={unreadCount}
-      />
-
-      <FlatList
-        data={filteredNotifications}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <NotificationCard
-            notification={item}
-            onPress={handleNotificationPress}
+      ) : (
+        <>
+          <NotificationFilterTabs
+            active={activeFilter}
+            onChange={setActiveFilter}
+            unreadCount={unreadCount}
           />
-        )}
-        contentContainerStyle={
-          filteredNotifications.length === 0
-            ? styles.emptyContainer
-            : styles.listContent
-        }
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Ionicons name="notifications-off-outline" size={64} color="#d1d5db" />
-            <Text style={styles.emptyTitle}>Không có thông báo</Text>
-            <Text style={styles.emptyDesc}>
-              {activeFilter === 'urgent'
-                ? 'Không có cảnh báo khẩn cấp nào'
-                : activeFilter === 'unread'
-                ? 'Bạn đã đọc tất cả thông báo'
-                : 'Các cảnh báo lũ lụt sẽ xuất hiện ở đây'}
-            </Text>
-          </View>
-        }
-        ListFooterComponent={renderFooter}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={refresh}
-            colors={['#009688']}
-            tintColor="#009688"
+          <FlatList
+            data={filteredNotifications}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <NotificationCard
+                notification={item}
+                onPress={handleNotificationPress}
+              />
+            )}
+            contentContainerStyle={
+              filteredNotifications.length === 0
+                ? styles.emptyContainer
+                : styles.listContent
+            }
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            ListEmptyComponent={
+              <View style={styles.emptyState}>
+                <Ionicons name="notifications-off-outline" size={64} color="#d1d5db" />
+                <Text style={styles.emptyTitle}>Không có thông báo</Text>
+                <Text style={styles.emptyDesc}>
+                  {activeFilter === 'urgent'
+                    ? 'Không có cảnh báo khẩn cấp nào'
+                    : activeFilter === 'unread'
+                    ? 'Bạn đã đọc tất cả thông báo'
+                    : 'Các cảnh báo lũ lụt sẽ xuất hiện ở đây'}
+                </Text>
+              </View>
+            }
+            ListFooterComponent={renderFooter}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={refresh}
+                colors={['#009688']}
+                tintColor="#009688"
+              />
+            }
+            onEndReached={() => {
+              if (hasMore && !isLoadingMore) loadMore();
+            }}
+            onEndReachedThreshold={0.5}
+            showsVerticalScrollIndicator={false}
           />
-        }
-        onEndReached={() => {
-          if (hasMore && !isLoadingMore) {
-            loadMore();
-          }
-        }}
-        onEndReachedThreshold={0.5}
-        showsVerticalScrollIndicator={false}
-      />
+        </>
+      )}
     </View>
   );
 }

@@ -97,10 +97,12 @@ export function useFloodWebSocket(): FloodWebSocketState {
             
             // Tính status dựa trên waterLevel và thresholds
             let status = 'NORMAL';
-            if (data.waterLevel >= data.dangerThreshold) {
-              status = 'DANGER';
-            } else if (data.waterLevel >= data.warningThreshold) {
-              status = 'WARNING';
+            if (data.waterLevel != null) {
+              if (data.waterLevel >= data.dangerThreshold) {
+                status = 'DANGER';
+              } else if (data.waterLevel >= data.warningThreshold) {
+                status = 'WARNING';
+              }
             }
             
             setSensors((prev) => ({ 
