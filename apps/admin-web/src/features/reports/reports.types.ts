@@ -23,6 +23,7 @@ export interface UserReport {
     description: string;
   };
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  score?: number | null;
   createdAt: string;
   message?: string;
 }
@@ -37,6 +38,7 @@ export interface UserReportApiResponse {
   lat: number;
   lon: number;
   status: string;
+  score?: number | null;
   createdAt: string;
   message?: string;
 }

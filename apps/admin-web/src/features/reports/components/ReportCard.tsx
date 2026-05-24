@@ -1,4 +1,4 @@
-import { Check, X, MapPin} from 'lucide-react';
+import { Check, X, MapPin, Activity } from 'lucide-react';
 import type { UserReport } from '../reports.types';
 
 interface ReportCardProps {
@@ -146,23 +146,53 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
             </div>
           </div> */}
 
-          {/* Actions */}
-          <div className="report-card__actions" style={{ marginTop: '24px' }}>
-            <button 
-              className="report-card__action-btn report-card__action-btn--approve"
-              onClick={() => onApprove(report.id)}
-            >
-              <Check size={16} />
-              Phê duyệt & Xuất bản
-            </button>
-            <button 
-              className="report-card__action-btn report-card__action-btn--reject"
-              onClick={() => onReject(report.id)}
-            >
-              <X size={16} />
-              Từ chối
-            </button>
-          </div>
+          {/* Score Box */}
+          {report.score != null && (
+            <div className="report-card__info-box" style={{ marginTop: '12px' }}>
+              <div className="report-card__info-row">
+                <span className="report-card__info-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Activity size={14} />
+                  Điểm tin cậy hệ thống:
+                </span>
+                <span className="report-card__info-value">
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      padding: '4px 12px',
+                      borderRadius: '6px',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      color: report.score >= 0.8 ? '#166534' : report.score >= 0.5 ? '#92400e' : '#991b1b',
+                      backgroundColor: report.score >= 0.8 ? '#dcfce7' : report.score >= 0.5 ? '#fef3c7' : '#fee2e2',
+                      border: `1px solid ${report.score >= 0.8 ? '#86efac' : report.score >= 0.5 ? '#fcd34d' : '#fca5a5'}`,
+                    }}
+                  >
+                    {(report.score * 100).toFixed(1)}%
+                  </span>
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Actions — chỉ hiển thị khi báo cáo đang chờ duyệt */}
+          {report.status === 'PENDING' && (
+            <div className="report-card__actions" style={{ marginTop: '24px' }}>
+              <button
+                className="report-card__action-btn report-card__action-btn--approve"
+                onClick={() => onApprove(report.id)}
+              >
+                <Check size={16} />
+                Phê duyệt & Xuất bản
+              </button>
+              <button
+                className="report-card__action-btn report-card__action-btn--reject"
+                onClick={() => onReject(report.id)}
+              >
+                <X size={16} />
+                Từ chối
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -61,6 +61,7 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
             description: 'Mưa to tại thời điểm báo cáo',
           },
           status: apiReport.status as 'PENDING' | 'APPROVED' | 'REJECTED',
+          score: apiReport.score ?? null,
           createdAt: apiReport.createdAt,
           message: apiReport.message,
         };

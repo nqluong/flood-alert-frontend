@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix giao dien mobile, admin">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix trang man">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/address/LocationPicker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/address/LocationPicker.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,6 +192,8 @@
       <workItem from="1779252991757" duration="3841000" />
       <workItem from="1779297932625" duration="1451000" />
       <workItem from="1779476664086" duration="2094000" />
+      <workItem from="1779498655968" duration="1681000" />
+      <workItem from="1779503493368" duration="886000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -294,7 +299,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779477690388</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="fix trang man">
+      <option name="closed" value="true" />
+      <created>1779498673496</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1779498673496</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,7 +350,8 @@
     <MESSAGE value="fix build admin" />
     <MESSAGE value="fix pack admin" />
     <MESSAGE value="fix giao dien mobile, admin" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix giao dien mobile, admin" />
+    <MESSAGE value="fix trang man" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix trang man" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

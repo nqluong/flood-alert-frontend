@@ -9,22 +9,28 @@ interface NotificationCardProps {
   onPress?: (notification: Notification) => void;
 }
 
-const TYPE_CONFIG = {
+const TYPE_CONFIG: Record<string, { label: string; icon: React.ComponentProps<typeof Ionicons>['name'] }> = {
   FLOOD_ALERT: {
     label: 'Cảnh báo ngập',
-    icon: 'warning' as const,
+    icon: 'warning',
+  },
+  FLOOD_RESOLVED: {
+    label: 'Hết ngập',
+    icon: 'checkmark-circle',
   },
   FLOOD_UPDATE: {
     label: 'Cập nhật',
-    icon: 'information-circle' as const,
+    icon: 'information-circle',
   },
   SYSTEM_UPDATE: {
     label: 'Hệ thống',
-    icon: 'notifications' as const,
+    icon: 'notifications',
   },
 };
 
-const PRIORITY_CONFIG = {
+const DEFAULT_TYPE_CONFIG = { label: 'Thông báo', icon: 'notifications' as const };
+
+const PRIORITY_CONFIG: Record<string, { labelColor: string; iconBg: string; borderColor: string }> = {
   HIGH: {
     labelColor: '#e53935',
     iconBg: '#e53935',
@@ -42,13 +48,15 @@ const PRIORITY_CONFIG = {
   },
 };
 
+const DEFAULT_PRIORITY_CONFIG = { labelColor: '#fb8c00', iconBg: '#fb8c00', borderColor: 'transparent' };
+
 export function NotificationCard({ notification, onPress }: NotificationCardProps) {
   const { title, body, notificationType, priority, data, isRead, createdAt } = notification;
-  
-  const typeConfig = TYPE_CONFIG[notificationType];
-  const priorityConfig = PRIORITY_CONFIG[priority];
+
+  const typeConfig = TYPE_CONFIG[notificationType] ?? DEFAULT_TYPE_CONFIG;
+  const priorityConfig = PRIORITY_CONFIG[priority] ?? DEFAULT_PRIORITY_CONFIG;
   const isUnread = !isRead;
-  
+
   const timeAgo = formatTimeAgo(createdAt);
   const location = formatNotificationLocation(data);
 
