@@ -72,6 +72,16 @@ export function createFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
   });
 }
 
+export function createUserReportFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
+  const color = SEVERITY_COLOR[severity];
+  return L.divIcon({
+    className: '',
+    html: `<span class="flood-marker flood-marker--user-report" style="background:${color};border-color:${color}"></span>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+  });
+}
+
 export function createSensorIcon(status: string): L.DivIcon {
   const color = STATUS_SENSOR_COLOR[status] ?? '#6b7280';
   return L.divIcon({

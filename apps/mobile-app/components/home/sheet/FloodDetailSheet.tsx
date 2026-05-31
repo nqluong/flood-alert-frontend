@@ -15,6 +15,14 @@ function formatTimeAgo(updatedAt: string): string {
   return `${Math.floor(diff / 60)} giờ trước`;
 }
 
+function formatWaterLevel(waterLevel: number | null | undefined, severity: string): string {
+  if (waterLevel != null && !isNaN(waterLevel as number)) {
+    return `Mực nước: ${waterLevel} cm`;
+  }
+  const threshold = severity === 'DANGER' ? 50 : 20;
+  return `Mực nước: ≥ ${threshold} cm`;
+}
+
 export function FloodDetailSheet({ flood, onClose }: FloodDetailSheetProps) {
   if (!flood) return null;
 
@@ -26,7 +34,7 @@ export function FloodDetailSheet({ flood, onClose }: FloodDetailSheetProps) {
         <View style={styles.cardWrapper}>
           <FloodPointCard
             name={flood.location || `${flood.lat.toFixed(5)}, ${flood.lon.toFixed(5)}`}
-            description={`Mực nước: ${flood.waterLevel} cm`}
+            description={formatWaterLevel(flood.waterLevel, flood.severityLevel)}
             timeAgo={formatTimeAgo(flood.updatedAt)}
             severity={flood.severityLevel === 'DANGER' ? 'danger' : 'warning'}
           />

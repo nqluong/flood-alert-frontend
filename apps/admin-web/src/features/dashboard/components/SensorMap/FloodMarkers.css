@@ -11,6 +11,16 @@
 }
 .flood-marker:hover { transform: scale(1.3); }
 
+/* User-report flood: diamond shape to distinguish from sensor circles */
+.flood-marker--user-report {
+  border-radius: 4px;
+  transform: rotate(45deg);
+  width: 16px;
+  height: 16px;
+  margin: 3px;
+}
+.flood-marker--user-report:hover { transform: rotate(45deg) scale(1.3); }
+
 /* ---- Flood cluster bubble ---- */
 .flood-cluster {
   display: flex;

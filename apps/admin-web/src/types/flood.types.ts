@@ -11,6 +11,7 @@ export interface ActiveFloodEvent {
   waterLevel:    number | null;
   severityLevel: SeverityLevel;
   status:        FloodStatus;
+  source?:       string;
   updatedAt:     string | null;
 }
 
@@ -46,6 +47,7 @@ export interface FloodLifecycleEvent {
   timestamp:     string;
   alertMessage:  string;
   alertLevel:    AlertLevel;
+  source?:       string;
 }
 
 export interface SensorMapItem {

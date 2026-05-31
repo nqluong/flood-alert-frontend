@@ -24,6 +24,9 @@ export interface UserReport {
   };
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   score?: number | null;
+  aiScore?: number | null;
+  spatialScore?: number | null;
+  reputationScore?: number | null;
   createdAt: string;
   message?: string;
 }
@@ -39,6 +42,9 @@ export interface UserReportApiResponse {
   lon: number;
   status: string;
   score?: number | null;
+  aiScore?: number | null;
+  spatialScore?: number | null;
+  reputationScore?: number | null;
   createdAt: string;
   message?: string;
 }

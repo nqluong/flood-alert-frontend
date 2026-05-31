@@ -156,6 +156,7 @@ export function useFloodWebSocket(): FloodWebSocketState {
                   waterLevel:    event.waterLevel,
                   severityLevel: event.severityLevel,
                   status:        'CONFIRMED',
+                  source:        event.source,
                   updatedAt:     event.timestamp,
                 },
               }));

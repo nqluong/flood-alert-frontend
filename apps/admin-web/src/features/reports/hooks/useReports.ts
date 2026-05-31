@@ -62,6 +62,9 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
           },
           status: apiReport.status as 'PENDING' | 'APPROVED' | 'REJECTED',
           score: apiReport.score ?? null,
+          aiScore: apiReport.aiScore ?? null,
+          spatialScore: apiReport.spatialScore ?? null,
+          reputationScore: apiReport.reputationScore ?? null,
           createdAt: apiReport.createdAt,
           message: apiReport.message,
         };

@@ -4,11 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix trang man">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="update report card">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/address/LocationPicker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/address/LocationPicker.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/hooks/useFloodWebSocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/hooks/useFloodWebSocket.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/ReportsPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/ReportsPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/reports.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/reports.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/types/flood.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/types/flood.types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,6 +201,8 @@
       <workItem from="1779476664086" duration="2094000" />
       <workItem from="1779498655968" duration="1681000" />
       <workItem from="1779503493368" duration="886000" />
+      <workItem from="1779639049379" duration="813000" />
+      <workItem from="1779759707533" duration="5299000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -307,7 +316,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779498673496</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="update report card">
+      <option name="closed" value="true" />
+      <created>1779639098511</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1779639098511</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -351,7 +368,8 @@
     <MESSAGE value="fix pack admin" />
     <MESSAGE value="fix giao dien mobile, admin" />
     <MESSAGE value="fix trang man" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix trang man" />
+    <MESSAGE value="update report card" />
+    <option name="LAST_COMMIT_MESSAGE" value="update report card" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

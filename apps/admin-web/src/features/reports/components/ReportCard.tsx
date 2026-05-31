@@ -1,5 +1,45 @@
 import { Check, X, MapPin, Activity } from 'lucide-react';
 import type { UserReport } from '../reports.types';
+import './ReportCard.css';
+
+function getScoreVariant(value: number): 'high' | 'medium' | 'low' {
+  return value >= 0.8 ? 'high' : value >= 0.5 ? 'medium' : 'low';
+}
+
+function getSeverityLabel(level: string): string {
+  const map: Record<string, string> = {
+    LOW: 'Thấp',
+    MEDIUM: 'Trung bình',
+    HIGH: 'Cao',
+    CRITICAL: 'Nghiêm trọng',
+  };
+  return map[level.toUpperCase()] ?? 'Chưa xác định';
+}
+
+function getSeverityVariant(level: string): string {
+  const valid = ['low', 'medium', 'high', 'critical'];
+  const l = level.toLowerCase();
+  return valid.includes(l) ? l : 'unknown';
+}
+
+function ScoreBar({ label, value }: { label: string; value: number }) {
+  const pct = Math.round(value * 100);
+  const variant = getScoreVariant(value);
+  return (
+    <div className="score-bar">
+      <span className="score-bar__label">{label}</span>
+      <div className="score-bar__track">
+        <div
+          className={`score-bar__fill score-bar__fill--${variant}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <span className={`score-bar__value score-bar__value--${variant}`}>
+        {pct}%
+      </span>
+    </div>
+  );
+}
 
 interface ReportCardProps {
   report: UserReport;
@@ -9,34 +49,19 @@ interface ReportCardProps {
 
 export default function ReportCard({ report, onApprove, onReject }: ReportCardProps) {
   const firstImage = report.imageUrls
-    ? report.imageUrls.split(',')[0].trim() 
+    ? report.imageUrls.split(',')[0].trim()
     : 'https://via.placeholder.com/527x256?text=No+Image';
-  
-  // Map severity level sang tiếng Việt và màu sắc
-  const getSeverityInfo = (level: string) => {
-    switch (level.toUpperCase()) {
-      case 'LOW':
-        return { label: 'Thấp', color: '#10b981', bgColor: '#d1fae5', borderColor: '#6ee7b7' };
-      case 'MEDIUM':
-        return { label: 'Trung bình', color: '#f59e0b', bgColor: '#fef3c7', borderColor: '#fcd34d' };
-      case 'HIGH':
-        return { label: 'Cao', color: '#ef4444', bgColor: '#fee2e2', borderColor: '#fca5a5' };
-      case 'CRITICAL':
-        return { label: 'Nghiêm trọng', color: '#dc2626', bgColor: '#fecaca', borderColor: '#f87171' };
-      default:
-        return { label: 'Chưa xác định', color: '#6b7280', bgColor: '#f3f4f6', borderColor: '#d1d5db' };
-    }
-  };
 
-  const severityInfo = getSeverityInfo(report.severityLevel);
-  
+  const severityVariant = getSeverityVariant(report.severityLevel);
+  const severityLabel = getSeverityLabel(report.severityLevel);
+
   return (
     <div className="report-card">
       <div className="report-card__content">
         {/* Evidence Section */}
         <div className="report-card__evidence">
           <h3 className="report-card__section-title">Bằng chứng</h3>
-          
+
           <div className="report-card__image">
             <img src={firstImage} alt="Bằng chứng lũ lụt" />
           </div>
@@ -47,7 +72,7 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
             </div>
             <p className="report-card__location-address">
               {report.location.address === 'Đang tải địa chỉ...' ? (
-                <span style={{ color: '#9ca3af', fontStyle: 'italic' }}>
+                <span className="report-card__location-address--loading">
                   {report.location.address}
                 </span>
               ) : (
@@ -70,7 +95,7 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
               <span className="report-card__info-label">Người dùng:</span>
               <span className="report-card__info-value">
                 {report.userName ?? (
-                  <span style={{ color: '#9ca3af', fontStyle: 'italic', fontSize: 12 }}>
+                  <span className="report-card__user-id">
                     {report.userId.slice(0, 8)}…
                   </span>
                 )}
@@ -82,20 +107,8 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
             </div>
             <div className="report-card__info-row">
               <span className="report-card__info-label">Mức độ nghiêm trọng:</span>
-              <span 
-                className="report-card__info-value"
-                style={{
-                  display: 'inline-block',
-                  padding: '4px 12px',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: severityInfo.color,
-                  backgroundColor: severityInfo.bgColor,
-                  border: `1px solid ${severityInfo.borderColor}`,
-                }}
-              >
-                {severityInfo.label}
+              <span className={`report-card__severity-badge report-card__severity-badge--${severityVariant}`}>
+                {severityLabel}
               </span>
             </div>
             <div className="report-card__info-row report-card__info-description">
@@ -103,80 +116,47 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
               {report.description ? (
                 <span className="report-card__info-value">{report.description}</span>
               ) : (
-                <span className="report-card__info-value" style={{ color: '#9ca3af', fontStyle: 'italic' }}>
+                <span className="report-card__info-value report-card__info-value--empty">
                   Không có mô tả
                 </span>
               )}
             </div>
           </div>
 
-          {/* AI Verification Box - Tạm thời ẩn */}
-          {/* <div className="report-card__ai-box">
-            <div className="report-card__ai-header">
-              <div className="report-card__ai-icon">
-                <Sparkles size={20} />
-              </div>
-              <h4 className="report-card__ai-title">Xác minh AI</h4>
-            </div>
-            <div className="report-card__ai-content">
-              <div className="report-card__ai-row">
-                <span className="report-card__ai-label">Độ tin cậy AI</span>
-                <span className="report-card__ai-percentage">{report.aiVerification.confidence}%</span>
-              </div>
-              <div className="report-card__ai-progress">
-                <div 
-                  className="report-card__ai-progress-bar" 
-                  style={{ width: `${report.aiVerification.confidence}%` }}
-                />
-              </div>
-              <p className="report-card__ai-description">{report.aiVerification.label}</p>
-            </div>
-          </div> */}
-
-          {/* Weather Box - Tạm thời ẩn */}
-          {/* <div className="report-card__weather-box">
-            <div className="report-card__weather-content">
-              <div className="report-card__weather-icon">
-                <CloudRain size={18} />
-              </div>
-              <div className="report-card__weather-text">
-                <h4>Dữ liệu thời tiết: {report.weatherData.matched ? 'Khớp' : 'Không khớp'}</h4>
-                <p>{report.weatherData.description}</p>
-              </div>
-            </div>
-          </div> */}
-
           {/* Score Box */}
           {report.score != null && (
-            <div className="report-card__info-box" style={{ marginTop: '12px' }}>
+            <div className="report-card__info-box report-card__score-box">
               <div className="report-card__info-row">
-                <span className="report-card__info-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span className="report-card__info-label report-card__score-label">
                   <Activity size={14} />
-                  Điểm tin cậy hệ thống:
+                  Điểm tin cậy tổng:
                 </span>
                 <span className="report-card__info-value">
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      padding: '4px 12px',
-                      borderRadius: '6px',
-                      fontSize: '13px',
-                      fontWeight: 700,
-                      color: report.score >= 0.8 ? '#166534' : report.score >= 0.5 ? '#92400e' : '#991b1b',
-                      backgroundColor: report.score >= 0.8 ? '#dcfce7' : report.score >= 0.5 ? '#fef3c7' : '#fee2e2',
-                      border: `1px solid ${report.score >= 0.8 ? '#86efac' : report.score >= 0.5 ? '#fcd34d' : '#fca5a5'}`,
-                    }}
-                  >
+                  <span className={`report-card__score-badge report-card__score-badge--${getScoreVariant(report.score)}`}>
                     {(report.score * 100).toFixed(1)}%
                   </span>
                 </span>
               </div>
+
+              {(report.aiScore != null || report.spatialScore != null || report.reputationScore != null) && (
+                <div className="report-card__score-breakdown">
+                  {report.aiScore != null && (
+                    <ScoreBar label="AI Vision" value={report.aiScore} />
+                  )}
+                  {report.spatialScore != null && (
+                    <ScoreBar label="Không gian" value={report.spatialScore} />
+                  )}
+                  {report.reputationScore != null && (
+                    <ScoreBar label="Uy tín" value={report.reputationScore} />
+                  )}
+                </div>
+              )}
             </div>
           )}
 
           {/* Actions — chỉ hiển thị khi báo cáo đang chờ duyệt */}
           {report.status === 'PENDING' && (
-            <div className="report-card__actions" style={{ marginTop: '24px' }}>
+            <div className="report-card__actions">
               <button
                 className="report-card__action-btn report-card__action-btn--approve"
                 onClick={() => onApprove(report.id)}

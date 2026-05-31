@@ -7,6 +7,7 @@ import {
   SEVERITY_LABEL,
   SEVERITY_HALO,
   createFloodMarkerIcon,
+  createUserReportFloodMarkerIcon,
   createClusterIcon,
 } from './constants';
 
@@ -47,33 +48,48 @@ export default function FloodMarkers({ floodList }: FloodMarkersProps) {
         spiderfyOnMaxZoom
         zoomToBoundsOnClick
       >
-        {floodList.map((flood) => (
-          <Marker
-            key={flood.eventId}
-            position={[flood.lat, flood.lon]}
-            icon={createFloodMarkerIcon(flood.severityLevel)}
-            alt={flood.severityLevel}
-          >
-            <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
-              <div className="sensor-map__tooltip">
-                <strong>{flood.eventId}</strong>
-                {flood.location && <span>{flood.location}</span>}
-                <span>Mực nước: {flood.waterLevel != null ? `${flood.waterLevel.toFixed(2)} cm` : '-'}</span>
-                <span
-                  className="sensor-map__tooltip-status"
-                  style={{ color: SEVERITY_COLOR[flood.severityLevel] }}
-                >
-                  {SEVERITY_LABEL[flood.severityLevel]} - {flood.status}
-                </span>
-                {flood.updatedAt && (
-                  <span style={{ color: '#9ca3af', fontSize: 10 }}>
-                    {new Date(flood.updatedAt).toLocaleTimeString('vi-VN')}
+        {floodList.map((flood) => {
+          const isUserReport = flood.source === 'USER_REPORT';
+          const icon = isUserReport
+            ? createUserReportFloodMarkerIcon(flood.severityLevel)
+            : createFloodMarkerIcon(flood.severityLevel);
+          const title = flood.location?.trim() || flood.eventId;
+          const waterLevelText = flood.waterLevel != null
+            ? `~${Math.round(flood.waterLevel)} cm`
+            : 'Chưa có dữ liệu';
+          return (
+            <Marker
+              key={flood.eventId}
+              position={[flood.lat, flood.lon]}
+              icon={icon}
+              alt={flood.severityLevel}
+            >
+              <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
+                <div className="sensor-map__tooltip">
+                  <strong>{title}</strong>
+                  <span
+                    className="sensor-map__tooltip-source"
+                    style={{ color: isUserReport ? '#7c3aed' : '#2563eb', fontSize: 11 }}
+                  >
+                    {isUserReport ? '👤 Báo cáo cộng đồng' : '📡 Cảm biến IoT'}
                   </span>
-                )}
-              </div>
-            </Tooltip>
-          </Marker>
-        ))}
+                  <span>Mực nước: {waterLevelText}</span>
+                  <span
+                    className="sensor-map__tooltip-status"
+                    style={{ color: SEVERITY_COLOR[flood.severityLevel] }}
+                  >
+                    {SEVERITY_LABEL[flood.severityLevel]}
+                  </span>
+                  {flood.updatedAt && (
+                    <span style={{ color: '#9ca3af', fontSize: 10 }}>
+                      {new Date(flood.updatedAt).toLocaleTimeString('vi-VN')}
+                    </span>
+                  )}
+                </div>
+              </Tooltip>
+            </Marker>
+          );
+        })}
       </MarkerClusterGroup>
     </>
   );

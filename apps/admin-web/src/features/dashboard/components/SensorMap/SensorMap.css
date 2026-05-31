@@ -101,6 +101,11 @@
   color: #4b5563;
 }
 
+.sensor-map__tooltip-source {
+  font-weight: 500;
+  /* color is set inline per source type */
+}
+
 .sensor-map__tooltip-status {
   font-weight: 500;
   margin-top: 2px;
