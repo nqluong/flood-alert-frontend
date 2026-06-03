@@ -84,7 +84,7 @@ export function useLocationTracker(): UseLocationTrackerReturn {
         distanceInterval: 100, // Trigger khi di chuyển > 100m
         timeInterval: 240000,  // Heartbeat: 4 phút (240,000ms)
         foregroundService: {
-          notificationTitle: 'FloodGuard đang hoạt động',
+          notificationTitle: 'FloodAlert đang hoạt động',
           notificationBody: 'Đang theo dõi vị trí để cảnh báo ngập lụt',
           notificationColor: '#3b82f6',
         },

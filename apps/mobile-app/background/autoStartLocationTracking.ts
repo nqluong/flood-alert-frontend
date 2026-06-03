@@ -29,7 +29,7 @@ export async function autoStartLocationTracking(): Promise<boolean> {
       distanceInterval: 100,
       timeInterval: 240000,
       foregroundService: {
-        notificationTitle: 'FloodGuard đang hoạt động',
+        notificationTitle: 'FloodAlert đang hoạt động',
         notificationBody: 'Đang theo dõi vị trí để cảnh báo ngập lụt',
         notificationColor: '#009688',
       },

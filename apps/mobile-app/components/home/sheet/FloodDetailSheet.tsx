@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Modal, Pressable, StyleSheet } from 'react-native';
 import { FloodPointCard } from './FloodPointCard';
+import { geocodingService } from '../../../services/geocoding.service';
 import type { FloodEvent } from '../../../types/flood.types';
 
 interface FloodDetailSheetProps {
@@ -24,6 +25,22 @@ function formatWaterLevel(waterLevel: number | null | undefined, severity: strin
 }
 
 export function FloodDetailSheet({ flood, onClose }: FloodDetailSheetProps) {
+  const [resolvedLocation, setResolvedLocation] = useState<string>('Đang xác định vị trí...');
+
+  useEffect(() => {
+    if (!flood) return;
+
+    if (flood.location) {
+      setResolvedLocation(flood.location);
+      return;
+    }
+
+    setResolvedLocation('Đang xác định vị trí...');
+    geocodingService.reverse(flood.lon, flood.lat).then((result) => {
+      setResolvedLocation(result?.place_name || `${flood.lat.toFixed(5)}, ${flood.lon.toFixed(5)}`);
+    });
+  }, [flood?.eventId]);
+
   if (!flood) return null;
 
   return (
@@ -33,7 +50,7 @@ export function FloodDetailSheet({ flood, onClose }: FloodDetailSheetProps) {
         <View style={styles.handleBar} />
         <View style={styles.cardWrapper}>
           <FloodPointCard
-            name={flood.location || `${flood.lat.toFixed(5)}, ${flood.lon.toFixed(5)}`}
+            name={resolvedLocation}
             description={formatWaterLevel(flood.waterLevel, flood.severityLevel)}
             timeAgo={formatTimeAgo(flood.updatedAt)}
             severity={flood.severityLevel === 'DANGER' ? 'danger' : 'warning'}

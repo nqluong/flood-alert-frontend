@@ -31,7 +31,7 @@ export function LocationTrackingToggle({ autoStart = false }: LocationTrackingTo
         if (!granted) {
           Alert.alert(
             'Cần cấp quyền',
-            'Vui lòng vào Cài đặt > FloodGuard > Vị trí > Chọn "Luôn luôn" để nhận cảnh báo ngập lụt kịp thời.',
+            'Vui lòng vào Cài đặt > FloodAlert > Vị trí > Chọn "Luôn luôn" để nhận cảnh báo ngập lụt kịp thời.',
             [{ text: 'OK' }]
           );
           return;

@@ -25,6 +25,7 @@ export interface FloodWebSocketState {
   apiError:         string | null;
   clearWsError:     () => void;
   reconnect:        () => void;
+  removeFlood:      (eventId: string) => void;
 }
 
 const WS_URL =
@@ -260,6 +261,14 @@ export function useFloodWebSocket(): FloodWebSocketState {
     scheduleRetryRef.current(errorMsg);
   }, []);
 
+  const removeFlood = useCallback((eventId: string) => {
+    setActiveFloods((prev) => {
+      const next = { ...prev };
+      delete next[eventId];
+      return next;
+    });
+  }, []);
+
   // ---- Retry thủ công (reset counter) ----
   const reconnect = useCallback(() => {
     clearTimers();
@@ -321,5 +330,6 @@ export function useFloodWebSocket(): FloodWebSocketState {
     apiError,
     clearWsError: () => setWsError(null),
     reconnect,
+    removeFlood,
   };
 }

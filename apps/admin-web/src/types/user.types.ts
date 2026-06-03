@@ -8,6 +8,7 @@ export interface UserSummaryResponse {
   roles: Array<'USER' | 'ADMIN'> | 'USER' | 'ADMIN';
   status: 'ACTIVE' | 'LOCKED' | 'PENDING';
   avatarUrl?: string;
+  reputationScore?: number;
   createdAt: string;
   lastLoginAt?: string;
   reportCount?: number;

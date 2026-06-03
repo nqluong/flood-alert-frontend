@@ -16,7 +16,7 @@ const TERMS = [
     icon: 'checkmark-circle' as const,
     color: '#10b981',
     content:
-      'Bằng cách tải xuống, cài đặt hoặc sử dụng ứng dụng FloodGuard, bạn xác nhận rằng bạn đã đọc, hiểu và đồng ý bị ràng buộc bởi các Điều khoản sử dụng này. Nếu bạn không đồng ý với bất kỳ phần nào, vui lòng không sử dụng ứng dụng.',
+      'Bằng cách tải xuống, cài đặt hoặc sử dụng ứng dụng FloodAlert, bạn xác nhận rằng bạn đã đọc, hiểu và đồng ý bị ràng buộc bởi các Điều khoản sử dụng này. Nếu bạn không đồng ý với bất kỳ phần nào, vui lòng không sử dụng ứng dụng.',
   },
   {
     id: '2',
@@ -24,7 +24,7 @@ const TERMS = [
     icon: 'phone-portrait' as const,
     color: '#3b82f6',
     content:
-      'FloodGuard được thiết kế để hỗ trợ cảnh báo ngập lụt và chia sẻ thông tin cộng đồng. Bạn đồng ý chỉ sử dụng ứng dụng cho các mục đích hợp pháp và không sử dụng để gửi thông tin sai lệch, gây hoang mang hoặc làm hỏng hệ thống cảnh báo.',
+      'FloodAlert được thiết kế để hỗ trợ cảnh báo ngập lụt và chia sẻ thông tin cộng đồng. Bạn đồng ý chỉ sử dụng ứng dụng cho các mục đích hợp pháp và không sử dụng để gửi thông tin sai lệch, gây hoang mang hoặc làm hỏng hệ thống cảnh báo.',
   },
   {
     id: '3',
@@ -48,7 +48,7 @@ const TERMS = [
     icon: 'information-circle' as const,
     color: '#8b5cf6',
     content:
-      'FloodGuard và các nhà phát triển không chịu trách nhiệm về bất kỳ thiệt hại trực tiếp, gián tiếp, ngẫu nhiên hoặc hệ quả nào phát sinh từ việc sử dụng hoặc không thể sử dụng ứng dụng, bao gồm cả các quyết định được đưa ra dựa trên thông tin từ ứng dụng.',
+      'FloodAlert và các nhà phát triển không chịu trách nhiệm về bất kỳ thiệt hại trực tiếp, gián tiếp, ngẫu nhiên hoặc hệ quả nào phát sinh từ việc sử dụng hoặc không thể sử dụng ứng dụng, bao gồm cả các quyết định được đưa ra dựa trên thông tin từ ứng dụng.',
   },
   {
     id: '6',
@@ -126,7 +126,7 @@ export default function TermsScreen() {
           <Text style={styles.heroTitle}>Điều khoản sử dụng</Text>
           <Text style={styles.heroSub}>Có hiệu lực từ ngày 01/01/2025</Text>
           <Text style={styles.heroDesc}>
-            Vui lòng đọc kỹ trước khi sử dụng ứng dụng FloodGuard.
+            Vui lòng đọc kỹ trước khi sử dụng ứng dụng FloodAlert.
           </Text>
         </View>
 
@@ -162,9 +162,9 @@ export default function TermsScreen() {
         <View style={styles.footer}>
           <Ionicons name="shield-half" size={16} color="#9ca3af" />
           <Text style={styles.footerText}>
-            Bằng cách sử dụng FloodGuard, bạn đồng ý với toàn bộ các điều khoản trên.
+            Bằng cách sử dụng FloodAlert, bạn đồng ý với toàn bộ các điều khoản trên.
             Để biết thêm thông tin, liên hệ{' '}
-            <Text style={styles.footerEmail}>legal@floodguard.vn</Text>
+            <Text style={styles.footerEmail}>legal@FloodAlert.vn</Text>
           </Text>
         </View>
       </ScrollView>

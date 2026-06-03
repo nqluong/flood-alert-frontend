@@ -1,0 +1,70 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  mapContainer: {
+    width: '100%',
+    height: 320,
+    position: 'relative',
+  },
+  map: {
+    flex: 1,
+  },
+  severityBadge: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  severityBadgeText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  mapLegend: {
+    position: 'absolute',
+    bottom: 12,
+    left: 12,
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    gap: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.12,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  legendRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  legendDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  legendDash: {
+    width: 16,
+    height: 2,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: '#009688',
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#374151',
+    fontWeight: '500',
+  },
+});

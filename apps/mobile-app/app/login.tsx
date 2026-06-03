@@ -102,7 +102,7 @@ function LoginScreen() {
           <View style={styles.heading}>
             <Text style={styles.title}>Chào mừng trở lại!</Text>
             <Text style={styles.subtitle}>
-              Đăng nhập để tiếp tục sử dụng FloodGuard
+              Đăng nhập để tiếp tục sử dụng FloodAlert
             </Text>
           </View>
 

@@ -9,6 +9,7 @@ import type {
   SeverityLevel,
 } from '../../../../types/flood.types';
 import type { WsStatus } from '../../hooks/useFloodWebSocket';
+import { floodService } from '../../../../services/flood.service';
 import { sensorService } from '../../../../services/sensor.service';
 import type { ActionType } from './constants';
 import type { ModalState } from './SensorModals';
@@ -19,14 +20,15 @@ import { FullscreenControl, MapHeader } from './MapControls';
 
 //  Types 
 interface SensorMapProps {
-  activeFloods:   Record<string, ActiveFloodEvent>;
-  sensors:        Record<string, ProcessedSensorData>;
-  sensorMarkers:  SensorMapItem[];
-  loading:        boolean;
-  apiError:       string | null;
-  wsStatus:       WsStatus;
-  wsError:        string | null;
-  onClearWsError: () => void;
+  activeFloods:      Record<string, ActiveFloodEvent>;
+  sensors:           Record<string, ProcessedSensorData>;
+  sensorMarkers:     SensorMapItem[];
+  loading:           boolean;
+  apiError:          string | null;
+  wsStatus:          WsStatus;
+  wsError:           string | null;
+  onClearWsError:    () => void;
+  onFloodDismissed:  (eventId: string) => void;
 }
 
 //  Component chính 
@@ -39,12 +41,27 @@ export default function SensorMap({
   wsStatus,
   wsError,
   onClearWsError,
+  onFloodDismissed,
 }: SensorMapProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   // ---- Action state ----
-  const [modalState,  setModalState]  = useState<ModalState | null>(null);
-  const [fetchingId,  setFetchingId]  = useState<string | null>(null);
+  const [modalState,   setModalState]   = useState<ModalState | null>(null);
+  const [fetchingId,   setFetchingId]   = useState<string | null>(null);
+  const [dismissingId, setDismissingId] = useState<string | null>(null);
+
+  const handleDismissFlood = useCallback(async (eventId: string) => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa điểm ngập này khỏi bản đồ không?')) return;
+    setDismissingId(eventId);
+    try {
+      await floodService.dismissFlood(eventId);
+      onFloodDismissed(eventId);
+    } catch (e) {
+      console.error('SensorMap: failed to dismiss flood', e);
+    } finally {
+      setDismissingId(null);
+    }
+  }, [onFloodDismissed]);
 
   const handleSensorAction = useCallback(async (sensorId: string, action: ActionType) => {
     setFetchingId(sensorId);
@@ -128,7 +145,11 @@ export default function SensorMap({
 
           <FullscreenControl containerRef={canvasRef} />
 
-          <FloodMarkers floodList={floodList} />
+          <FloodMarkers
+            floodList={floodList}
+            dismissingId={dismissingId}
+            onDismiss={handleDismissFlood}
+          />
 
           <SensorMarkers
             sensorList={sensorList}

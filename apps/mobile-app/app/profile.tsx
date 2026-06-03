@@ -15,6 +15,7 @@ import { ProfileFormField } from '../components/profile/ProfileFormField';
 import { AddressNavigationCard } from '../components/profile/AddressNavigationCard';
 import { ProfileInfoSection } from '../components/profile/ProfileInfoSection';
 import { ProfileActionButtons } from '../components/profile/ProfileActionButtons';
+import { ReputationCard } from '../components/profile/ReputationCard';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useAlert } from '../hooks/useAlert';
 import type { UserProfileUpdateRequest } from '../types/user.types';
@@ -122,12 +123,12 @@ export default function ProfileScreen() {
     },
     ...(profile.lastLoginAt
       ? [
-          {
-            icon: 'log-in-outline',
-            label: 'Đăng nhập:',
-            value: formatDate(profile.lastLoginAt),
-          },
-        ]
+        {
+          icon: 'log-in-outline',
+          label: 'Đăng nhập:',
+          value: formatDate(profile.lastLoginAt),
+        },
+      ]
       : []),
   ];
 
@@ -142,6 +143,8 @@ export default function ProfileScreen() {
       >
         <ProfileAvatar avatarUrl={profile.avatarUrl} status={profile.status} />
 
+        <ReputationCard score={profile.reputationScore ?? 50} />
+
         <View style={styles.formSection}>
           <ProfileFormField
             label="Email"
@@ -154,7 +157,7 @@ export default function ProfileScreen() {
           <ProfileFormField
             label="Họ và tên"
             icon="person-outline"
-            value={formData.fullName}
+            value={formData.fullName || ''}
             isEditing={isEditing}
             placeholder="Nhập họ tên"
             inputProps={{ editable: !isSaving }}
@@ -164,7 +167,7 @@ export default function ProfileScreen() {
           <ProfileFormField
             label="Số điện thoại"
             icon="call-outline"
-            value={formData.phone}
+            value={formData.phone || ''}
             isEditing={isEditing}
             placeholder="Nhập số điện thoại"
             inputProps={{ keyboardType: 'phone-pad', editable: !isSaving }}

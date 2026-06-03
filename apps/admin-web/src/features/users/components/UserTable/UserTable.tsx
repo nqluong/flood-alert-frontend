@@ -39,6 +39,13 @@ export default function UserTable({ users, loading, onView, onToggleStatus, onMa
     return badges[status as keyof typeof badges] || { label: status, className: '' };
   };
 
+  const getReputationBadge = (score: number) => {
+    if (score >= 90) return { label: 'Xuất sắc', className: 'user-table__badge--rep-excellent' };
+    if (score >= 60) return { label: 'Tốt', className: 'user-table__badge--rep-good' };
+    if (score >= 30) return { label: 'Trung bình', className: 'user-table__badge--rep-avg' };
+    return { label: 'Thấp', className: 'user-table__badge--rep-low' };
+  };
+
   const getRoleBadge = (role: string) => {
     const badges = {
       ADMIN: { label: 'Quản trị viên', className: 'user-table__badge--admin' },
@@ -67,6 +74,7 @@ export default function UserTable({ users, loading, onView, onToggleStatus, onMa
             <th>Liên hệ</th>
             <th>Vai trò</th>
             <th>Trạng thái</th>
+            <th>Uy tín</th>
             <th>Ngày tạo</th>
             <th>Đăng nhập cuối</th>
             <th>Hành động</th>
@@ -124,6 +132,19 @@ export default function UserTable({ users, loading, onView, onToggleStatus, onMa
                   <span className={`user-table__badge ${statusBadge.className}`}>
                     {statusBadge.label}
                   </span>
+                </td>
+
+                {/* Reputation */}
+                <td>
+                  {user.reputationScore != null ? (() => {
+                    const rep = getReputationBadge(user.reputationScore);
+                    return (
+                      <div className="user-table__reputation">
+                        <span className="user-table__reputation-score">{user.reputationScore}</span>
+                        <span className={`user-table__badge ${rep.className}`}>{rep.label}</span>
+                      </div>
+                    );
+                  })() : <span className="user-table__date">—</span>}
                 </td>
 
                 {/* Created At */}

@@ -78,7 +78,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
           <div className="login-card__logo-icon">
             <ShieldCheck size={26} />
           </div>
-          <span className="login-card__logo-name">FloodGuard</span>
+          <span className="login-card__logo-name">FloodAlert</span>
           <span className="login-card__tagline">Hệ thống quản lý cảnh báo lũ lụt</span>
         </div>
 
@@ -98,7 +98,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                 id="email"
                 type="email"
                 className={`login-form__input${error ? ' login-form__input--error' : ''}`}
-                placeholder="admin@floodguard.vn"
+                placeholder="admin@floodalert.vn"
                 value={credentials.email}
                 onChange={(e) => setField('email', e.target.value)}
                 autoComplete="username"

@@ -1,4 +1,7 @@
 import L from 'leaflet';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { Droplets, Flag } from 'lucide-react';
 import type { SeverityLevel } from '../../../../types/flood.types';
 
 // ---- Severity ----
@@ -25,6 +28,9 @@ export const SEVERITY_HALO: Partial<Record<SeverityLevel, { radius: number; fill
   WARNING: { radius: 50,  fillOpacity: 0.18 },
   DANGER:  { radius: 150, fillOpacity: 0.22 },
 };
+
+// Purple for community reports whose severity hasn't been confirmed yet
+const USER_REPORT_COLOR = '#7c3aed';
 
 // ---- Sensor status ----
 
@@ -62,23 +68,32 @@ export const SENSOR_STATUS_STYLE: Record<string, { bg: string; color: string }> 
 
 // ---- Icon factories ----
 
+// Pre-render SVG strings once to avoid repeated renderToStaticMarkup calls
+const _dropletsIcon = renderToStaticMarkup(
+  createElement(Droplets, { size: 15, color: '#ffffff', strokeWidth: 2 })
+);
+const _flagIcon = renderToStaticMarkup(
+  createElement(Flag, { size: 12, color: '#ffffff', strokeWidth: 2.5 })
+);
+
 export function createFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
   const color = SEVERITY_COLOR[severity];
   return L.divIcon({
     className: '',
-    html: `<span class="flood-marker" style="background:${color};border-color:${color}"></span>`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    html: `<div class="flood-icon" style="background:${color};border-color:${color}">${_dropletsIcon}</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
   });
 }
 
 export function createUserReportFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
-  const color = SEVERITY_COLOR[severity];
+  // Use severity color only when confirmed; fall back to purple for unconfirmed (UNKNOWN) reports
+  const color = severity !== 'UNKNOWN' ? SEVERITY_COLOR[severity] : USER_REPORT_COLOR;
   return L.divIcon({
     className: '',
-    html: `<span class="flood-marker flood-marker--user-report" style="background:${color};border-color:${color}"></span>`,
-    iconSize: [22, 22],
-    iconAnchor: [11, 11],
+    html: `<div class="flood-icon flood-icon--user-report" style="background:${color};border-color:${color}">${_flagIcon}</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
   });
 }
 

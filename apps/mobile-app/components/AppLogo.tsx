@@ -24,7 +24,7 @@ export function AppLogo({ size = 'md' }: AppLogoProps) {
       >
         <Ionicons name="umbrella" size={s.icon} color="#ffffff" />
       </View>
-      <Text style={[styles.name, { fontSize: s.fontSize }]}>FloodGuard</Text>
+      <Text style={[styles.name, { fontSize: s.fontSize }]}>FloodAlert</Text>
     </View>
   );
 }

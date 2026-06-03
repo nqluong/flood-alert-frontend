@@ -446,13 +446,9 @@ export default function HomeScreen() {
         <NavigationPanel
           topInset={insets.top}
           destinationName={destination?.name || ''}
-          isRerouting={isRerouting}
           currentStep={currentStep}
           nextStep={nextStep}
           distanceToNextStep={distanceToNextStep}
-          isOffRoute={isOffRoute}
-          distanceFromRoute={distanceFromRoute}
-          totalRemainingDistance={totalRemainingDistance}
           cameraMode={cameraMode}
           onCycleCameraMode={cycleCameraMode}
           onStop={handleStopNavigation}

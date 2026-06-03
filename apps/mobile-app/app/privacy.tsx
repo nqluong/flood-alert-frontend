@@ -172,11 +172,11 @@ export default function PrivacyScreen() {
           />
           <FaqItem
             question="Làm thế nào để xóa tài khoản?"
-            answer="Liên hệ đội hỗ trợ qua email support@floodguard.vn kèm yêu cầu xóa tài khoản. Chúng tôi sẽ xử lý trong vòng 7 ngày làm việc và xóa toàn bộ dữ liệu cá nhân."
+            answer="Liên hệ đội hỗ trợ qua email support@floodalert.vn kèm yêu cầu xóa tài khoản. Chúng tôi sẽ xử lý trong vòng 7 ngày làm việc và xóa toàn bộ dữ liệu cá nhân."
           />
           <FaqItem
             question="Tôi có thể thu hồi quyền vị trí không?"
-            answer="Có. Vào Cài đặt điện thoại > FloodGuard > Vị trí > Đổi thành 'Không bao giờ'. Lưu ý rằng việc này sẽ vô hiệu hóa tính năng cảnh báo theo vị trí."
+            answer="Có. Vào Cài đặt điện thoại > FloodAlert > Vị trí > Đổi thành 'Không bao giờ'. Lưu ý rằng việc này sẽ vô hiệu hóa tính năng cảnh báo theo vị trí."
           />
         </Section>
 
@@ -184,7 +184,7 @@ export default function PrivacyScreen() {
           <Ionicons name="mail" size={20} color="#009688" />
           <View style={styles.contactText}>
             <Text style={styles.contactTitle}>Liên hệ về quyền riêng tư</Text>
-            <Text style={styles.contactEmail}>privacy@floodguard.vn</Text>
+            <Text style={styles.contactEmail}>privacy@floodalert.vn</Text>
           </View>
         </View>
       </ScrollView>

@@ -4,20 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { CameraModeButton, type CameraMode } from './CameraModeButton';
 import { NavigationInstructionCard } from './NavigationInstructionCard';
-import { NavigationStats } from './NavigationStats';
-import { RerouteBanner } from './RerouteBanner';
 import type { RouteStep } from '../../../hooks/useNavigationTracking';
 
 interface Props {
   topInset: number;
   destinationName: string;
-  isRerouting: boolean;
   currentStep: RouteStep | null;
   nextStep: RouteStep | null;
   distanceToNextStep: number;
-  isOffRoute: boolean;
-  distanceFromRoute: number;
-  totalRemainingDistance: number;
   cameraMode: CameraMode;
   onCycleCameraMode: () => void;
   onStop: () => void;
@@ -29,13 +23,9 @@ interface Props {
 export function NavigationPanel({
   topInset,
   destinationName,
-  isRerouting,
   currentStep,
   nextStep,
   distanceToNextStep,
-  isOffRoute,
-  distanceFromRoute,
-  totalRemainingDistance,
   cameraMode,
   onCycleCameraMode,
   onStop,
@@ -79,18 +69,10 @@ export function NavigationPanel({
         </View>
       </View>
 
-      <RerouteBanner visible={isRerouting} />
-
       <NavigationInstructionCard
         currentStep={currentStep}
         nextStep={nextStep}
         distanceToNextStep={distanceToNextStep}
-      />
-
-      <NavigationStats
-        isOffRoute={isOffRoute}
-        distanceFromRoute={distanceFromRoute}
-        totalRemainingDistance={totalRemainingDistance}
       />
     </View>
   );

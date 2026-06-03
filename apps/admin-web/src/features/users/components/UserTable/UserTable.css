@@ -123,6 +123,41 @@
   align-items: flex-start;
 }
 
+/* Reputation */
+.user-table__reputation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.user-table__reputation-score {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-text, #111827);
+}
+
+.user-table__badge--rep-excellent {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.user-table__badge--rep-good {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.user-table__badge--rep-avg {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.user-table__badge--rep-low {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 /* Date */
 .user-table__date {
   color: var(--color-text-muted, #6b7280);

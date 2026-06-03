@@ -48,7 +48,7 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Ứng dụng cần quyền truy cập vị trí để hiển thị điểm ngập lụt gần bạn.",
           "locationWhenInUsePermission": "Ứng dụng cần quyền truy cập vị trí để hiển thị điểm ngập lụt gần bạn.",
-          "locationAlwaysPermission": "FloodGuard cần quyền truy cập vị trí liên tục để gửi cảnh báo ngập lụt kịp thời ngay cả khi bạn không mở ứng dụng.",
+          "locationAlwaysPermission": "FloodAlert cần quyền truy cập vị trí liên tục để gửi cảnh báo ngập lụt kịp thời ngay cả khi bạn không mở ứng dụng.",
           "isIosBackgroundLocationEnabled": true,
           "isAndroidBackgroundLocationEnabled": true,
           "isAndroidForegroundServiceEnabled": true

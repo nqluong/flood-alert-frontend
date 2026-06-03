@@ -9,6 +9,7 @@ export interface UserProfileResponse {
   phone: string;
   avatarUrl: string;
   status: string;
+  reputationScore: number;
   createdAt: string;
   updatedAt: string;
   lastLoginAt: string;

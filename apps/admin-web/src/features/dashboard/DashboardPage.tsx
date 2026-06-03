@@ -47,6 +47,7 @@ function DashboardView() {
           wsStatus={ws.wsStatus}
           wsError={ws.wsError}
           onClearWsError={ws.clearWsError}
+          onFloodDismissed={ws.removeFlood}
         />
         <RecentActivity
           recentActivities={ws.recentActivities}

@@ -139,7 +139,7 @@ export default function RegisterScreen() {
           <View style={styles.heading}>
             <Text style={styles.title}>Tạo tài khoản</Text>
             <Text style={styles.subtitle}>
-              Đăng ký để sử dụng FloodGuard
+              Đăng ký để sử dụng FloodAlert
             </Text>
           </View>
 

@@ -11,7 +11,6 @@ import {
   FileText,
   Users,
   Mail,
-  Github,
   ExternalLink,
 } from 'lucide-react';
 
@@ -183,23 +182,8 @@ export default function SupportPage({ onNavChange }: SupportPageProps) {
                 <Mail size={14} />
                 <div>
                   <p className="support-contact__label">Email kỹ thuật</p>
-                  <a href="mailto:support@floodguard.vn" className="support-contact__value">
-                    support@floodguard.vn
-                  </a>
-                </div>
-              </div>
-              <div className="support-contact__item">
-                <Github size={14} />
-                <div>
-                  <p className="support-contact__label">Báo lỗi / Góp ý</p>
-                  <a
-                    href="https://github.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="support-contact__value"
-                  >
-                    GitHub Issues
-                    <ExternalLink size={11} style={{ marginLeft: 4 }} />
+                  <a href="mailto:support@floodalert.vn" className="support-contact__value">
+                    support@floodalert.vn
                   </a>
                 </div>
               </div>

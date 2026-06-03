@@ -42,7 +42,7 @@ export default function Sidebar({ activeNav = 'dashboard', onNavChange, onLogout
         <div className="sidebar__logo-icon">
           <ShieldCheck size={14} />
         </div>
-        <span className="sidebar__logo-text">FloodGuard</span>
+        <span className="sidebar__logo-text">FloodAlert</span>
       </div>
 
       {/* Main Navigation */}

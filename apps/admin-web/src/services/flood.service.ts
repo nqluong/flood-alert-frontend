@@ -29,6 +29,18 @@ export const floodService = {
     return body.data;
   },
 
+  async dismissFlood(eventId: string): Promise<void> {
+    const res = await fetch(`${API_BASE_URL}/admin/floods/events/${eventId}`, {
+      method: 'DELETE',
+      headers: await authHeaders(),
+    });
+
+    if (!res.ok) await parseApiError(res);
+
+    const body = (await res.json()) as { success: boolean; message?: string; code?: number };
+    if (!body.success) throw new ApiError(body.message ?? 'Không thể xóa điểm ngập.', body.code);
+  },
+
   async getSensorsMap(): Promise<SensorMapItem[]> {
     const res = await fetch(`${API_BASE_URL}/sensors/map`, {
       headers: await authHeaders(),

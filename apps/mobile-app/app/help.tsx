@@ -142,15 +142,15 @@ export default function HelpScreen() {
             iconColor="#3b82f6"
             iconBg="rgba(59,130,246,0.1)"
             title="Email hỗ trợ"
-            subtitle="support@floodguard.vn"
-            onPress={() => Linking.openURL('mailto:support@floodguard.vn')}
+            subtitle="support@floodalert.vn"
+            onPress={() => Linking.openURL('mailto:support@floodalert.vn')}
           />
           <ContactRow
             icon="logo-github"
             iconColor="#111827"
             iconBg="rgba(17,24,39,0.08)"
             title="Báo cáo lỗi"
-            subtitle="github.com/floodguard/issues"
+            subtitle="github.com/floodalert/issues"
             onPress={() => {}}
             last
           />
