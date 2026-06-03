@@ -4,37 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix report mobile">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="update delete flood admin &amp; detail mobile">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/components/Sidebar/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/components/Sidebar/Sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/auth/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/auth/LoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/hooks/useFloodWebSocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/hooks/useFloodWebSocket.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/support/SupportPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/support/SupportPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/users/components/UserTable/UserTable.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/users/components/UserTable/UserTable.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/users/components/UserTable/UserTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/users/components/UserTable/UserTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/services/flood.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/services/flood.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/types/user.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/types/user.types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/help.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/help.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/notification-detail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/notification-detail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/privacy.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/privacy.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/profile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/register.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/terms.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/terms.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/background/autoStartLocationTracking.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/background/autoStartLocationTracking.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/AppLogo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/AppLogo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/LocationTrackingToggle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/LocationTrackingToggle.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/navigation/NavigationPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/navigation/NavigationPanel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/sheet/FloodDetailSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/sheet/FloodDetailSheet.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useLocationTracker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useLocationTracker.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/user.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/user.types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,6 +196,7 @@
       <workItem from="1780245402804" duration="1632000" />
       <workItem from="1780330090816" duration="2047000" />
       <workItem from="1780415985925" duration="2929000" />
+      <workItem from="1780459997694" duration="1209000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -354,7 +326,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780245521390</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="update delete flood admin &amp; detail mobile">
+      <option name="closed" value="true" />
+      <created>1780460208726</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1780460208726</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -400,7 +380,8 @@
     <MESSAGE value="fix trang man" />
     <MESSAGE value="update report card" />
     <MESSAGE value="fix report mobile" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix report mobile" />
+    <MESSAGE value="update delete flood admin &amp; detail mobile" />
+    <option name="LAST_COMMIT_MESSAGE" value="update delete flood admin &amp; detail mobile" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

@@ -38,7 +38,7 @@ export const floodService = {
     if (!res.ok) await parseApiError(res);
 
     const body = (await res.json()) as { success: boolean; message?: string; code?: number };
-    if (!body.success) throw new ApiError(body.message ?? 'Không thể xóa điểm ngập.', body.code);
+    if (!body.success) throw new ApiError(body.message ?? 'Không thể xóa điểm ngập.', body.code ?? 500);
   },
 
   async getSensorsMap(): Promise<SensorMapItem[]> {
