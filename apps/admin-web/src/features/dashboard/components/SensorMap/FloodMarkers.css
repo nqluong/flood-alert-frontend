@@ -14,13 +14,14 @@
 
 /* User-report: diamond shape to distinguish from sensor circles */
 .flood-icon--user-report {
+  --flood-color: #7c3aed;
   border-radius: 4px;
   transform: rotate(45deg);
   width: 22px;
   height: 22px;
   margin: 3px;
-  background: var(--flood-color, #7c3aed);
-  border-color: var(--flood-color, #7c3aed);
+  background: var(--flood-color);
+  border-color: var(--flood-color);
 }
 /* Counter-rotate the icon so it stays upright inside the diamond */
 .flood-icon--user-report > svg {
