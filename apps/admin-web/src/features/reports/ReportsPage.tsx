@@ -26,7 +26,7 @@ export default function ReportsPage() {
     rejectReport,
     loadMore,
     changeFilter,
-  } = useReports({ status: 'PENDING' });
+  } = useReports();
 
   const handleApproveClick = (reportId: string) => {
     setConfirmModal({ isOpen: true, type: 'approve', reportId });

@@ -14,11 +14,24 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
   const [filter, setFilter] = useState<ReportFilterRequest>({
     page: 0,
     size: 10,
-    status: 'PENDING',
     ...initialFilter,
   });
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
+
+  const fetchPendingCount = useCallback(async () => {
+    try {
+      const response = await reportService.getAllReports({ status: 'PENDING', page: 0, size: 1 });
+      setPendingCount(response.totalElements);
+    } catch {
+      // silently ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPendingCount();
+  }, [fetchPendingCount]);
 
   const fetchReports = useCallback(async () => {
     try {
@@ -126,8 +139,8 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
   const approveReport = async (reportId: string) => {
     try {
       await reportService.approveFloodEvent(reportId);
-      setReports(prev => prev.filter(r => r.id !== reportId));
-      setTotalElements(prev => prev - 1);
+      setReports(prev => prev.map(r => r.id === reportId ? { ...r, status: 'APPROVED' as const } : r));
+      setPendingCount(prev => Math.max(0, prev - 1));
     } catch (err) {
       console.error('Error approving report:', err);
       throw err;
@@ -137,8 +150,8 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
   const rejectReport = async (reportId: string) => {
     try {
       await reportService.rejectFloodEvent(reportId);
-      setReports(prev => prev.filter(r => r.id !== reportId));
-      setTotalElements(prev => prev - 1);
+      setReports(prev => prev.map(r => r.id === reportId ? { ...r, status: 'REJECTED' as const } : r));
+      setPendingCount(prev => Math.max(0, prev - 1));
     } catch (err) {
       console.error('Error rejecting report:', err);
       throw err;
@@ -169,7 +182,7 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
     filter,
     totalPages,
     totalElements,
-    pendingCount: totalElements,
+    pendingCount,
     approveReport,
     rejectReport,
     loadMore,

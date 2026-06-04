@@ -12,7 +12,6 @@ import UserDetailModal from './components/UserDetailModal/UserDetailModal';
 import ChangeStatusModal from './components/ChangeStatusModal/ChangeStatusModal';
 import AssignRoleModal from './components/AssignRoleModal/AssignRoleModal';
 import Pagination from '../../components/Pagination/Pagination';
-import { Users as UsersIcon } from 'lucide-react';
 
 const DEFAULT_FILTERS: UserFilters = {
   search: '',
@@ -99,49 +98,31 @@ export default function UsersPage() {
     <div className="users-page">
       {/* ---- Top bar ---- */}
       <div className="users-page__top">
-        <div>
-          <h2 className="users-page__title">
-            <UsersIcon size={24} style={{ marginRight: 8 }} />
-            Quản lý Người dùng
-            {pageData && (
-              <span
-                style={{
-                  fontSize: 14,
-                  fontWeight: 400,
-                  color: 'var(--color-text-muted)',
-                  marginLeft: 8,
-                }}
-              >
-                ({pageData.totalElements} người dùng)
-              </span>
-            )}
-          </h2>
-          <div className="users-page__stats">
-            {totalActive > 0 && (
-              <span className="users-stat users-stat--active">
-                <span className="users-stat__dot" />
-                {totalActive} hoạt động
-              </span>
-            )}
-            {totalLocked > 0 && (
-              <span className="users-stat users-stat--locked">
-                <span className="users-stat__dot" />
-                {totalLocked} bị khóa
-              </span>
-            )}
-            {totalPending > 0 && (
-              <span className="users-stat users-stat--pending">
-                <span className="users-stat__dot" />
-                {totalPending} chờ xác thực
-              </span>
-            )}
-            {totalAdmins > 0 && (
-              <span className="users-stat users-stat--admin">
-                <span className="users-stat__dot" />
-                {totalAdmins} quản trị viên
-              </span>
-            )}
-          </div>
+        <div className="users-page__stats">
+          {totalActive > 0 && (
+            <span className="users-stat users-stat--active">
+              <span className="users-stat__dot" />
+              {totalActive} hoạt động
+            </span>
+          )}
+          {totalLocked > 0 && (
+            <span className="users-stat users-stat--locked">
+              <span className="users-stat__dot" />
+              {totalLocked} bị khóa
+            </span>
+          )}
+          {totalPending > 0 && (
+            <span className="users-stat users-stat--pending">
+              <span className="users-stat__dot" />
+              {totalPending} chờ xác thực
+            </span>
+          )}
+          {totalAdmins > 0 && (
+            <span className="users-stat users-stat--admin">
+              <span className="users-stat__dot" />
+              {totalAdmins} quản trị viên
+            </span>
+          )}
         </div>
       </div>
 

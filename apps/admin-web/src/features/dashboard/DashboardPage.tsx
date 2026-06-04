@@ -23,13 +23,10 @@ interface PageMeta {
 
 const PAGE_META: Record<string, PageMeta> = {
   dashboard: { title: 'Bảng điều khiển', subtitle: 'Giám sát thời gian thực hệ thống cảnh báo lũ lụt' },
-  sensors:   { title: 'Quản lý Cảm biến' },
-  alerts:    { title: 'Cảnh báo' },
-  map:       { title: 'Bản đồ' },
+  sensors:   { title: 'Quản lý Cảm biến',              subtitle: 'Theo dõi và quản lý trạng thái các cảm biến đo mực nước' },
   reports:   { title: 'Kiểm duyệt báo cáo người dùng', subtitle: 'Xem xét và phê duyệt các báo cáo lũ lụt từ cộng đồng' },
-  users:     { title: 'Người dùng' },
-  config:    { title: 'Cấu hình' },
-  support:   { title: 'Hỗ trợ' },
+  users:     { title: 'Người dùng',                     subtitle: 'Quản lý tài khoản và phân quyền người dùng hệ thống' },
+  support:   { title: 'Hỗ trợ',                         subtitle: 'Hỗ trợ và giải đáp thắc mắc từ người dùng' },
 };
 
 function DashboardView() {

@@ -1,4 +1,4 @@
-import { Check, X, MapPin, Activity } from 'lucide-react';
+import { Check, X, MapPin, Activity, CheckCircle, XCircle } from 'lucide-react';
 import type { UserReport } from '../reports.types';
 import './ReportCard.css';
 
@@ -129,7 +129,7 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
               <div className="report-card__info-row">
                 <span className="report-card__info-label report-card__score-label">
                   <Activity size={14} />
-                  Điểm tin cậy tổng:
+                  Điểm tổng hợp (theo trọng số):
                 </span>
                 <span className="report-card__info-value">
                   <span className={`report-card__score-badge report-card__score-badge--${getScoreVariant(report.score)}`}>
@@ -154,8 +154,8 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
             </div>
           )}
 
-          {/* Actions — chỉ hiển thị khi báo cáo đang chờ duyệt */}
-          {report.status === 'PENDING' && (
+          {/* Actions / Status */}
+          {report.status === 'PENDING' ? (
             <div className="report-card__actions">
               <button
                 className="report-card__action-btn report-card__action-btn--approve"
@@ -172,7 +172,17 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
                 Từ chối
               </button>
             </div>
-          )}
+          ) : report.status === 'APPROVED' ? (
+            <div className="report-card__status-result report-card__status-result--approved">
+              <CheckCircle size={16} />
+              Đã xác nhận
+            </div>
+          ) : report.status === 'REJECTED' ? (
+            <div className="report-card__status-result report-card__status-result--rejected">
+              <XCircle size={16} />
+              Đã từ chối
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

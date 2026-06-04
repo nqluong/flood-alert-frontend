@@ -273,6 +273,30 @@
   height: 16px;
 }
 
+.report-card__status-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.report-card__status-result--approved {
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1.5px solid #bbf7d0;
+}
+
+.report-card__status-result--rejected {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1.5px solid #fecaca;
+}
+
 .score-bar {
   display: flex;
   align-items: center;
