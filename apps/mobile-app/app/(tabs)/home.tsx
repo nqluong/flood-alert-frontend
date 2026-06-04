@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MapView, Camera } from '@maplibre/maplibre-react-native';
@@ -27,9 +27,9 @@ import {
 } from '../../components/home/navigation/CameraModeButton';
 
 import { geocodingService } from '../../services/geocoding.service';
+import { MAP_STYLES, type MapStyleId } from '../../components/home/overlay/MapStylePicker';
+import { useAlertContext } from '../../context/AlertContext';
 import type { VehicleType } from '../../types/route.types';
-
-const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 
 const HANOI_CENTER: [number, number] = [105.8342, 21.0278];
 const FALLBACK_COORD: [number, number] = [0, 0];
@@ -46,6 +46,12 @@ export default function HomeScreen() {
     name: string;
   } | null>(null);
   const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+
+  const { show: showAlert } = useAlertContext();
+
+  // State for map style
+  const [mapStyleId, setMapStyleId] = useState<MapStyleId>('liberty');
+  const mapStyleUrl = MAP_STYLES.find((s) => s.id === mapStyleId)!.url;
 
   // State for navigation mode
   const [isNavigating, setIsNavigating] = useState(false);
@@ -129,15 +135,13 @@ export default function HomeScreen() {
   }, [findRoute]);
 
   const handleArrival = useCallback(() => {
-    Alert.alert('Đã đến đích', 'Bạn đã đến nơi!', [
-      {
-        text: 'OK',
-        onPress: () => {
-          setIsNavigating(false);
-        },
-      },
-    ]);
-  }, []);
+    showAlert({
+      type: 'success',
+      title: 'Đã đến đích',
+      message: 'Bạn đã đến nơi!',
+      buttons: [{ text: 'OK', style: 'default', onPress: () => setIsNavigating(false) }],
+    });
+  }, [showAlert]);
 
   // Navigation tracking hook - Chỉ active khi đang navigation
   const {
@@ -254,7 +258,12 @@ export default function HomeScreen() {
     if (isRealLocation && userCoordinate) {
       flyToLocation(userCoordinate, { zoomLevel: 15, animationDuration: 800 });
     } else if (locationError) {
-      Alert.alert('Không thể định vị', locationError);
+      showAlert({
+        type: 'error',
+        title: 'Không thể định vị',
+        message: locationError,
+        buttons: [{ text: 'Đóng', style: 'cancel' }],
+      });
     }
   };
 
@@ -368,9 +377,10 @@ export default function HomeScreen() {
       {/* Map */}
       <MapView
         style={StyleSheet.absoluteFill}
-        mapStyle={OPENFREEMAP_STYLE}
+        mapStyle={mapStyleUrl}
         logoEnabled={false}
         attributionEnabled={false}
+        compassViewMargins={{ x: 16, y: insets.top + 196 }}
         onRegionDidChange={onRegionDidChange}
         onPress={handleMapPress}
       >
@@ -414,6 +424,8 @@ export default function HomeScreen() {
             onClearSearch={handleClearDirections}
             onLocateUser={handleLocateUser}
             onCameraPress={() => router.push('/(tabs)/report')}
+            currentMapStyleId={mapStyleId}
+            onMapStyleChange={setMapStyleId}
           />
         )}
       </KeyboardAvoidingView>

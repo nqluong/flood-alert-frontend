@@ -50,11 +50,16 @@ const PRIORITY_CONFIG: Record<string, { labelColor: string; iconBg: string; bord
 
 const DEFAULT_PRIORITY_CONFIG = { labelColor: '#fb8c00', iconBg: '#fb8c00', borderColor: 'transparent' };
 
+// Override màu theo loại thông báo, bất kể priority
+const TYPE_COLOR_OVERRIDE: Partial<Record<string, { labelColor: string; iconBg: string; borderColor: string }>> = {
+  FLOOD_RESOLVED: { labelColor: '#43a047', iconBg: '#43a047', borderColor: '#43a047' },
+};
+
 export function NotificationCard({ notification, onPress }: NotificationCardProps) {
   const { title, body, notificationType, priority, data, isRead, createdAt } = notification;
 
   const typeConfig = TYPE_CONFIG[notificationType] ?? DEFAULT_TYPE_CONFIG;
-  const priorityConfig = PRIORITY_CONFIG[priority] ?? DEFAULT_PRIORITY_CONFIG;
+  const priorityConfig = TYPE_COLOR_OVERRIDE[notificationType] ?? PRIORITY_CONFIG[priority] ?? DEFAULT_PRIORITY_CONFIG;
   const isUnread = !isRead;
 
   const timeAgo = formatTimeAgo(createdAt);

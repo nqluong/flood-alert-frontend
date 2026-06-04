@@ -95,6 +95,7 @@ export function AppAlert() {
             style={[
               styles.buttonRow,
               config.buttons.length === 1 && styles.buttonRowSingle,
+              config.buttons.length >= 3 && styles.buttonRowColumn,
             ]}
           >
             {config.buttons.map((btn, i) => {
@@ -105,6 +106,7 @@ export function AppAlert() {
                   key={i}
                   style={[
                     styles.button,
+                    config.buttons.length >= 3 && styles.buttonColumnItem,
                     isDestructive && styles.buttonDestructive,
                     isCancel      && styles.buttonCancel,
                     !isDestructive && !isCancel && styles.buttonDefault,
@@ -201,12 +203,20 @@ const styles = StyleSheet.create({
   buttonRowSingle: {
     justifyContent: 'center',
   },
+  buttonRowColumn: {
+    flexDirection: 'column',
+    gap: 8,
+  },
   button: {
     flex: 1,
     height: 48,
     borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonColumnItem: {
+    flex: 0,
+    width: '100%',
   },
   buttonDefault: {
     backgroundColor: '#009688',

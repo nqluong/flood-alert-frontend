@@ -1,9 +1,10 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { CameraModeButton, type CameraMode } from './CameraModeButton';
 import { NavigationInstructionCard } from './NavigationInstructionCard';
+import { useAlert } from '../../../hooks/useAlert';
 import type { RouteStep } from '../../../hooks/useNavigationTracking';
 
 interface Props {
@@ -30,14 +31,14 @@ export function NavigationPanel({
   onCycleCameraMode,
   onStop,
 }: Props) {
+  const { showConfirm } = useAlert();
+
   const handleStopPress = () => {
-    Alert.alert(
+    showConfirm(
       'Dừng điều hướng',
       'Bạn có chắc muốn dừng điều hướng?',
-      [
-        { text: 'Hủy', style: 'cancel' },
-        { text: 'Dừng', style: 'destructive', onPress: onStop },
-      ],
+      onStop,
+      { cancelLabel: 'Huỷ', confirmLabel: 'Dừng', destructive: true },
     );
   };
 

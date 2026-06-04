@@ -4,8 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="update delete flood admin &amp; detail mobile">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix undefined web">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/report.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/navigation/NavigationPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/navigation/NavigationPanel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/overlay/MapOverlay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/overlay/MapOverlay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notification-detail/NotificationDetailMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notification-detail/NotificationDetailMap.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/ui/AppAlert.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/ui/AppAlert.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useMediaPicker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useMediaPicker.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,7 +206,8 @@
       <workItem from="1780245402804" duration="1632000" />
       <workItem from="1780330090816" duration="2047000" />
       <workItem from="1780415985925" duration="2929000" />
-      <workItem from="1780459997694" duration="1209000" />
+      <workItem from="1780459997694" duration="4822000" />
+      <workItem from="1780501448518" duration="3062000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -334,7 +345,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780460208726</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="fix undefined web">
+      <option name="closed" value="true" />
+      <created>1780471073527</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1780471073527</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -381,7 +400,8 @@
     <MESSAGE value="update report card" />
     <MESSAGE value="fix report mobile" />
     <MESSAGE value="update delete flood admin &amp; detail mobile" />
-    <option name="LAST_COMMIT_MESSAGE" value="update delete flood admin &amp; detail mobile" />
+    <MESSAGE value="fix undefined web" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix undefined web" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

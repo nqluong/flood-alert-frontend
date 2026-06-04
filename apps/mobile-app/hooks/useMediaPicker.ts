@@ -1,4 +1,4 @@
-import { Alert, ActionSheetIOS, Platform } from 'react-native';
+import { useAlertContext } from '../context/AlertContext';
 
 export interface PickedMedia {
   uri: string;
@@ -16,103 +16,90 @@ function getImagePicker(): any | null {
   }
 }
 
-/**
- * Xin quyền camera, trả về true nếu được cấp.
- */
-async function requestCameraPermission(): Promise<boolean> {
+export function useMediaPicker() {
+  const { show: showAlert } = useAlertContext();
   const ImagePicker = getImagePicker();
-  if (!ImagePicker) return false;
-  const { status, canAskAgain } = await ImagePicker.requestCameraPermissionsAsync();
-  if (status === 'granted') return true;
-  if (!canAskAgain) {
-    Alert.alert(
-      'Quyền bị từ chối',
-      'Bạn đã từ chối quyền camera vĩnh viễn. Vui lòng vào Cài đặt để cấp quyền thủ công.',
-    );
-  }
-  return false;
-}
 
-/**
- * Xin quyền thư viện ảnh, trả về true nếu được cấp.
- */
-async function requestLibraryPermission(): Promise<boolean> {
-  const ImagePicker = getImagePicker();
-  if (!ImagePicker) return false;
-  const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (status === 'granted') return true;
-  if (!canAskAgain) {
-    Alert.alert(
-      'Quyền bị từ chối',
-      'Bạn đã từ chối quyền thư viện ảnh vĩnh viễn. Vui lòng vào Cài đặt để cấp quyền thủ công.',
-    );
-  }
-  return false;
-}
+  const showUnsupported = () => {
+    showAlert({
+      type: 'error',
+      title: 'Chưa hỗ trợ',
+      message: 'Tính năng này yêu cầu build lại app. Chạy: npx expo run:android',
+      buttons: [{ text: 'Đóng', style: 'cancel' }],
+    });
+  };
 
-/**
- * Mở camera để chụp ảnh. Trả về PickedMedia hoặc null nếu huỷ / từ chối quyền.
- */
-async function takePhoto(): Promise<PickedMedia | null> {
-  const ImagePicker = getImagePicker();
-  if (!ImagePicker) {
-    Alert.alert('Chưa hỗ trợ', 'Tính năng này yêu cầu build lại app. Chạy: npx expo run:android');
-    return null;
-  }
-  const granted = await requestCameraPermission();
-  if (!granted) return null;
+  const showPermissionDenied = (type: 'camera' | 'library') => {
+    const name = type === 'camera' ? 'camera' : 'thư viện ảnh';
+    showAlert({
+      type: 'error',
+      title: 'Quyền bị từ chối',
+      message: `Bạn đã từ chối quyền ${name} vĩnh viễn. Vui lòng vào Cài đặt để cấp quyền thủ công.`,
+      buttons: [{ text: 'Đóng', style: 'cancel' }],
+    });
+  };
 
-  const result = await ImagePicker.launchCameraAsync({
-    mediaTypes: ['images'],
-    quality: 0.85,
-    allowsEditing: false,
-  });
+  const takePicture = async (): Promise<PickedMedia | null> => {
+    if (!ImagePicker) { showUnsupported(); return null; }
 
-  if (result.canceled || result.assets.length === 0) return null;
-  const asset = result.assets[0];
-  return { uri: asset.uri, width: asset.width, height: asset.height, mimeType: asset.mimeType ?? undefined };
-}
+    const { status, canAskAgain } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      if (!canAskAgain) showPermissionDenied('camera');
+      return null;
+    }
 
-/**
- * Mở thư viện ảnh để chọn. Trả về PickedMedia hoặc null nếu huỷ / từ chối quyền.
- */
-async function pickFromLibrary(): Promise<PickedMedia | null> {
-  const ImagePicker = getImagePicker();
-  if (!ImagePicker) {
-    Alert.alert('Chưa hỗ trợ', 'Tính năng này yêu cầu build lại app. Chạy: npx expo run:android');
-    return null;
-  }
-  const granted = await requestLibraryPermission();
-  if (!granted) return null;
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      quality: 0.85,
+      allowsEditing: false,
+    });
+    if (result.canceled || result.assets.length === 0) return null;
+    const { uri, width, height, mimeType } = result.assets[0];
+    return { uri, width, height, mimeType: mimeType ?? undefined };
+  };
 
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['images'],
-    quality: 0.85,
-    allowsEditing: false,
-  });
+  const pickFromLibrary = async (): Promise<PickedMedia | null> => {
+    if (!ImagePicker) { showUnsupported(); return null; }
 
-  if (result.canceled || result.assets.length === 0) return null;
-  const asset = result.assets[0];
-  return { uri: asset.uri, width: asset.width, height: asset.height, mimeType: asset.mimeType ?? undefined };
-}
+    const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      if (!canAskAgain) showPermissionDenied('library');
+      return null;
+    }
 
-export function showMediaPickerSheet(onResult: (media: PickedMedia | null) => void) {
-  if (Platform.OS === 'ios') {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: ['Huỷ', 'Chụp ảnh', 'Chọn từ thư viện'],
-        cancelButtonIndex: 0,
-      },
-      async (buttonIndex) => {
-        if (buttonIndex === 1) onResult(await takePhoto());
-        else if (buttonIndex === 2) onResult(await pickFromLibrary());
-      },
-    );
-  } else {
-    Alert.alert('Thêm ảnh', 'Chọn nguồn ảnh', [
-      { text: 'Chụp ảnh', onPress: async () => onResult(await takePhoto()) },
-      { text: 'Chọn từ thư viện', onPress: async () => onResult(await pickFromLibrary()) },
-      { text: 'Huỷ', style: 'cancel', onPress: () => onResult(null) },
-    ]);
-  }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 0.85,
+      allowsEditing: false,
+    });
+    if (result.canceled || result.assets.length === 0) return null;
+    const { uri, width, height, mimeType } = result.assets[0];
+    return { uri, width, height, mimeType: mimeType ?? undefined };
+  };
+
+  const showSourcePicker = (onResult: (media: PickedMedia | null) => void) => {
+    showAlert({
+      type: 'info',
+      title: 'Thêm ảnh',
+      buttons: [
+        {
+          text: 'Chụp ảnh',
+          style: 'default',
+          onPress: async () => onResult(await takePicture()),
+        },
+        {
+          text: 'Chọn từ thư viện',
+          style: 'default',
+          onPress: async () => onResult(await pickFromLibrary()),
+        },
+        {
+          text: 'Huỷ',
+          style: 'cancel',
+          onPress: () => onResult(null),
+        },
+      ],
+    });
+  };
+
+  return { showSourcePicker };
 }

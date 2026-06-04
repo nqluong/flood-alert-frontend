@@ -78,23 +78,25 @@ export function NotificationDetailMap({
         }
       : null;
 
-  const cameraProps =
-    homeAddress && alertRadiusMeters
-      ? {
-          bounds: getBounds(
-            homeAddress.lat,
-            homeAddress.lon,
-            floodLat,
-            floodLon,
-            alertRadiusMeters,
-          ),
-        }
-      : {
-          defaultSettings: {
-            centerCoordinate: [floodLon, floodLat] as [number, number],
-            zoomLevel: 15,
-          },
-        };
+  // Always use bounds (never defaultSettings) so Camera updates reactively
+  // when homeAddress/alertRadiusMeters load after initial render.
+  const FLOOD_PAD = 0.005; // ~500 m at equator
+  const cameraBounds = homeAddress
+    ? getBounds(
+        homeAddress.lat,
+        homeAddress.lon,
+        floodLat,
+        floodLon,
+        alertRadiusMeters ?? 500,
+      )
+    : {
+        ne: [floodLon + FLOOD_PAD, floodLat + FLOOD_PAD] as [number, number],
+        sw: [floodLon - FLOOD_PAD, floodLat - FLOOD_PAD] as [number, number],
+        paddingTop: 60,
+        paddingBottom: 60,
+        paddingLeft: 40,
+        paddingRight: 40,
+      };
 
   return (
     <View style={styles.mapContainer}>
@@ -108,7 +110,11 @@ export function NotificationDetailMap({
         pitchEnabled={false}
         rotateEnabled={false}
       >
-        <Camera {...cameraProps} />
+        <Camera
+          bounds={cameraBounds}
+          animationMode="flyTo"
+          animationDuration={800}
+        />
 
         {/* Alert radius circle */}
         {radiusCircleGeoJSON && (
@@ -173,7 +179,7 @@ export function NotificationDetailMap({
       </View>
 
       {/* Map legend */}
-      {homeAddress && alertRadiusMeters && (
+      {homeAddress && (
         <View style={styles.mapLegend}>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: '#009688' }]} />
@@ -183,12 +189,14 @@ export function NotificationDetailMap({
             <View style={[styles.legendDot, { backgroundColor: severityColor }]} />
             <Text style={styles.legendText}>Điểm ngập</Text>
           </View>
-          <View style={styles.legendRow}>
-            <View style={styles.legendDash} />
-            <Text style={styles.legendText}>
-              Bán kính {formatMeters(alertRadiusMeters)}
-            </Text>
-          </View>
+          {alertRadiusMeters && (
+            <View style={styles.legendRow}>
+              <View style={styles.legendDash} />
+              <Text style={styles.legendText}>
+                Bán kính {formatMeters(alertRadiusMeters)}
+              </Text>
+            </View>
+          )}
         </View>
       )}
     </View>

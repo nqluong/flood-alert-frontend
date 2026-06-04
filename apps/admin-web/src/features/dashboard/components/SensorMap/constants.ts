@@ -88,10 +88,10 @@ export function createFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
 
 export function createUserReportFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
   // Use severity color only when confirmed; fall back to purple for unconfirmed (UNKNOWN) reports
-  const color = severity !== 'UNKNOWN' ? SEVERITY_COLOR[severity] : USER_REPORT_COLOR;
+  const color = severity !== 'UNKNOWN' ? (SEVERITY_COLOR[severity] ?? USER_REPORT_COLOR) : USER_REPORT_COLOR;
   return L.divIcon({
     className: '',
-    html: `<div class="flood-icon flood-icon--user-report" style="background:${color};border-color:${color}">${_flagIcon}</div>`,
+    html: `<div class="flood-icon flood-icon--user-report" style="--flood-color:${color}">${_flagIcon}</div>`,
     iconSize: [28, 28],
     iconAnchor: [14, 14],
   });

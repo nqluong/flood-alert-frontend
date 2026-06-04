@@ -19,6 +19,8 @@
   width: 22px;
   height: 22px;
   margin: 3px;
+  background: var(--flood-color, #7c3aed);
+  border-color: var(--flood-color, #7c3aed);
 }
 /* Counter-rotate the icon so it stays upright inside the diamond */
 .flood-icon--user-report > svg {

@@ -11,7 +11,7 @@ import {
 } from '../../components/report/FloodLevelOption';
 import { SubmitSection } from '../../components/report/SubmitSection';
 import { DescriptionInput } from '../../components/report/DescriptionInput';
-import { showMediaPickerSheet } from '../../hooks/useMediaPicker';
+import { useMediaPicker } from '../../hooks/useMediaPicker';
 import { useUserLocation } from '../../hooks/useUserLocation';
 import { useAlert } from '../../hooks/useAlert';
 import { uploadReportImage } from '../../services/firebase';
@@ -26,6 +26,7 @@ export default function ReportScreen() {
 
   const { coordinate } = useUserLocation();
   const { showSuccess, showError, showWarning } = useAlert();
+  const { showSourcePicker } = useMediaPicker();
 
   // Reverse geocode whenever GPS coordinate changes
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function ReportScreen() {
   }, [coordinate]);
 
   const handleCameraPress = () => {
-    showMediaPickerSheet((media) => {
+    showSourcePicker((media) => {
       if (media) setImageUri(media.uri);
     });
   };
