@@ -3,6 +3,7 @@ import { AppState, AppStateStatus } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { notificationService } from '../services/notification.service';
 import { storageService } from '../services/storage.service';
+import { useFloodToastContext } from '../context/FloodToastContext';
 
 export interface UnreadNotificationsContextType {
   unreadCount: number;
@@ -25,6 +26,7 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const appStateRef = useRef<AppStateStatus>(AppState.currentState);
+  const { showFloodToast } = useFloodToastContext();
 
   const checkAuth = useCallback(async () => {
     const token = await storageService.getAccessToken();
@@ -100,11 +102,18 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
       console.log('[UnreadNotifications] FCM foreground message:', remoteMessage);
       if (remoteMessage.data?.type === 'flood_alert' || remoteMessage.data?.type === 'notification') {
         incrementCount();
+
+        const title = remoteMessage.notification?.title ?? 'Cảnh báo lũ lụt';
+        const body = remoteMessage.notification?.body ?? '';
+        const notificationType =
+          (remoteMessage.data?.notificationType as string) ??
+          (remoteMessage.data?.type === 'flood_alert' ? 'FLOOD_ALERT' : 'SYSTEM_UPDATE');
+        showFloodToast(title, body, notificationType);
       }
     });
 
     return unsubscribe;
-  }, [incrementCount]);
+  }, [incrementCount, showFloodToast]);
 
   // Initial fetch
   useEffect(() => {

@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix detail map">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix css">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/ReportsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/ReportsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/users/UsersPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/users/UsersPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/users/components/UserTable/UserTable.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/users/components/UserTable/UserTable.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +200,7 @@
       <workItem from="1780415985925" duration="2929000" />
       <workItem from="1780459997694" duration="4822000" />
       <workItem from="1780501448518" duration="3062000" />
-      <workItem from="1780587263625" duration="1787000" />
+      <workItem from="1780587263625" duration="4596000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -359,7 +354,23 @@
       <option name="project" value="LOCAL" />
       <updated>1780587416614</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="fix giao dien bao cao, menu, nguoi dung">
+      <option name="closed" value="true" />
+      <created>1780589180101</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1780589180101</updated>
+    </task>
+    <task id="LOCAL-00021" summary="fix css">
+      <option name="closed" value="true" />
+      <created>1780589333932</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1780589333932</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -408,7 +419,9 @@
     <MESSAGE value="update delete flood admin &amp; detail mobile" />
     <MESSAGE value="fix undefined web" />
     <MESSAGE value="fix detail map" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix detail map" />
+    <MESSAGE value="fix giao dien bao cao, menu, nguoi dung" />
+    <MESSAGE value="fix css" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix css" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
