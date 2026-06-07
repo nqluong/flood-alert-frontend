@@ -6,6 +6,7 @@ import L from 'leaflet';
 import {
     X, Cpu, MapPin, Battery, Wifi, Wrench,
     Calendar, AlertTriangle, RefreshCw, ScrollText, Info,
+    KeyRound, Eye, EyeOff, Copy, Check,
 } from 'lucide-react';
 import type { SensorDetailResponse, SensorLog, SensorSummaryResponse } from '../../../../types/sensor.types';
 import { sensorService } from '../../../../services/sensor.service';
@@ -62,6 +63,8 @@ const fmt = (v: string | null | undefined) =>
     v ? new Date(v).toLocaleString('vi-VN') : '--';
 const fmtDate = (v: string | null | undefined) =>
     v ? new Date(v).toLocaleDateString('vi-VN') : '--';
+const maskApiKey = (key: string) =>
+    key.length <= 8 ? '••••••••' : `${key.slice(0, 4)}${'•'.repeat(key.length - 8)}${key.slice(-4)}`;
 
 // ---- Sub-components ----
 
@@ -92,6 +95,8 @@ export default function SensorDetailModal({ sensor, onClose, hideMap = false }: 
     const [logs, setLogs] = useState<SensorLog[] | null>(null);
     const [logsLoading, setLogsLoading] = useState(false);
     const [logsError, setLogsError] = useState<string | null>(null);
+    const [showApiKey, setShowApiKey] = useState(false);
+    const [apiKeyCopied, setApiKeyCopied] = useState(false);
 
     const fetchDetail = useCallback(async () => {
         setLoading(true);
@@ -120,6 +125,19 @@ export default function SensorDetailModal({ sensor, onClose, hideMap = false }: 
     }, [sensor.id]);
 
     useEffect(() => { void fetchDetail(); }, [fetchDetail]);
+
+    // Ẩn API Key mỗi khi chuyển sang xem sensor khác
+    useEffect(() => {
+        setShowApiKey(false);
+        setApiKeyCopied(false);
+    }, [sensor.id]);
+
+    const copyApiKey = useCallback((key: string) => {
+        void navigator.clipboard.writeText(key).then(() => {
+            setApiKeyCopied(true);
+            setTimeout(() => setApiKeyCopied(false), 2000);
+        });
+    }, []);
 
     // Lazy-load logs when tab becomes 'logs' for the first time
     useEffect(() => {
@@ -264,6 +282,34 @@ export default function SensorDetailModal({ sensor, onClose, hideMap = false }: 
                                     <InfoRow label="Tên">{d.name}</InfoRow>
                                     <InfoRow label="Vị trí">
                                         {d.locationName ?? `${d.lat.toFixed(5)}, ${d.lon.toFixed(5)}`}
+                                    </InfoRow>
+                                </section>
+
+                                {/* API Key */}
+                                <section className="sdm-section">
+                                    <h4 className="sdm-section__title">
+                                        <KeyRound size={12} /> API Key thiết bị
+                                    </h4>
+                                    <InfoRow label="API Key">
+                                        <div className="sdm-apikey">
+                                            <code className="sdm-code sdm-apikey__value">
+                                                {showApiKey ? d.apiKey : maskApiKey(d.apiKey)}
+                                            </code>
+                                            <button
+                                                className="sdm-apikey__btn"
+                                                onClick={() => setShowApiKey((v) => !v)}
+                                                title={showApiKey ? 'Ẩn API Key' : 'Hiện API Key'}
+                                            >
+                                                {showApiKey ? <EyeOff size={13} /> : <Eye size={13} />}
+                                            </button>
+                                            <button
+                                                className={`sdm-apikey__btn ${apiKeyCopied ? 'sdm-apikey__btn--copied' : ''}`}
+                                                onClick={() => copyApiKey(d.apiKey)}
+                                                title="Sao chép API Key"
+                                            >
+                                                {apiKeyCopied ? <Check size={13} /> : <Copy size={13} />}
+                                            </button>
+                                        </div>
                                     </InfoRow>
                                 </section>
 

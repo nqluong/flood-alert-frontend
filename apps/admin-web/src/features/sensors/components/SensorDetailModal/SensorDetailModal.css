@@ -288,6 +288,50 @@
   color: var(--color-text-muted, #64748b);
 }
 
+/* ---- API Key ---- */
+
+.sdm-apikey {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.sdm-apikey__value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.sdm-apikey__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: var(--color-bg-card, #fff);
+  border-radius: 6px;
+  color: var(--color-text-muted, #64748b);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.sdm-apikey__btn:hover {
+  background: var(--color-bg-alt, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+}
+
+.sdm-apikey__btn--copied {
+  color: #16a34a;
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
 /* ---- Threshold pills ---- */
 
 .sdm-threshold {

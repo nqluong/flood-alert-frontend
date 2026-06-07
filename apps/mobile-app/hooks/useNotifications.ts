@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import { notificationService } from '../services/notification.service';
 import { useUnreadNotificationsContext } from '../background/UnreadNotificationsContext';
 import type { Notification } from '../types/notification.types';
@@ -33,7 +34,9 @@ export function useNotifications(): UseNotificationsReturn {
   const [activeFilter, setActiveFilter] = useState<NotificationFilter>('all');
 
   // Sử dụng context để quản lý unread count globally
-  const { unreadCount, decrementCount, updateCount } = useUnreadNotificationsContext();
+  const { unreadCount, decrementCount, updateCount, lastPushAt } = useUnreadNotificationsContext();
+  const isFocused = useIsFocused();
+  const prevPushAtRef = useRef<number | null>(lastPushAt);
 
   // Filter notifications based on active filter
   const filteredNotifications = notifications.filter((n) => {
@@ -84,6 +87,15 @@ export function useNotifications(): UseNotificationsReturn {
     await loadNotifications(0);
     setIsRefreshing(false);
   }, [loadNotifications]);
+
+  useEffect(() => {
+    const isNewPush = lastPushAt !== null && lastPushAt !== prevPushAtRef.current;
+    prevPushAtRef.current = lastPushAt;
+
+    if (isNewPush && isFocused) {
+      void loadNotifications(0);
+    }
+  }, [lastPushAt, isFocused, loadNotifications]);
 
   // Load more (infinite scroll)
   const loadMore = useCallback(async () => {

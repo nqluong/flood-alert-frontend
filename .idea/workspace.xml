@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix css">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix thong bao navigation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/background/BackgroundLocationTask.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/background/BackgroundLocationTask.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useLocationTracker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useLocationTracker.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,6 +201,8 @@
       <workItem from="1780459997694" duration="4822000" />
       <workItem from="1780501448518" duration="3062000" />
       <workItem from="1780587263625" duration="4596000" />
+      <workItem from="1780671985918" duration="3372000" />
+      <workItem from="1780847420351" duration="2071000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -370,7 +372,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780589333932</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="fix thong bao navigation">
+      <option name="closed" value="true" />
+      <created>1780672113699</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1780672113699</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -421,7 +431,8 @@
     <MESSAGE value="fix detail map" />
     <MESSAGE value="fix giao dien bao cao, menu, nguoi dung" />
     <MESSAGE value="fix css" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix css" />
+    <MESSAGE value="fix thong bao navigation" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix thong bao navigation" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

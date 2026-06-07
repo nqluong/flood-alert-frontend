@@ -88,8 +88,13 @@ export default function SensorMap({
   );
 
   // Cảm biến tĩnh từ API /sensors/map chưa có telemetry
+  // (cũng loại trừ vị trí trùng điểm ngập — giống sensorList — để tránh marker/tooltip
+  // đè lên nhau, đặc biệt hay thấy lúc mới reload trang khi telemetry chưa kịp về)
   const telemetrySensorIds = new Set(Object.keys(sensors));
-  const staticMarkers = sensorMarkers.filter((m) => !telemetrySensorIds.has(m.sensorId));
+  const staticMarkers = sensorMarkers.filter(
+    (m) => !telemetrySensorIds.has(m.sensorId)
+        && !floodList.some((f) => f.lat === m.lat && f.lon === m.lon),
+  );
 
   const totalSensorCount = sensorMarkers.length || sensorList.length;
   const counts: Record<SeverityLevel, number> = {

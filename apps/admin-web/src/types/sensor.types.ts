@@ -191,6 +191,7 @@ export interface SensorLog {
 }
 
 export interface SensorDetailResponse extends SensorSummaryResponse {
+  apiKey: string;
   installedAt: string | null;
   createdBy: string | null;
   logs: SensorLog[] | null;

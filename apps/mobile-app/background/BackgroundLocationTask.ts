@@ -12,7 +12,7 @@ type BackgroundLocationTaskData = {
 let lastSentLocation: { lat: number; lon: number; timestamp: number } | null = null;
 
 const MIN_DISTANCE_METERS = 100; // Chỉ gửi khi di chuyển > 100m
-const MIN_TIME_MS = 240000;
+const MIN_TIME_MS = 120000; // Heartbeat: 2 phút — phải < Redis heartbeat TTL (300s) để user không bị coi là ghost
 
 
 function calculateDistance(

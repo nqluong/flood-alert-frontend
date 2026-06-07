@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import './FloodMarkers.css';
 import './SensorPopup.css';
-import { Marker, Tooltip, Circle, Popup } from 'react-leaflet';
+import { Marker, Tooltip, Circle, Popup, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { Trash2 } from 'lucide-react';
 import type { ActiveFloodEvent } from '../../../../types/flood.types';
@@ -19,11 +20,18 @@ interface FloodMarkersProps {
   onDismiss:    (eventId: string) => void;
 }
 
+const FLOOD_DISABLE_CLUSTER_ZOOM = 15;
+
 export default function FloodMarkers({ floodList, dismissingId, onDismiss }: FloodMarkersProps) {
+  const map = useMapEvents({
+    zoomend: () => setZoom(map.getZoom()),
+  });
+  const [zoom, setZoom] = useState(() => map.getZoom());
+  const showHalo = zoom >= FLOOD_DISABLE_CLUSTER_ZOOM;
+
   return (
     <>
-      {/* Vòng tròn halo WARNING / DANGER */}
-      {floodList.map((flood) => {
+      {showHalo && floodList.map((flood) => {
         const halo = SEVERITY_HALO[flood.severityLevel];
         if (!halo) return null;
         const color = SEVERITY_COLOR[flood.severityLevel];
@@ -49,6 +57,7 @@ export default function FloodMarkers({ floodList, dismissingId, onDismiss }: Flo
         iconCreateFunction={createClusterIcon}
         showCoverageOnHover={false}
         maxClusterRadius={60}
+        disableClusteringAtZoom={FLOOD_DISABLE_CLUSTER_ZOOM}
         spiderfyOnMaxZoom
         zoomToBoundsOnClick
       >

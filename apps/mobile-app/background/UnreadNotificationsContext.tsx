@@ -8,6 +8,9 @@ import { useFloodToastContext } from '../context/FloodToastContext';
 export interface UnreadNotificationsContextType {
   unreadCount: number;
   isLoading: boolean;
+  /** Mốc thời gian (Date.now()) của lần nhận push gần nhất — đổi giá trị mỗi khi có push mới.
+   *  Màn hình danh sách thông báo dựa vào đây để fetch lại đúng lúc, thay vì polling định kỳ. */
+  lastPushAt: number | null;
   refresh: () => Promise<void>;
   incrementCount: () => void;
   decrementCount: (amount?: number) => void;
@@ -25,6 +28,7 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
   const [unreadCount, setUnreadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [lastPushAt, setLastPushAt] = useState<number | null>(null);
   const appStateRef = useRef<AppStateStatus>(AppState.currentState);
   const { showFloodToast } = useFloodToastContext();
 
@@ -100,15 +104,20 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       console.log('[UnreadNotifications] FCM foreground message:', remoteMessage);
-      if (remoteMessage.data?.type === 'flood_alert' || remoteMessage.data?.type === 'notification') {
+
+      // Backend (FcmDispatchService) luôn đính kèm notificationId + notificationType
+      // trong data payload — đây là dấu hiệu tin cậy để nhận biết push từ hệ thống
+      // (data KHÔNG có field "type" như điều kiện cũ kiểm tra, nên trước đây luôn bỏ qua).
+      const notificationType = remoteMessage.data?.notificationType as string | undefined;
+      if (remoteMessage.data?.notificationId || notificationType) {
         incrementCount();
+        // Báo cho màn danh sách thông báo (nếu đang mở) biết để fetch lại — event-driven,
+        // không polling theo chu kỳ để tránh gọi API thừa khi không có gì mới.
+        setLastPushAt(Date.now());
 
         const title = remoteMessage.notification?.title ?? 'Cảnh báo lũ lụt';
         const body = remoteMessage.notification?.body ?? '';
-        const notificationType =
-          (remoteMessage.data?.notificationType as string) ??
-          (remoteMessage.data?.type === 'flood_alert' ? 'FLOOD_ALERT' : 'SYSTEM_UPDATE');
-        showFloodToast(title, body, notificationType);
+        showFloodToast(title, body, notificationType ?? 'SYSTEM_UPDATE');
       }
     });
 
@@ -133,6 +142,7 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
   const value: UnreadNotificationsContextType = {
     unreadCount,
     isLoading,
+    lastPushAt,
     refresh: fetchUnreadCount,
     incrementCount,
     decrementCount,

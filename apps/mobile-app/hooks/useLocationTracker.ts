@@ -82,7 +82,7 @@ export function useLocationTracker(): UseLocationTrackerReturn {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.Balanced,
         distanceInterval: 100, // Trigger khi di chuyển > 100m
-        timeInterval: 240000,  // Heartbeat: 4 phút (240,000ms)
+        timeInterval: 120000,  // Heartbeat: 2 phút (120,000ms) — phải < Redis TTL 300s để tránh ghost user
         foregroundService: {
           notificationTitle: 'FloodAlert đang hoạt động',
           notificationBody: 'Đang theo dõi vị trí để cảnh báo ngập lụt',
