@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { getValidAccessToken } from '../services/apiClient';
+import { autoStartLocationTracking } from '../background/autoStartLocationTracking';
 
 
 export default function Index() {
@@ -9,6 +10,7 @@ export default function Index() {
     async function checkAuth() {
       const token = await getValidAccessToken();
       if (token) {
+        await autoStartLocationTracking();
         router.replace('/(tabs)/home');
       } else {
         router.replace('/login');

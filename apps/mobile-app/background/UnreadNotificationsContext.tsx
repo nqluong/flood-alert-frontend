@@ -100,29 +100,56 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
     return () => subscription?.remove();
   }, [checkAuth, fetchUnreadCount]);
 
+
+  const presentFloodToast = useCallback(
+    (remoteMessage: { data?: Record<string, any>; notification?: { title?: string; body?: string } } | null) => {
+      const notificationType = remoteMessage?.data?.notificationType as string | undefined;
+      if (!remoteMessage || (!remoteMessage.data?.notificationId && !notificationType)) {
+        return false;
+      }
+
+      const title = remoteMessage.notification?.title ?? 'Cảnh báo lũ lụt';
+      const body = remoteMessage.notification?.body ?? '';
+      showFloodToast(title, body, notificationType ?? 'SYSTEM_UPDATE');
+      return true;
+    },
+    [showFloodToast],
+  );
+
   // FCM foreground message listener
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       console.log('[UnreadNotifications] FCM foreground message:', remoteMessage);
 
-      // Backend (FcmDispatchService) luôn đính kèm notificationId + notificationType
-      // trong data payload — đây là dấu hiệu tin cậy để nhận biết push từ hệ thống
-      // (data KHÔNG có field "type" như điều kiện cũ kiểm tra, nên trước đây luôn bỏ qua).
-      const notificationType = remoteMessage.data?.notificationType as string | undefined;
-      if (remoteMessage.data?.notificationId || notificationType) {
+      if (presentFloodToast(remoteMessage)) {
         incrementCount();
-        // Báo cho màn danh sách thông báo (nếu đang mở) biết để fetch lại — event-driven,
-        // không polling theo chu kỳ để tránh gọi API thừa khi không có gì mới.
         setLastPushAt(Date.now());
-
-        const title = remoteMessage.notification?.title ?? 'Cảnh báo lũ lụt';
-        const body = remoteMessage.notification?.body ?? '';
-        showFloodToast(title, body, notificationType ?? 'SYSTEM_UPDATE');
       }
     });
 
     return unsubscribe;
-  }, [incrementCount, showFloodToast]);
+  }, [incrementCount, presentFloodToast]);
+
+  useEffect(() => {
+    const unsubscribeOpenedApp = messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log('[UnreadNotifications] Notification opened app từ background:', remoteMessage);
+      if (presentFloodToast(remoteMessage)) {
+        setLastPushAt(Date.now());
+      }
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (!remoteMessage) return;
+        console.log('[UnreadNotifications] App mở từ quit state qua notification:', remoteMessage);
+        if (presentFloodToast(remoteMessage)) {
+          setLastPushAt(Date.now());
+        }
+      });
+
+    return unsubscribeOpenedApp;
+  }, [presentFloodToast]);
 
   // Initial fetch
   useEffect(() => {

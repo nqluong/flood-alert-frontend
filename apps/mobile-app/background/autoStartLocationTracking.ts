@@ -7,12 +7,23 @@ export async function autoStartLocationTracking(): Promise<boolean> {
   try {
     console.log('[AutoStart] Checking location tracking...');
 
-    // Kiểm tra quyền
-    const { status: fgStatus } = await Location.getForegroundPermissionsAsync();
-    const { status: bgStatus } = await Location.getBackgroundPermissionsAsync();
+    // Kiểm tra quyền foreground, nếu chưa có thì xin
+    let { status: fgStatus } = await Location.getForegroundPermissionsAsync();
+    if (fgStatus !== 'granted') {
+      ({ status: fgStatus } = await Location.requestForegroundPermissionsAsync());
+    }
+    if (fgStatus !== 'granted') {
+      console.log('[AutoStart] Foreground permission denied, skipping auto-start');
+      return false;
+    }
 
-    if (fgStatus !== 'granted' || bgStatus !== 'granted') {
-      console.log('[AutoStart] Permissions not granted, skipping auto-start');
+    // Phải có foreground rồi mới được xin background
+    let { status: bgStatus } = await Location.getBackgroundPermissionsAsync();
+    if (bgStatus !== 'granted') {
+      ({ status: bgStatus } = await Location.requestBackgroundPermissionsAsync());
+    }
+    if (bgStatus !== 'granted') {
+      console.log('[AutoStart] Background permission denied, skipping auto-start');
       return false;
     }
 
