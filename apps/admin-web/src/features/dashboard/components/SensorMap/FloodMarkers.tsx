@@ -79,28 +79,39 @@ export default function FloodMarkers({ floodList, dismissingId, onDismiss }: Flo
               icon={icon}
               alt={flood.severityLevel}
             >
-              <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
-                <div className="sensor-map__tooltip">
-                  <strong>{title}</strong>
-                  <span
-                    className="sensor-map__tooltip-source"
-                    style={{ color: isUserReport ? '#7c3aed' : '#2563eb', fontSize: 11 }}
-                  >
-                    {isUserReport ? '👤 Báo cáo cộng đồng' : '📡 Cảm biến IoT'}
-                  </span>
-                  {!isUserReport && (
-                    <span>Mực nước: {waterLevelText ?? 'Chưa có dữ liệu'}</span>
-                  )}
-                  <span
-                    className="sensor-map__tooltip-status"
-                    style={{ color: SEVERITY_COLOR[flood.severityLevel] }}
-                  >
-                    {SEVERITY_LABEL[flood.severityLevel]}
-                  </span>
-                  {flood.updatedAt && (
-                    <span style={{ color: '#9ca3af', fontSize: 10 }}>
-                      {new Date(flood.updatedAt).toLocaleTimeString('vi-VN')}
+              <Tooltip direction="top" offset={[0, -8]} opacity={1} className="smap-popup-wrap">
+                <div className="smap-popup">
+                  <div className="smap-popup__head">
+                    <span className="smap-popup__name">{title}</span>
+                    <code className="smap-popup__sid">{flood.eventId}</code>
+                  </div>
+                  <div className="smap-popup__meta">
+                    <span
+                      className="smap-popup__badge"
+                      style={{
+                        background: isUserReport ? '#f3e8ff' : '#eff6ff',
+                        color: isUserReport ? '#7c3aed' : '#2563eb',
+                      }}
+                    >
+                      {isUserReport ? '👤 Cộng đồng' : '📡 Cảm biến'}
                     </span>
+                    <span
+                      className="smap-popup__badge"
+                      style={{
+                        background: '#fef2f2',
+                        color: SEVERITY_COLOR[flood.severityLevel] ?? '#374151',
+                      }}
+                    >
+                      {SEVERITY_LABEL[flood.severityLevel] ?? flood.severityLevel}
+                    </span>
+                  </div>
+                  {waterLevelText && (
+                    <p className="smap-popup__time">Mực nước: {waterLevelText}</p>
+                  )}
+                  {flood.updatedAt && (
+                    <p className="smap-popup__time">
+                      {new Date(flood.updatedAt).toLocaleString('vi-VN')}
+                    </p>
                   )}
                 </div>
               </Tooltip>

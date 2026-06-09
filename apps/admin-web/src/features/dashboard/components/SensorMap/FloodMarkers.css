@@ -29,6 +29,28 @@
 }
 .flood-icon--user-report:hover { transform: rotate(45deg) scale(1.25); }
 
+/* ---- Flood hover tooltip — reuse popup visual style ---- */
+.leaflet-tooltip.smap-popup-wrap {
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 1px 4px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+/* Arrow tint to match border color */
+.leaflet-tooltip.smap-popup-wrap.leaflet-tooltip-top::before {
+  border-top-color: #e2e8f0;
+}
+.leaflet-tooltip.smap-popup-wrap.leaflet-tooltip-bottom::before {
+  border-bottom-color: #e2e8f0;
+}
+.leaflet-tooltip.smap-popup-wrap.leaflet-tooltip-left::before {
+  border-left-color: #e2e8f0;
+}
+.leaflet-tooltip.smap-popup-wrap.leaflet-tooltip-right::before {
+  border-right-color: #e2e8f0;
+}
+
 /* ---- Flood cluster bubble ---- */
 .flood-cluster {
   display: flex;
