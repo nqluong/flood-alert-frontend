@@ -60,10 +60,14 @@ export default function HomeScreen() {
   const [cameraMode, setCameraMode] = useState<CameraMode>('follow_3d');
   const lastRerouteAtRef = useRef(0);
 
+  // Follow mode: camera tự theo user khi di chuyển
+  const [isFollowingUser, setIsFollowingUser] = useState(true);
+  const hasFocusedInitially = useRef(false);
+
   // Hooks
   const { coordinate: userCoordinate, error: locationError, isRealLocation } = useUserLocation();
   const { viewport, onRegionDidChange } = useMapViewport();
-  const { cameraRef, flyToLocation, flyToUserLocation } = useMapCamera();
+  const { cameraRef, flyToLocation } = useMapCamera();
   const { searchedLocation, handleSelectLocation, clearSearchedLocation } = useSearchLocation();
 
   const { data: floods = [] } = useNearbyFloods(viewport);
@@ -161,11 +165,34 @@ export default function HomeScreen() {
     onArrival: handleArrival,
   });
 
+  // Initial fly + follow mode
   useEffect(() => {
-    if (isRealLocation) {
-      flyToUserLocation(userCoordinate);
+    if (!isRealLocation || !userCoordinate || isNavigating) return;
+    if (!hasFocusedInitially.current) {
+      hasFocusedInitially.current = true;
+      flyToLocation(userCoordinate, { zoomLevel: 15, animationDuration: 1200 });
+      return;
     }
-  }, [userCoordinate, isRealLocation, flyToUserLocation]);
+    if (isFollowingUser) {
+      flyToLocation(userCoordinate, { zoomLevel: 15, animationDuration: 300 });
+    }
+  }, [userCoordinate, isRealLocation, isNavigating, isFollowingUser, flyToLocation]);
+
+  // Resume follow mode khi thoát navigation
+  useEffect(() => {
+    if (!isNavigating) setIsFollowingUser(true);
+  }, [isNavigating]);
+
+  // Tắt follow khi user kéo bản đồ, bật lại khi camera di chuyển programmatically
+  const handleRegionDidChange = useCallback(
+    (feature: GeoJSON.Feature) => {
+      onRegionDidChange(feature);
+      if ((feature.properties as any)?.isUserInteraction === true) {
+        setIsFollowingUser(false);
+      }
+    },
+    [onRegionDidChange],
+  );
 
   const hasFocusedFromNotification = React.useRef(false);
   useEffect(() => {
@@ -175,6 +202,7 @@ export default function HomeScreen() {
 
       if (!isNaN(lat) && !isNaN(lon)) {
         hasFocusedFromNotification.current = true;
+        setIsFollowingUser(false);
         flyToLocation([lon, lat], {
           zoomLevel: 16,
           animationDuration: 1000,
@@ -256,6 +284,7 @@ export default function HomeScreen() {
   // Handlers
   const handleLocateUser = () => {
     if (isRealLocation && userCoordinate) {
+      setIsFollowingUser(true);
       flyToLocation(userCoordinate, { zoomLevel: 15, animationDuration: 800 });
     } else if (locationError) {
       showAlert({
@@ -381,7 +410,7 @@ export default function HomeScreen() {
         logoEnabled={false}
         attributionEnabled={false}
         compassViewMargins={{ x: 16, y: insets.top + 196 }}
-        onRegionDidChange={onRegionDidChange}
+        onRegionDidChange={handleRegionDidChange}
         onPress={handleMapPress}
       >
         <Camera

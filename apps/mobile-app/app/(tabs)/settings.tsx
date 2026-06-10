@@ -20,6 +20,13 @@ import { authService } from '../../services/auth.service';
 import { useAlert } from '../../hooks/useAlert';
 import { useNotificationPreferences } from '../../hooks/useNotificationPreferences';
 
+const formatRadius = (meters: number): string => {
+  if (meters === 0) return '0 m';
+  if (meters < 1000) return `${meters} m`;
+  const km = meters / 1000;
+  return km % 1 === 0 ? `${km} km` : `${km.toFixed(1)} km`;
+};
+
 export default function SettingsScreen() {
   const { showConfirm } = useAlert();
   const {
@@ -89,10 +96,10 @@ export default function SettingsScreen() {
               iconBg="rgba(0,150,136,0.1)"
               label="Bán kính nhận cảnh báo"
               value={radius}
-              min={1}
-              max={10}
-              step={1}
-              unit="km"
+              min={0}
+              max={5000}
+              step={100}
+              formatValue={formatRadius}
               onValueChange={handleRadiusChange}
             />
           </View>

@@ -135,6 +135,7 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
       console.log('[UnreadNotifications] Notification opened app từ background:', remoteMessage);
       if (presentFloodToast(remoteMessage)) {
         setLastPushAt(Date.now());
+        fetchUnreadCount();
       }
     });
 
@@ -145,11 +146,12 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
         console.log('[UnreadNotifications] App mở từ quit state qua notification:', remoteMessage);
         if (presentFloodToast(remoteMessage)) {
           setLastPushAt(Date.now());
+          fetchUnreadCount();
         }
       });
 
     return unsubscribeOpenedApp;
-  }, [presentFloodToast]);
+  }, [presentFloodToast, fetchUnreadCount]);
 
   // Initial fetch
   useEffect(() => {

@@ -7,7 +7,7 @@ export function useNotificationPreferences() {
   const [loading, setLoading] = useState(true);
   const [pushEnabled, setPushEnabled] = useState(true);
   const [severeOnly, setSevereOnly] = useState(false);
-  const [radius, setRadius] = useState(5);
+  const [radius, setRadius] = useState(5000);
   const { showError } = useAlert();
   
   // Store full preferences from server
@@ -55,7 +55,7 @@ export function useNotificationPreferences() {
       // Map to UI state
       setPushEnabled(prefs.enabled && prefs.preferPush);
       setSevereOnly(!prefs.floodAlerts); // severeOnly is inverse of floodAlerts
-      setRadius(prefs.alertRadiusMeters / 1000); // Convert meters to km
+      setRadius(prefs.alertRadiusMeters);
     } catch (error) {
       
       // Extract error message
@@ -67,7 +67,7 @@ export function useNotificationPreferences() {
       
       setPushEnabled(true);
       setSevereOnly(false);
-      setRadius(5);
+      setRadius(5000);
     } finally {
       setLoading(false);
     }
@@ -125,9 +125,7 @@ export function useNotificationPreferences() {
     
     // Set new timer to update after 1 second of no changes
     radiusUpdateTimer.current = setTimeout(() => {
-      updatePreferences({ 
-        alertRadiusMeters: value * 1000, // Convert km to meters
-      });
+      updatePreferences({ alertRadiusMeters: value });
     }, 1000);
   };
 

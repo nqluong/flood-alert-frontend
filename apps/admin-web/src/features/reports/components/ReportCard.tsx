@@ -1,4 +1,4 @@
-import { Check, X, MapPin, Activity, CheckCircle, XCircle } from 'lucide-react';
+import { Check, X, MapPin, Activity, CheckCircle, XCircle, ImageOff } from 'lucide-react';
 import type { UserReport } from '../reports.types';
 import './ReportCard.css';
 
@@ -48,9 +48,7 @@ interface ReportCardProps {
 }
 
 export default function ReportCard({ report, onApprove, onReject }: ReportCardProps) {
-  const firstImage = report.imageUrls
-    ? report.imageUrls.split(',')[0].trim()
-    : 'https://via.placeholder.com/527x256?text=No+Image';
+  const firstImage = report.imageUrls?.split(',')[0]?.trim() || null;
 
   const severityVariant = getSeverityVariant(report.severityLevel);
   const severityLabel = getSeverityLabel(report.severityLevel);
@@ -63,7 +61,14 @@ export default function ReportCard({ report, onApprove, onReject }: ReportCardPr
           <h3 className="report-card__section-title">Bằng chứng</h3>
 
           <div className="report-card__image">
-            <img src={firstImage} alt="Bằng chứng lũ lụt" />
+            {firstImage ? (
+              <img src={firstImage} alt="Bằng chứng lũ lụt" />
+            ) : (
+              <div className="report-card__image-placeholder">
+                <ImageOff size={32} />
+                <span>Không có hình ảnh báo cáo</span>
+              </div>
+            )}
           </div>
 
           <div className="report-card__location">

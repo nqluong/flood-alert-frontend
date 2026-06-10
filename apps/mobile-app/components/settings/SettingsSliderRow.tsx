@@ -16,6 +16,7 @@ interface SettingsSliderRowProps {
   max: number;
   step?: number;
   unit?: string;
+  formatValue?: (value: number) => string;
   onValueChange: (val: number) => void;
 }
 
@@ -28,8 +29,11 @@ export function SettingsSliderRow({
   max,
   step = 1,
   unit = '',
+  formatValue,
   onValueChange,
 }: SettingsSliderRowProps) {
+  const display = (v: number) =>
+    formatValue ? formatValue(v) : `${v}${unit ? ` ${unit}` : ''}`;
   const trackWidth = useRef(0);
 
   const clamp = useCallback(
@@ -72,9 +76,7 @@ export function SettingsSliderRow({
       <View style={styles.header}>
         <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>{icon}</View>
         <Text style={styles.label}>{label}</Text>
-        <Text style={styles.valueText}>
-          {value} {unit}
-        </Text>
+        <Text style={styles.valueText}>{display(value)}</Text>
       </View>
 
       {/* Slider track */}
@@ -94,12 +96,8 @@ export function SettingsSliderRow({
 
       {/* Min/max labels */}
       <View style={styles.rangeRow}>
-        <Text style={styles.rangeLabel}>
-          {min} {unit}
-        </Text>
-        <Text style={styles.rangeLabel}>
-          {max} {unit}
-        </Text>
+        <Text style={styles.rangeLabel}>{display(min)}</Text>
+        <Text style={styles.rangeLabel}>{display(max)}</Text>
       </View>
     </View>
   );

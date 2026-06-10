@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix thong bao home">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix marker admin">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/settings/SettingsSliderRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/settings/SettingsSliderRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useNotificationPreferences.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useNotificationPreferences.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -207,7 +213,8 @@
       <workItem from="1780898511906" duration="97000" />
       <workItem from="1780936783550" duration="2642000" />
       <workItem from="1780983872190" duration="956000" />
-      <workItem from="1781019649707" duration="2578000" />
+      <workItem from="1781019649707" duration="6572000" />
+      <workItem from="1781050201650" duration="2723000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -401,7 +408,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780939133516</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="fix marker admin">
+      <option name="closed" value="true" />
+      <created>1781024105866</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1781024105866</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -455,7 +470,8 @@
     <MESSAGE value="fix thong bao navigation" />
     <MESSAGE value="fix vẽ điểm ngập admin &amp; thong bao mobile" />
     <MESSAGE value="fix thong bao home" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix thong bao home" />
+    <MESSAGE value="fix marker admin" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix marker admin" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

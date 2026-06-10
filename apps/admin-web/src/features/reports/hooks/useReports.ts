@@ -136,11 +136,27 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
     fetchReports();
   }, [fetchReports]);
 
+  const syncStatusFromServer = (currentFilter: ReportFilterRequest) => {
+    reportService.getAllReports(currentFilter)
+      .then(response => {
+        const statusMap = new Map(response.content.map(r => [r.id, r.status]));
+        setReports(prev => prev.map(r => {
+          const serverStatus = statusMap.get(r.id);
+          return serverStatus
+            ? { ...r, status: serverStatus as 'PENDING' | 'APPROVED' | 'REJECTED' }
+            : r;
+        }));
+        fetchPendingCount();
+      })
+      .catch(() => {});
+  };
+
   const approveReport = async (reportId: string) => {
     try {
       await reportService.approveFloodEvent(reportId);
       setReports(prev => prev.map(r => r.id === reportId ? { ...r, status: 'APPROVED' as const } : r));
       setPendingCount(prev => Math.max(0, prev - 1));
+      syncStatusFromServer(filter);
     } catch (err) {
       console.error('Error approving report:', err);
       throw err;
@@ -152,6 +168,7 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
       await reportService.rejectFloodEvent(reportId);
       setReports(prev => prev.map(r => r.id === reportId ? { ...r, status: 'REJECTED' as const } : r));
       setPendingCount(prev => Math.max(0, prev - 1));
+      syncStatusFromServer(filter);
     } catch (err) {
       console.error('Error rejecting report:', err);
       throw err;
