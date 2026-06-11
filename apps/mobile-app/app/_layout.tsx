@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AlertProvider } from '../context/AlertContext';
 import { FloodToastProvider } from '../context/FloodToastContext';
 import { UnreadNotificationsProvider } from '../background/UnreadNotificationsContext';
+import { ForegroundLocationHeartbeat } from '../background/ForegroundLocationHeartbeat';
 import { AppAlert } from '../components/ui/AppAlert';
 import { FloodToastBanner } from '../components/ui/FloodToastBanner';
 
@@ -47,6 +48,7 @@ export default function RootLayout() {
               </Stack>
               <AppAlert />
               <FloodToastBanner />
+              <ForegroundLocationHeartbeat />
             </View>
           </UnreadNotificationsProvider>
         </FloodToastProvider>
