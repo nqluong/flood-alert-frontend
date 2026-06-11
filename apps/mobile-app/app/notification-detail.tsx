@@ -30,6 +30,8 @@ export default function NotificationDetailScreen() {
     notificationType: params.notificationType as string,
   };
 
+  const hasCoordinates = Number.isFinite(notification.lat) && Number.isFinite(notification.lon);
+
   const [homeAddress, setHomeAddress] = useState<UserAddressResponse | null>(null);
   const [alertRadiusMeters, setAlertRadiusMeters] = useState<number | null>(null);
 
@@ -59,13 +61,15 @@ export default function NotificationDetailScreen() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <NotificationDetailMap
-          floodLat={notification.lat}
-          floodLon={notification.lon}
-          severityLevel={notification.severityLevel}
-          homeAddress={homeAddress}
-          alertRadiusMeters={alertRadiusMeters}
-        />
+        {hasCoordinates && (
+          <NotificationDetailMap
+            floodLat={notification.lat}
+            floodLon={notification.lon}
+            severityLevel={notification.severityLevel}
+            homeAddress={homeAddress}
+            alertRadiusMeters={alertRadiusMeters}
+          />
+        )}
 
         <NotificationDetailInfo
           title={notification.title}
@@ -75,8 +79,8 @@ export default function NotificationDetailScreen() {
           affectedZones={notification.affectedZones}
           staticDistance={notification.staticDistance}
           timestamp={notification.timestamp}
-          lat={notification.lat}
-          lon={notification.lon}
+          lat={hasCoordinates ? notification.lat : undefined}
+          lon={hasCoordinates ? notification.lon : undefined}
           alertRadiusMeters={alertRadiusMeters}
           onViewOnMap={() =>
             router.push({

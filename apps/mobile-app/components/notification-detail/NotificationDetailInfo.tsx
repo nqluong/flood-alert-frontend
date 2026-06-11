@@ -34,8 +34,8 @@ interface NotificationDetailInfoProps {
   affectedZones?: string;
   staticDistance?: number;
   timestamp?: string;
-  lat: number;
-  lon: number;
+  lat?: number;
+  lon?: number;
   alertRadiusMeters: number | null;
   onViewOnMap: () => void;
 }
@@ -53,6 +53,9 @@ export function NotificationDetailInfo({
   alertRadiusMeters,
   onViewOnMap,
 }: NotificationDetailInfoProps) {
+  const hasCoordinates =
+    lat !== undefined && lon !== undefined && Number.isFinite(lat) && Number.isFinite(lon);
+
   return (
     <View style={styles.container}>
       {/* Title */}
@@ -112,18 +115,22 @@ export function NotificationDetailInfo({
           />
         )}
 
-        <DetailRow
-          icon="pin-outline"
-          label="Tọa độ"
-          value={`${lat.toFixed(6)}, ${lon.toFixed(6)}`}
-        />
+        {hasCoordinates && (
+          <DetailRow
+            icon="pin-outline"
+            label="Tọa độ"
+            value={`${lat.toFixed(6)}, ${lon.toFixed(6)}`}
+          />
+        )}
       </View>
 
       {/* Action */}
-      <TouchableOpacity style={styles.actionButton} onPress={onViewOnMap}>
-        <Ionicons name="map" size={20} color="#ffffff" />
-        <Text style={styles.actionButtonText}>Xem trên bản đồ chính</Text>
-      </TouchableOpacity>
+      {hasCoordinates && (
+        <TouchableOpacity style={styles.actionButton} onPress={onViewOnMap}>
+          <Ionicons name="map" size={20} color="#ffffff" />
+          <Text style={styles.actionButtonText}>Xem trên bản đồ chính</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

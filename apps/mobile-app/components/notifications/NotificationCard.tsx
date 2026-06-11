@@ -26,6 +26,14 @@ const TYPE_CONFIG: Record<string, { label: string; icon: React.ComponentProps<ty
     label: 'Hệ thống',
     icon: 'notifications',
   },
+  REPORT_APPROVED: {
+    label: 'Báo cáo được duyệt',
+    icon: 'checkmark-done-circle',
+  },
+  REPORT_REJECTED: {
+    label: 'Báo cáo bị từ chối',
+    icon: 'close-circle',
+  },
 };
 
 const DEFAULT_TYPE_CONFIG = { label: 'Thông báo', icon: 'notifications' as const };
@@ -53,6 +61,8 @@ const DEFAULT_PRIORITY_CONFIG = { labelColor: '#fb8c00', iconBg: '#fb8c00', bord
 // Override màu theo loại thông báo, bất kể priority
 const TYPE_COLOR_OVERRIDE: Partial<Record<string, { labelColor: string; iconBg: string; borderColor: string }>> = {
   FLOOD_RESOLVED: { labelColor: '#43a047', iconBg: '#43a047', borderColor: '#43a047' },
+  REPORT_APPROVED: { labelColor: '#43a047', iconBg: '#43a047', borderColor: '#43a047' },
+  REPORT_REJECTED: { labelColor: '#e53935', iconBg: '#e53935', borderColor: '#e53935' },
 };
 
 export function NotificationCard({ notification, onPress }: NotificationCardProps) {

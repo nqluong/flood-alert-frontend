@@ -26,7 +26,13 @@ export interface NotificationPreferenceDTO {
  * Notification API Types
  */
 
-export type NotificationType = 'FLOOD_ALERT' | 'FLOOD_RESOLVED' | 'FLOOD_UPDATE' | 'SYSTEM_UPDATE';
+export type NotificationType =
+  | 'FLOOD_ALERT'
+  | 'FLOOD_RESOLVED'
+  | 'FLOOD_UPDATE'
+  | 'SYSTEM_UPDATE'
+  | 'REPORT_APPROVED'
+  | 'REPORT_REJECTED';
 export type NotificationPriority = 'LOW' | 'NORMAL' | 'HIGH';
 
 export interface NotificationData {
