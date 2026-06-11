@@ -22,7 +22,8 @@ export default function ReportScreen() {
   const [selectedLevel, setSelectedLevel] = useState<FloodLevel | null>(null);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-  const [address, setAddress] = useState<string>('Đang xác định vị trí...');
+  // Rỗng = chưa reverse-geocode xong; LocationCard hiển thị placeholder riêng
+  const [address, setAddress] = useState<string>('');
 
   const { coordinate } = useUserLocation();
   const { showSuccess, showError, showWarning } = useAlert();
@@ -78,6 +79,7 @@ export default function ReportScreen() {
         level: selectedLevel,
         imageUrl,
         description: description.trim() || undefined,
+        address: address || undefined,
       });
 
       showSuccess('Thành công', 'Báo cáo của bạn đã được gửi. Cảm ơn bạn đã đóng góp!');
@@ -106,7 +108,7 @@ export default function ReportScreen() {
         </View>
 
         {/* Location */}
-        <LocationCard address={address} accuracy="±8m" />
+        <LocationCard address={address || 'Đang xác định vị trí...'} accuracy="±8m" />
 
         {/* Description */}
         <DescriptionInput value={description} onChange={setDescription} />

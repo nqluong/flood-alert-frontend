@@ -80,6 +80,20 @@ export async function getValidAccessToken(): Promise<string | null> {
 }
 
 
+/**
+ * Lỗi API có kèm `code` nghiệp vụ (CoreErrorCode/ErrorCode) trả về từ backend,
+ * giúp UI phân biệt được các trường hợp lỗi cụ thể thay vì chỉ dựa vào message.
+ */
+export class ApiError extends Error {
+  code: number;
+
+  constructor(message: string, code: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.code = code;
+  }
+}
+
 type FetchOptions = RequestInit & {
   skipAuth?: boolean;
 };
@@ -121,7 +135,7 @@ export async function apiFetch<T>(
   const json = (await response.json()) as ApiResponse<T>;
 
   if (!response.ok || !json.success) {
-    throw new Error(json.message ?? 'Có lỗi xảy ra');
+    throw new ApiError(json.message ?? 'Có lỗi xảy ra', json.code);
   }
 
   return json.data;

@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { CameraModeButton, type CameraMode } from './CameraModeButton';
 import { NavigationInstructionCard } from './NavigationInstructionCard';
+import { RerouteBanner } from './RerouteBanner';
 import { useAlert } from '../../../hooks/useAlert';
 import type { RouteStep } from '../../../hooks/useNavigationTracking';
 
@@ -16,6 +17,8 @@ interface Props {
   cameraMode: CameraMode;
   onCycleCameraMode: () => void;
   onStop: () => void;
+  isRerouting: boolean;
+  onReroute: () => void;
 }
 
 /**
@@ -30,6 +33,8 @@ export function NavigationPanel({
   cameraMode,
   onCycleCameraMode,
   onStop,
+  isRerouting,
+  onReroute,
 }: Props) {
   const { showConfirm } = useAlert();
 
@@ -58,6 +63,19 @@ export function NavigationPanel({
         </View>
 
         <View style={styles.headerRight}>
+          <TouchableOpacity
+            style={styles.rerouteButton}
+            onPress={onReroute}
+            disabled={isRerouting}
+            hitSlop={6}
+            accessibilityLabel="Tìm đường khác"
+          >
+            {isRerouting ? (
+              <ActivityIndicator size="small" color="#2196F3" />
+            ) : (
+              <Ionicons name="refresh" size={18} color="#2196F3" />
+            )}
+          </TouchableOpacity>
           <CameraModeButton mode={cameraMode} onPress={onCycleCameraMode} />
           <TouchableOpacity
             style={styles.closeButton}
@@ -69,6 +87,8 @@ export function NavigationPanel({
           </TouchableOpacity>
         </View>
       </View>
+
+      <RerouteBanner visible={isRerouting} text="Đang tìm đường khác..." />
 
       <NavigationInstructionCard
         currentStep={currentStep}
@@ -136,6 +156,14 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     backgroundColor: 'rgba(244, 67, 54, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rerouteButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(33, 150, 243, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },

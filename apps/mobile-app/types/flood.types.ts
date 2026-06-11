@@ -8,6 +8,8 @@ export interface ReportPayload {
   level: FloodLevel;
   imageUrl?: string;
   description?: string;
+  /** Địa chỉ reverse-geocode từ tọa độ GPS, dùng làm location cho cảnh báo */
+  address?: string;
 }
 
 export interface FloodEvent {

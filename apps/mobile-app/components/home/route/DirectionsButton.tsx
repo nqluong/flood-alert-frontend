@@ -8,6 +8,7 @@ interface DirectionsButtonProps {
   destinationName: string;
   destinationCoordinate: [number, number];
   isLoadingAddress?: boolean;
+  isFindingRoute?: boolean;
   onDirections: (vehicleType: VehicleType) => void;
   onClose: () => void;
 }
@@ -20,6 +21,7 @@ export function DirectionsButton({
   destinationName,
   destinationCoordinate,
   isLoadingAddress = false,
+  isFindingRoute = false,
   onDirections,
   onClose,
 }: DirectionsButtonProps) {
@@ -30,6 +32,7 @@ export function DirectionsButton({
   }
 
   const handleDirectionsPress = () => {
+    if (isFindingRoute) return;
     setShowVehicleOptions(true);
   };
 
@@ -80,12 +83,22 @@ export function DirectionsButton({
 
           {/* Directions Button */}
           <TouchableOpacity
-            style={styles.directionsButton}
+            style={[styles.directionsButton, isFindingRoute && styles.directionsButtonDisabled]}
             onPress={handleDirectionsPress}
+            disabled={isFindingRoute}
             activeOpacity={0.8}
           >
-            <Ionicons name="navigate" size={20} color="#ffffff" />
-            <Text style={styles.directionsButtonText}>Chỉ đường</Text>
+            {isFindingRoute ? (
+              <>
+                <ActivityIndicator size="small" color="#ffffff" />
+                <Text style={styles.directionsButtonText}>Đang tìm đường...</Text>
+              </>
+            ) : (
+              <>
+                <Ionicons name="navigate" size={20} color="#ffffff" />
+                <Text style={styles.directionsButtonText}>Chỉ đường</Text>
+              </>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -224,6 +237,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#ffffff',
+  },
+  directionsButtonDisabled: {
+    opacity: 0.6,
   },
   
   // Modal styles

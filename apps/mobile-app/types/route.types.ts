@@ -18,6 +18,15 @@ export interface SafeRouteResponse {
   message: string;
 }
 
+/**
+ * Mã lỗi routing trả về từ backend (CoreErrorCode) khi không tìm được đường đi an toàn.
+ */
+export const ROUTE_ERROR_CODE = {
+  ROUTE_NOT_FOUND: 4014,
+  ROUTE_POINT_NOT_FOUND: 4015,
+  ROUTE_POINT_NOT_ACCESSIBLE: 4016,
+} as const;
+
 export interface RouteCoordinate {
   latitude: number;
   longitude: number;

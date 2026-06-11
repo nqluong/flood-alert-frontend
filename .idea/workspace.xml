@@ -4,16 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix marker admin">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="fix report admin">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/components/ReportCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/reports/hooks/useReports.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/(tabs)/settings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/background/UnreadNotificationsContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/settings/SettingsSliderRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/settings/SettingsSliderRow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useNotificationPreferences.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useNotificationPreferences.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/navigation/NavigationPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/navigation/NavigationPanel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/home/route/DirectionsButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/home/route/DirectionsButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/hooks/useSafeRoute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/hooks/useSafeRoute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/services/apiClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/services/apiClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/route.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/route.types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,7 +212,8 @@
       <workItem from="1780936783550" duration="2642000" />
       <workItem from="1780983872190" duration="956000" />
       <workItem from="1781019649707" duration="6572000" />
-      <workItem from="1781050201650" duration="2723000" />
+      <workItem from="1781050201650" duration="2857000" />
+      <workItem from="1781090239773" duration="2574000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -416,7 +415,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781024105866</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="fix report admin">
+      <option name="closed" value="true" />
+      <created>1781054259521</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1781054259521</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -446,7 +453,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="tao luong cap nhat vi tri tu dong" />
     <MESSAGE value="update bao cao &amp; setting" />
     <MESSAGE value="feat thong tin ca nhan &amp; search dia diem" />
     <MESSAGE value="fix gps may ao" />
@@ -471,7 +477,8 @@
     <MESSAGE value="fix vẽ điểm ngập admin &amp; thong bao mobile" />
     <MESSAGE value="fix thong bao home" />
     <MESSAGE value="fix marker admin" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix marker admin" />
+    <MESSAGE value="fix report admin" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix report admin" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

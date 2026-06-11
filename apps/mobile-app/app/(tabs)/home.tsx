@@ -29,7 +29,7 @@ import {
 import { geocodingService } from '../../services/geocoding.service';
 import { MAP_STYLES, type MapStyleId } from '../../components/home/overlay/MapStylePicker';
 import { useAlertContext } from '../../context/AlertContext';
-import type { VehicleType } from '../../types/route.types';
+import { ROUTE_ERROR_CODE, type VehicleType } from '../../types/route.types';
 
 const HANOI_CENTER: [number, number] = [105.8342, 21.0278];
 const FALLBACK_COORD: [number, number] = [0, 0];
@@ -79,11 +79,35 @@ export default function HomeScreen() {
     routeGeoJSON,
     isLoading: isRoutingLoading,
     error: routingError,
+    errorCode: routingErrorCode,
     avoidedFloodsCount,
     message: routingMessage,
     findRoute,
     clearRoute,
   } = useSafeRoute();
+
+  // Thông báo cho người dùng khi tìm đường thất bại (vùng ngập chặn hết lối đi,
+  // tọa độ ngoài vùng dữ liệu bản đồ, hoặc điểm không thể tiếp cận bằng đường bộ)
+  useEffect(() => {
+    if (!routingError) return;
+
+    let title = 'Không thể tìm đường đi';
+    if (routingErrorCode === ROUTE_ERROR_CODE.ROUTE_NOT_FOUND) {
+      title = 'Không tìm thấy đường đi an toàn';
+    } else if (
+      routingErrorCode === ROUTE_ERROR_CODE.ROUTE_POINT_NOT_FOUND ||
+      routingErrorCode === ROUTE_ERROR_CODE.ROUTE_POINT_NOT_ACCESSIBLE
+    ) {
+      title = 'Vị trí không hợp lệ';
+    }
+
+    showAlert({
+      type: 'error',
+      title,
+      message: routingError,
+      buttons: [{ text: 'Đóng', style: 'cancel' }],
+    });
+  }, [routingError, routingErrorCode, showAlert]);
 
   const destination = useMemo(
     () => searchedLocation || tappedLocation,
@@ -116,14 +140,12 @@ export default function HomeScreen() {
     vehicleTypeRef.current = currentVehicleType;
   }, [currentVehicleType]);
 
-  const handleOffRouteAutoReroute = useCallback(async () => {
-    const now = Date.now();
-    if (now - lastRerouteAtRef.current < REROUTE_COOLDOWN_MS) return;
+  const recalculateRoute = useCallback(async () => {
     const start = userCoordinateRef.current;
     const dest = destinationRef.current;
     if (!start || !dest) return;
 
-    lastRerouteAtRef.current = now;
+    lastRerouteAtRef.current = Date.now();
     setIsRerouting(true);
     try {
       await findRoute({
@@ -137,6 +159,18 @@ export default function HomeScreen() {
       setIsRerouting(false);
     }
   }, [findRoute]);
+
+  const handleOffRouteAutoReroute = useCallback(() => {
+    const now = Date.now();
+    if (now - lastRerouteAtRef.current < REROUTE_COOLDOWN_MS) return;
+    void recalculateRoute();
+  }, [recalculateRoute]);
+
+  // Người dùng chủ động bấm tìm đường khác khi phát hiện điểm ngập mới trên lộ trình
+  const handleManualReroute = useCallback(() => {
+    if (isRerouting) return;
+    void recalculateRoute();
+  }, [isRerouting, recalculateRoute]);
 
   const handleArrival = useCallback(() => {
     showAlert({
@@ -468,6 +502,7 @@ export default function HomeScreen() {
         destinationName={destination?.name || ''}
         destinationCoordinate={destinationCoordinate}
         isLoadingAddress={isFetchingAddress}
+        isFindingRoute={isRoutingLoading}
         onDirections={handleGetDirections}
         onClose={handleClearDirections}
       />
@@ -493,6 +528,8 @@ export default function HomeScreen() {
           cameraMode={cameraMode}
           onCycleCameraMode={cycleCameraMode}
           onStop={handleStopNavigation}
+          isRerouting={isRerouting}
+          onReroute={handleManualReroute}
         />
       )}
     </View>
