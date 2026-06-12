@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="update tim kiem duong di">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="feat thong bao bao cao thanh cong hay that bai">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/app/notification-detail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/app/notification-detail.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notification-detail/NotificationDetailInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notification-detail/NotificationDetailInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/components/notifications/NotificationCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mobile-app/types/notification.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/RecentActivity/RecentActivity.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/RecentActivity/RecentActivity.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMarkers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMarkers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,29 +65,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "last_opened_file_path": "D:/DoAnTN/code/flood-alert-frontend/apps/admin-web/public",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.mobile:8000.executor": "Run",
-    "npm.web.executor": "Debug",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "D:\\DoAnTN\\code\\flood-alert-frontend\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/DoAnTN/code/flood-alert-frontend/apps/admin-web/public&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.mobile:8000.executor&quot;: &quot;Run&quot;,
+    &quot;npm.web.executor&quot;: &quot;Debug&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\DoAnTN\\code\\flood-alert-frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\DoAnTN\code\flood-alert-frontend\apps\admin-web\public" />
@@ -213,7 +216,7 @@
       <workItem from="1781019649707" duration="6572000" />
       <workItem from="1781050201650" duration="2857000" />
       <workItem from="1781090239773" duration="2574000" />
-      <workItem from="1781193026656" duration="2240000" />
+      <workItem from="1781193026656" duration="3683000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -431,7 +434,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781193448673</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="feat thong bao bao cao thanh cong hay that bai">
+      <option name="closed" value="true" />
+      <created>1781196118268</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1781196118268</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -461,7 +472,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat thong tin ca nhan &amp; search dia diem" />
     <MESSAGE value="fix gps may ao" />
     <MESSAGE value="add giao dien notification" />
     <MESSAGE value="add tim kiem duong di" />
@@ -486,7 +496,8 @@
     <MESSAGE value="fix marker admin" />
     <MESSAGE value="fix report admin" />
     <MESSAGE value="update tim kiem duong di" />
-    <option name="LAST_COMMIT_MESSAGE" value="update tim kiem duong di" />
+    <MESSAGE value="feat thong bao bao cao thanh cong hay that bai" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat thong bao bao cao thanh cong hay that bai" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

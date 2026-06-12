@@ -2,11 +2,16 @@
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
+  /* Lấp đầy chiều cao còn lại của viewport:
+     100vh − header − padding trên/dưới (24px × 2) của dashboard-layout__content */
+  height: calc(100vh - var(--header-height) - 48px);
+  min-height: 520px;
 }
 
 @media (max-width: 1100px) {
   .dashboard-page__widgets {
     grid-template-columns: 1fr;
+    height: auto;
   }
 }

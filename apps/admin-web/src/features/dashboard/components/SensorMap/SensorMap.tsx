@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import './SensorMap.css';
 import { MapContainer, TileLayer } from 'react-leaflet';
@@ -79,30 +79,34 @@ export default function SensorMap({
     }
   }, []);
 
-  //  Dữ liệu render 
-  const floodList  = Object.values(activeFloods);
+  const floodList = useMemo(() => Object.values(activeFloods), [activeFloods]);
+
+  // Tập vị trí điểm ngập — tra cứu O(1) thay vì .some() O(n) cho từng sensor
+  const floodPositionKeys = useMemo(
+    () => new Set(floodList.map((f) => `${f.lat},${f.lon}`)),
+    [floodList],
+  );
 
   // Cảm biến có telemetry real-time (loại trừ vị trí trùng điểm ngập)
-  const sensorList = Object.values(sensors).filter(
-    (s) => !floodList.some((f) => f.lat === s.lat && f.lon === s.lon),
+  const sensorList = useMemo(
+    () => Object.values(sensors).filter((s) => !floodPositionKeys.has(`${s.lat},${s.lon}`)),
+    [sensors, floodPositionKeys],
   );
 
-  // Cảm biến tĩnh từ API /sensors/map chưa có telemetry
-  // (cũng loại trừ vị trí trùng điểm ngập — giống sensorList — để tránh marker/tooltip
-  // đè lên nhau, đặc biệt hay thấy lúc mới reload trang khi telemetry chưa kịp về)
-  const telemetrySensorIds = new Set(Object.keys(sensors));
-  const staticMarkers = sensorMarkers.filter(
-    (m) => !telemetrySensorIds.has(m.sensorId)
-        && !floodList.some((f) => f.lat === m.lat && f.lon === m.lon),
-  );
+  const staticMarkers = useMemo(() => {
+    const telemetrySensorIds = new Set(Object.keys(sensors));
+    return sensorMarkers.filter(
+      (m) => !telemetrySensorIds.has(m.sensorId)
+          && !floodPositionKeys.has(`${m.lat},${m.lon}`),
+    );
+  }, [sensorMarkers, sensors, floodPositionKeys]);
 
   const totalSensorCount = sensorMarkers.length || sensorList.length;
-  const counts: Record<SeverityLevel, number> = {
-    SAFE:    floodList.filter(f => f.severityLevel === 'SAFE').length,
-    WARNING: floodList.filter(f => f.severityLevel === 'WARNING').length,
-    DANGER:  floodList.filter(f => f.severityLevel === 'DANGER').length,
-    UNKNOWN: floodList.filter(f => f.severityLevel === 'UNKNOWN').length,
-  };
+  const counts: Record<SeverityLevel, number> = useMemo(() => {
+    const c: Record<SeverityLevel, number> = { SAFE: 0, WARNING: 0, DANGER: 0, UNKNOWN: 0 };
+    for (const f of floodList) c[f.severityLevel] = (c[f.severityLevel] ?? 0) + 1;
+    return c;
+  }, [floodList]);
 
   return (
     <div className="sensor-map">

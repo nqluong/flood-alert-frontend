@@ -31,10 +31,13 @@
 }
 .sensor-map__ws-toast-close:hover { color: #78350f; }
 
-/* ---- Map canvas (Leaflet requires explicit height) ---- */
+/* ---- Map canvas ----
+   Giãn theo chiều cao của .sensor-map (được grid widgets kéo full viewport);
+   min-height là fallback cho layout 1 cột (mobile) khi grid không có height cố định */
 .sensor-map__canvas {
   position: relative;
-  height: 460px;
+  flex: 1;
+  min-height: 460px;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   overflow: hidden;
 }

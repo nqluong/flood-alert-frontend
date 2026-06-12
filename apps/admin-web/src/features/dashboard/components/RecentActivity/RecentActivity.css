@@ -54,7 +54,15 @@
 .recent-activity__list {
   flex: 1;
   overflow-y: auto;
-  max-height: 600px; /* Giới hạn chiều cao tối đa */
+  min-height: 0; /* Cho phép co lại để scroll trong layout full-height */
+}
+
+/* Layout 1 cột (mobile): panel không còn bị grid khống chế chiều cao
+   → giới hạn lại để danh sách không kéo dài vô hạn */
+@media (max-width: 1100px) {
+  .recent-activity__list {
+    max-height: 600px;
+  }
 }
 
 .recent-activity__list::-webkit-scrollbar {

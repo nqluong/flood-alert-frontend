@@ -76,35 +76,56 @@ const _flagIcon = renderToStaticMarkup(
   createElement(Flag, { size: 12, color: '#ffffff', strokeWidth: 2.5 })
 );
 
+// Cache icon theo severity/status — giữ nguyên tham chiếu giữa các lần render
+// để react-leaflet không gọi setIcon() (thay DOM) cho mọi marker mỗi lần re-render
+const _floodIconCache      = new Map<SeverityLevel, L.DivIcon>();
+const _userReportIconCache = new Map<SeverityLevel, L.DivIcon>();
+const _sensorIconCache     = new Map<string, L.DivIcon>();
+
 export function createFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
-  const color = SEVERITY_COLOR[severity];
-  return L.divIcon({
-    className: '',
-    html: `<div class="flood-icon" style="background:${color};border-color:${color}">${_dropletsIcon}</div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-  });
+  let icon = _floodIconCache.get(severity);
+  if (!icon) {
+    const color = SEVERITY_COLOR[severity];
+    icon = L.divIcon({
+      className: '',
+      html: `<div class="flood-icon" style="background:${color};border-color:${color}">${_dropletsIcon}</div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    });
+    _floodIconCache.set(severity, icon);
+  }
+  return icon;
 }
 
 export function createUserReportFloodMarkerIcon(severity: SeverityLevel): L.DivIcon {
-  // Use severity color only when confirmed; fall back to purple for unconfirmed (UNKNOWN) reports
-  const color = severity !== 'UNKNOWN' ? (SEVERITY_COLOR[severity] ?? USER_REPORT_COLOR) : USER_REPORT_COLOR;
-  return L.divIcon({
-    className: '',
-    html: `<div class="flood-icon flood-icon--user-report" style="--flood-color:${color}">${_flagIcon}</div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-  });
+  let icon = _userReportIconCache.get(severity);
+  if (!icon) {
+    // Use severity color only when confirmed; fall back to purple for unconfirmed (UNKNOWN) reports
+    const color = severity !== 'UNKNOWN' ? (SEVERITY_COLOR[severity] ?? USER_REPORT_COLOR) : USER_REPORT_COLOR;
+    icon = L.divIcon({
+      className: '',
+      html: `<div class="flood-icon flood-icon--user-report" style="--flood-color:${color}">${_flagIcon}</div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    });
+    _userReportIconCache.set(severity, icon);
+  }
+  return icon;
 }
 
 export function createSensorIcon(status: string): L.DivIcon {
-  const color = STATUS_SENSOR_COLOR[status] ?? '#6b7280';
-  return L.divIcon({
-    className: '',
-    html: `<span class="sensor-marker" style="background:${color};border-color:${color}"></span>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-  });
+  let icon = _sensorIconCache.get(status);
+  if (!icon) {
+    const color = STATUS_SENSOR_COLOR[status] ?? '#6b7280';
+    icon = L.divIcon({
+      className: '',
+      html: `<span class="sensor-marker" style="background:${color};border-color:${color}"></span>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+    });
+    _sensorIconCache.set(status, icon);
+  }
+  return icon;
 }
 
 export function createSensorClusterIcon(cluster: any): L.DivIcon {
