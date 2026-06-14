@@ -42,6 +42,11 @@ export interface NotificationData {
   severityLevel?: string;
   waterLevel?: number;
   voteCount?: number;
+  staticDistance?: number;
+  activeDistance?: number;
+  isNearActive?: boolean;
+  activeLat?: number;
+  activeLon?: number;
   [key: string]: any;
 }
 

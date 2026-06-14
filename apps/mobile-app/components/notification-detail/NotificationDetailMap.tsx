@@ -14,6 +14,7 @@ import { ADDRESS_TYPE_LABELS, type AddressType } from '../../types/address.types
 import {
   createRadiusCircle,
   findNearestAddress,
+  haversineMeters,
   getBounds,
   getSeverityColor,
   getSeverityIcon,
@@ -30,6 +31,11 @@ interface NotificationDetailMapProps {
   severityLevel: string;
   addresses: UserAddressResponse[];
   alertRadiusMeters: number | null;
+  /** Cảnh báo kích hoạt theo vị trí di chuyển (live) của user */
+  isNearActive?: boolean;
+  /** Toạ độ vị trí live lúc cảnh báo — backend gửi xuống để vẽ vị trí lịch sử */
+  activeLat?: number;
+  activeLon?: number;
 }
 
 export function NotificationDetailMap({
@@ -38,10 +44,62 @@ export function NotificationDetailMap({
   severityLevel,
   addresses,
   alertRadiusMeters,
+  isNearActive,
+  activeLat,
+  activeLon,
 }: NotificationDetailMapProps) {
   const severityColor = getSeverityColor(severityLevel);
 
-  const triggerAddress = findNearestAddress(addresses, floodLat, floodLon);
+  // Có vị trí lịch sử (live) khi cảnh báo theo di chuyển và backend gửi kèm toạ độ.
+  const hasActivePosition =
+    isNearActive === true &&
+    activeLat != null &&
+    activeLon != null &&
+    Number.isFinite(activeLat) &&
+    Number.isFinite(activeLon);
+
+  // Địa chỉ tĩnh gần điểm ngập nhất + khoảng cách tới điểm ngập.
+  const nearestAddress = findNearestAddress(addresses, floodLat, floodLon);
+  const nearestDistance = nearestAddress
+    ? haversineMeters(nearestAddress.lat, nearestAddress.lon, floodLat, floodLon)
+    : Infinity;
+
+  // Cảnh báo do địa chỉ tĩnh (nhà/công ty) kích hoạt khi có địa chỉ gần nhất nằm trong
+  // bán kính cảnh báo VÀ không phải cảnh báo theo vị trí di chuyển. Trường hợp di
+  // chuyển sẽ ưu tiên vẽ theo vị trí lịch sử (activeLat/activeLon) bên dưới.
+  const triggeredByAddress =
+    !hasActivePosition &&
+    nearestAddress != null &&
+    alertRadiusMeters != null &&
+    nearestDistance <= alertRadiusMeters;
+  const triggerAddress = triggeredByAddress ? nearestAddress : null;
+
+  // Tâm vòng bán kính, ưu tiên: vị trí lịch sử → địa chỉ kích hoạt → điểm ngập.
+  const radiusCenter: [number, number] | null = alertRadiusMeters
+    ? hasActivePosition
+      ? [activeLon as number, activeLat as number]
+      : triggerAddress
+        ? [triggerAddress.lon, triggerAddress.lat]
+        : [floodLon, floodLat]
+    : null;
+
+  // Marker vị trí lịch sử của user lúc cảnh báo (cảnh báo theo di chuyển).
+  const activeMarkerGeoJSON: GeoJSON.FeatureCollection | null = hasActivePosition
+    ? {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            id: 'active-location',
+            geometry: {
+              type: 'Point',
+              coordinates: [activeLon as number, activeLat as number],
+            },
+            properties: {},
+          },
+        ],
+      }
+    : null;
 
   const floodMarkerGeoJSON: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -87,38 +145,27 @@ export function NotificationDetailMap({
   };
 
   const radiusCircleGeoJSON: GeoJSON.FeatureCollection | null =
-    triggerAddress && alertRadiusMeters
+    radiusCenter && alertRadiusMeters
       ? {
           type: 'FeatureCollection',
           features: [
-            createRadiusCircle(
-              triggerAddress.lon,
-              triggerAddress.lat,
-              alertRadiusMeters,
-            ),
+            createRadiusCircle(radiusCenter[0], radiusCenter[1], alertRadiusMeters),
           ],
         }
       : null;
 
-  // Always use bounds (never defaultSettings) so Camera updates reactively
-  // when addresses/alertRadiusMeters load after initial render.
-  const FLOOD_PAD = 0.005; // ~500 m at equator
-  const cameraBounds = triggerAddress
-    ? getBounds(
-        triggerAddress.lat,
-        triggerAddress.lon,
-        floodLat,
-        floodLon,
-        alertRadiusMeters ?? 500,
-      )
-    : {
-        ne: [floodLon + FLOOD_PAD, floodLat + FLOOD_PAD] as [number, number],
-        sw: [floodLon - FLOOD_PAD, floodLat - FLOOD_PAD] as [number, number],
-        paddingTop: 60,
-        paddingBottom: 60,
-        paddingLeft: 40,
-        paddingRight: 40,
-      };
+  // Always use bounds (never defaultSettings) so Camera updates reactively when
+  // addresses/alertRadiusMeters load after initial render. Anchor (tâm khung) ưu tiên:
+  // vị trí lịch sử → địa chỉ kích hoạt → điểm ngập.
+  const anchorLat = hasActivePosition ? (activeLat as number) : triggerAddress?.lat ?? floodLat;
+  const anchorLon = hasActivePosition ? (activeLon as number) : triggerAddress?.lon ?? floodLon;
+  const cameraBounds = getBounds(
+    anchorLat,
+    anchorLon,
+    floodLat,
+    floodLon,
+    alertRadiusMeters ?? 500,
+  );
 
   return (
     <View style={styles.mapContainer}>
@@ -192,6 +239,25 @@ export function NotificationDetailMap({
           </ShapeSource>
         )}
 
+        {/* User's historical (live) position when alert was triggered */}
+        {activeMarkerGeoJSON && (
+          <ShapeSource id="active-marker-source" shape={activeMarkerGeoJSON}>
+            <CircleLayer
+              id="active-halo"
+              style={{ circleRadius: 18, circleColor: '#3b82f6', circleOpacity: 0.2 }}
+            />
+            <CircleLayer
+              id="active-dot"
+              style={{
+                circleRadius: 8,
+                circleColor: '#3b82f6',
+                circleStrokeWidth: 3,
+                circleStrokeColor: '#ffffff',
+              }}
+            />
+          </ShapeSource>
+        )}
+
         {/* Flood marker */}
         <ShapeSource id="flood-marker-source" shape={floodMarkerGeoJSON}>
           <CircleLayer
@@ -217,23 +283,33 @@ export function NotificationDetailMap({
       </View>
 
       {/* Map legend */}
-      {triggerAddress && (
+      {(addresses.length > 0 || alertRadiusMeters || hasActivePosition) && (
         <View style={styles.mapLegend}>
-          <View style={styles.legendRow}>
-            <View style={[styles.legendDot, { backgroundColor: '#009688' }]} />
-            <Text style={styles.legendText}>
-              {triggerAddress.addressType
-                ? `Vị trí cảnh báo (${
-                    ADDRESS_TYPE_LABELS[triggerAddress.addressType as AddressType] ??
-                    'Khác'
-                  })`
-                : 'Vị trí cảnh báo'}
-            </Text>
-          </View>
+          {hasActivePosition && (
+            <View style={styles.legendRow}>
+              <View style={[styles.legendDot, { backgroundColor: '#3b82f6' }]} />
+              <Text style={styles.legendText}>Vị trí của bạn lúc cảnh báo</Text>
+            </View>
+          )}
+          {triggerAddress && (
+            <View style={styles.legendRow}>
+              <View style={[styles.legendDot, { backgroundColor: '#009688' }]} />
+              <Text style={styles.legendText}>
+                {triggerAddress.addressType
+                  ? `Vị trí cảnh báo (${
+                      ADDRESS_TYPE_LABELS[triggerAddress.addressType as AddressType] ??
+                      'Khác'
+                    })`
+                  : 'Vị trí cảnh báo'}
+              </Text>
+            </View>
+          )}
           {otherMarkersGeoJSON.features.length > 0 && (
             <View style={styles.legendRow}>
               <View style={[styles.legendDot, { backgroundColor: '#90a4ae' }]} />
-              <Text style={styles.legendText}>Vị trí khác của bạn</Text>
+              <Text style={styles.legendText}>
+                {triggerAddress ? 'Vị trí khác của bạn' : 'Vị trí đã lưu của bạn'}
+              </Text>
             </View>
           )}
           <View style={styles.legendRow}>
@@ -244,7 +320,9 @@ export function NotificationDetailMap({
             <View style={styles.legendRow}>
               <View style={styles.legendDash} />
               <Text style={styles.legendText}>
-                Bán kính {formatMeters(alertRadiusMeters)}
+                {triggerAddress || hasActivePosition
+                  ? `Bán kính ${formatMeters(alertRadiusMeters)}`
+                  : `Vùng cảnh báo ${formatMeters(alertRadiusMeters)}`}
               </Text>
             </View>
           )}

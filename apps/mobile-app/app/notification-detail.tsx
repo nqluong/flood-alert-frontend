@@ -26,6 +26,9 @@ export default function NotificationDetailScreen() {
     affectedZones: params.affectedZones as string,
     location: params.location as string,
     staticDistance: params.staticDistance ? parseFloat(params.staticDistance as string) : undefined,
+    isNearActive: params.isNearActive === 'true',
+    activeLat: params.activeLat ? parseFloat(params.activeLat as string) : undefined,
+    activeLon: params.activeLon ? parseFloat(params.activeLon as string) : undefined,
     timestamp: params.timestamp as string,
     notificationType: params.notificationType as string,
   };
@@ -68,6 +71,9 @@ export default function NotificationDetailScreen() {
             severityLevel={notification.severityLevel}
             addresses={addresses}
             alertRadiusMeters={alertRadiusMeters}
+            isNearActive={notification.isNearActive}
+            activeLat={notification.activeLat}
+            activeLon={notification.activeLon}
           />
         )}
 
