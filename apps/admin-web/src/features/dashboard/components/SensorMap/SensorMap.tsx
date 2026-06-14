@@ -101,6 +101,12 @@ export default function SensorMap({
     );
   }, [sensorMarkers, sensors, floodPositionKeys]);
 
+
+  const operationalStatusById = useMemo(
+    () => new Map(sensorMarkers.map((m) => [m.sensorId, m.status])),
+    [sensorMarkers],
+  );
+
   const totalSensorCount = sensorMarkers.length || sensorList.length;
   const counts: Record<SeverityLevel, number> = useMemo(() => {
     const c: Record<SeverityLevel, number> = { SAFE: 0, WARNING: 0, DANGER: 0, UNKNOWN: 0 };
@@ -163,6 +169,7 @@ export default function SensorMap({
           <SensorMarkers
             sensorList={sensorList}
             staticMarkers={staticMarkers}
+            operationalStatusById={operationalStatusById}
             fetchingId={fetchingId}
             onAction={handleSensorAction}
           />

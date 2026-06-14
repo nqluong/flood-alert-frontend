@@ -10,8 +10,10 @@ import {
   LineLayer,
 } from '@maplibre/maplibre-react-native';
 import type { UserAddressResponse } from '../../types/address.types';
+import { ADDRESS_TYPE_LABELS, type AddressType } from '../../types/address.types';
 import {
   createRadiusCircle,
+  findNearestAddress,
   getBounds,
   getSeverityColor,
   getSeverityIcon,
@@ -26,7 +28,7 @@ interface NotificationDetailMapProps {
   floodLat: number;
   floodLon: number;
   severityLevel: string;
-  homeAddress: UserAddressResponse | null;
+  addresses: UserAddressResponse[];
   alertRadiusMeters: number | null;
 }
 
@@ -34,10 +36,12 @@ export function NotificationDetailMap({
   floodLat,
   floodLon,
   severityLevel,
-  homeAddress,
+  addresses,
   alertRadiusMeters,
 }: NotificationDetailMapProps) {
   const severityColor = getSeverityColor(severityLevel);
+
+  const triggerAddress = findNearestAddress(addresses, floodLat, floodLon);
 
   const floodMarkerGeoJSON: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -51,16 +55,17 @@ export function NotificationDetailMap({
     ],
   };
 
-  const homeMarkerGeoJSON: GeoJSON.FeatureCollection | null = homeAddress
+  // Marker cho địa chỉ kích hoạt cảnh báo (nổi bật).
+  const triggerMarkerGeoJSON: GeoJSON.FeatureCollection | null = triggerAddress
     ? {
         type: 'FeatureCollection',
         features: [
           {
             type: 'Feature',
-            id: 'home-location',
+            id: 'trigger-location',
             geometry: {
               type: 'Point',
-              coordinates: [homeAddress.lon, homeAddress.lat],
+              coordinates: [triggerAddress.lon, triggerAddress.lat],
             },
             properties: {},
           },
@@ -68,23 +73,40 @@ export function NotificationDetailMap({
       }
     : null;
 
+  // Marker cho các địa chỉ còn lại của user (mờ hơn).
+  const otherMarkersGeoJSON: GeoJSON.FeatureCollection = {
+    type: 'FeatureCollection',
+    features: addresses
+      .filter((addr) => addr.id !== triggerAddress?.id)
+      .map((addr) => ({
+        type: 'Feature',
+        id: `address-${addr.id}`,
+        geometry: { type: 'Point', coordinates: [addr.lon, addr.lat] },
+        properties: {},
+      })),
+  };
+
   const radiusCircleGeoJSON: GeoJSON.FeatureCollection | null =
-    homeAddress && alertRadiusMeters
+    triggerAddress && alertRadiusMeters
       ? {
           type: 'FeatureCollection',
           features: [
-            createRadiusCircle(homeAddress.lon, homeAddress.lat, alertRadiusMeters),
+            createRadiusCircle(
+              triggerAddress.lon,
+              triggerAddress.lat,
+              alertRadiusMeters,
+            ),
           ],
         }
       : null;
 
   // Always use bounds (never defaultSettings) so Camera updates reactively
-  // when homeAddress/alertRadiusMeters load after initial render.
+  // when addresses/alertRadiusMeters load after initial render.
   const FLOOD_PAD = 0.005; // ~500 m at equator
-  const cameraBounds = homeAddress
+  const cameraBounds = triggerAddress
     ? getBounds(
-        homeAddress.lat,
-        homeAddress.lon,
+        triggerAddress.lat,
+        triggerAddress.lon,
         floodLat,
         floodLon,
         alertRadiusMeters ?? 500,
@@ -135,15 +157,31 @@ export function NotificationDetailMap({
           </ShapeSource>
         )}
 
-        {/* User home marker */}
-        {homeMarkerGeoJSON && (
-          <ShapeSource id="home-marker-source" shape={homeMarkerGeoJSON}>
+        {/* Other user addresses (dimmed) */}
+        {otherMarkersGeoJSON.features.length > 0 && (
+          <ShapeSource id="other-markers-source" shape={otherMarkersGeoJSON}>
             <CircleLayer
-              id="home-halo"
+              id="other-dot"
+              style={{
+                circleRadius: 6,
+                circleColor: '#90a4ae',
+                circleStrokeWidth: 2,
+                circleStrokeColor: '#ffffff',
+                circleOpacity: 0.85,
+              }}
+            />
+          </ShapeSource>
+        )}
+
+        {/* Triggering address marker (highlighted) */}
+        {triggerMarkerGeoJSON && (
+          <ShapeSource id="trigger-marker-source" shape={triggerMarkerGeoJSON}>
+            <CircleLayer
+              id="trigger-halo"
               style={{ circleRadius: 18, circleColor: '#009688', circleOpacity: 0.2 }}
             />
             <CircleLayer
-              id="home-dot"
+              id="trigger-dot"
               style={{
                 circleRadius: 8,
                 circleColor: '#009688',
@@ -179,12 +217,25 @@ export function NotificationDetailMap({
       </View>
 
       {/* Map legend */}
-      {homeAddress && (
+      {triggerAddress && (
         <View style={styles.mapLegend}>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: '#009688' }]} />
-            <Text style={styles.legendText}>Vị trí của bạn</Text>
+            <Text style={styles.legendText}>
+              {triggerAddress.addressType
+                ? `Vị trí cảnh báo (${
+                    ADDRESS_TYPE_LABELS[triggerAddress.addressType as AddressType] ??
+                    'Khác'
+                  })`
+                : 'Vị trí cảnh báo'}
+            </Text>
           </View>
+          {otherMarkersGeoJSON.features.length > 0 && (
+            <View style={styles.legendRow}>
+              <View style={[styles.legendDot, { backgroundColor: '#90a4ae' }]} />
+              <Text style={styles.legendText}>Vị trí khác của bạn</Text>
+            </View>
+          )}
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: severityColor }]} />
             <Text style={styles.legendText}>Điểm ngập</Text>

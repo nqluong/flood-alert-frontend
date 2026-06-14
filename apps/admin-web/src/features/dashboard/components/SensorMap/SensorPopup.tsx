@@ -10,7 +10,6 @@ interface SensorActionPopupProps {
   status:           string;
   batteryLevel?:    number;
   waterLevel?:      number;
-  timestamp?:       string;           // Thay recordedAt bằng timestamp
   locationName?:    string;           // Tên địa điểm
   warningThreshold?: number;          // Ngưỡng cảnh báo
   dangerThreshold?:  number;          // Ngưỡng nguy hiểm
@@ -19,7 +18,7 @@ interface SensorActionPopupProps {
 }
 
 export default function SensorActionPopup({
-  sensorId, name, status, batteryLevel, waterLevel, timestamp, locationName,
+  sensorId, name, status, batteryLevel, waterLevel, locationName,
   warningThreshold, dangerThreshold, fetchingId, onAction,
 }: SensorActionPopupProps) {
   const map = useMap();
@@ -66,12 +65,6 @@ export default function SensorActionPopup({
           </span>
         )}
       </div>
-
-      {timestamp && (
-        <p className="smap-popup__time">
-          {new Date(timestamp).toLocaleString('vi-VN')}
-        </p>
-      )}
 
       {/* Action buttons — hiện trực tiếp, không cần dropdown */}
       <div className="smap-popup__actions">

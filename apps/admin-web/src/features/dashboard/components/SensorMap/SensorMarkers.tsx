@@ -4,7 +4,7 @@ import { Marker, Tooltip, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { Radio } from 'lucide-react';
 import type { ProcessedSensorData, SensorMapItem } from '../../../../types/flood.types';
-import { createSensorIcon, createSensorClusterIcon } from './constants';
+import { createSensorIcon, createSensorClusterIcon, SENSOR_STATUS_LABEL } from './constants';
 import type { ActionType } from './constants';
 import SensorActionPopup from './SensorPopup';
 
@@ -13,16 +13,20 @@ interface SensorMarkersProps {
   sensorList: ProcessedSensorData[];
   /** Cảm biến tĩnh từ /sensors/map chưa có telemetry */
   staticMarkers: SensorMapItem[];
+  /** Trạng thái hoạt động (ACTIVE/OFFLINE…) theo sensorId, lấy từ /sensors/map */
+  operationalStatusById: Map<string, string>;
   fetchingId: string | null;
   onAction: (sensorId: string, action: ActionType) => void;
 }
 
 const TelemetrySensorMarker = memo(function TelemetrySensorMarker({
   sensor,
+  operationalStatus,
   isFetching,
   onAction,
 }: {
   sensor: ProcessedSensorData;
+  operationalStatus: string;
   isFetching: boolean;
   onAction: (sensorId: string, action: ActionType) => void;
 }) {
@@ -39,22 +43,16 @@ const TelemetrySensorMarker = memo(function TelemetrySensorMarker({
           </strong>
           <span>{sensor.locationName}</span>
           <span>Mực nước: {sensor.waterLevel != null ? `${sensor.waterLevel.toFixed(1)} cm` : '—'}</span>
-          <span>Trạng thái: {sensor.status || 'NORMAL'}</span>
+          <span>Trạng thái: {SENSOR_STATUS_LABEL[operationalStatus] ?? operationalStatus}</span>
           <span>Pin: {sensor.battery}%</span>
-          {sensor.timestamp && (
-            <span style={{ color: '#9ca3af', fontSize: 10 }}>
-              {new Date(sensor.timestamp).toLocaleTimeString('vi-VN')}
-            </span>
-          )}
         </div>
       </Tooltip>
       <Popup className="smap-popup-wrap" closeButton={false} minWidth={220} maxWidth={280}>
         <SensorActionPopup
           sensorId={sensor.sensorId}
-          status={sensor.status || 'NORMAL'}
+          status={operationalStatus}
           waterLevel={sensor.waterLevel ?? undefined}
           batteryLevel={sensor.battery}
-          timestamp={sensor.timestamp}
           locationName={sensor.locationName}
           warningThreshold={sensor.warningThreshold}
           dangerThreshold={sensor.dangerThreshold}
@@ -87,7 +85,7 @@ const StaticSensorMarker = memo(function StaticSensorMarker({
             {sensor.sensorId}
           </strong>
           <span>{sensor.name}</span>
-          <span>Trạng thái: {sensor.status}</span>
+          <span>Trạng thái: {SENSOR_STATUS_LABEL[sensor.status] ?? sensor.status}</span>
           <span>Pin: {sensor.batteryLevel}%</span>
         </div>
       </Tooltip>
@@ -108,6 +106,7 @@ const StaticSensorMarker = memo(function StaticSensorMarker({
 export default memo(function SensorMarkers({
   sensorList,
   staticMarkers,
+  operationalStatusById,
   fetchingId,
   onAction,
 }: SensorMarkersProps) {
@@ -125,6 +124,7 @@ export default memo(function SensorMarkers({
         <TelemetrySensorMarker
           key={sensor.sensorId}
           sensor={sensor}
+          operationalStatus={operationalStatusById.get(sensor.sensorId) ?? 'ACTIVE'}
           isFetching={fetchingId === sensor.sensorId}
           onAction={onAction}
         />

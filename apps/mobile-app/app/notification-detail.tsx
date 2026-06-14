@@ -32,15 +32,15 @@ export default function NotificationDetailScreen() {
 
   const hasCoordinates = Number.isFinite(notification.lat) && Number.isFinite(notification.lon);
 
-  const [homeAddress, setHomeAddress] = useState<UserAddressResponse | null>(null);
+  const [addresses, setAddresses] = useState<UserAddressResponse[]>([]);
   const [alertRadiusMeters, setAlertRadiusMeters] = useState<number | null>(null);
 
   useEffect(() => {
     Promise.all([
-      addressService.getPrimaryAddress().catch(() => null),
+      addressService.getUserAddresses().catch(() => []),
       notificationService.getPreferences().catch(() => null),
-    ]).then(([address, prefs]) => {
-      setHomeAddress(address);
+    ]).then(([userAddresses, prefs]) => {
+      setAddresses(userAddresses ?? []);
       if (prefs?.alertRadiusMeters) setAlertRadiusMeters(prefs.alertRadiusMeters);
     });
   }, []);
@@ -66,7 +66,7 @@ export default function NotificationDetailScreen() {
             floodLat={notification.lat}
             floodLon={notification.lon}
             severityLevel={notification.severityLevel}
-            homeAddress={homeAddress}
+            addresses={addresses}
             alertRadiusMeters={alertRadiusMeters}
           />
         )}

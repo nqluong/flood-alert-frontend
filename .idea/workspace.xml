@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="feat thong bao bao cao thanh cong hay that bai">
+    <list default="true" id="7b1bac6c-104d-4d90-8241-a937a04e374c" name="Changes" comment="update perf admin render floodmarker">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/DashboardPage.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/RecentActivity/RecentActivity.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/RecentActivity/RecentActivity.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/FloodMarkers.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMap.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMarkers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/SensorMarkers.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/admin-web/src/features/dashboard/components/SensorMap/constants.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,6 +210,10 @@
       <workItem from="1781050201650" duration="2857000" />
       <workItem from="1781090239773" duration="2574000" />
       <workItem from="1781193026656" duration="3683000" />
+      <workItem from="1781280771370" duration="2451000" />
+      <workItem from="1781366302063" duration="16000" />
+      <workItem from="1781372720571" duration="1956000" />
+      <workItem from="1781429991539" duration="900000" />
     </task>
     <task id="LOCAL-00001" summary="tao luong cap nhat vi tri tu dong">
       <option name="closed" value="true" />
@@ -442,7 +439,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781196118268</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="update perf admin render floodmarker">
+      <option name="closed" value="true" />
+      <created>1781281151995</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1781281151995</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -472,7 +477,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix gps may ao" />
     <MESSAGE value="add giao dien notification" />
     <MESSAGE value="add tim kiem duong di" />
     <MESSAGE value="del components" />
@@ -497,7 +501,8 @@
     <MESSAGE value="fix report admin" />
     <MESSAGE value="update tim kiem duong di" />
     <MESSAGE value="feat thong bao bao cao thanh cong hay that bai" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat thong bao bao cao thanh cong hay that bai" />
+    <MESSAGE value="update perf admin render floodmarker" />
+    <option name="LAST_COMMIT_MESSAGE" value="update perf admin render floodmarker" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
