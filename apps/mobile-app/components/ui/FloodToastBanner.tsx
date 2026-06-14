@@ -1,14 +1,8 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useFloodToastContext } from '../../context/FloodToastContext';
+import { useFloodToastContext, type FloodToastData } from '../../context/FloodToastContext';
 
 const AUTO_DISMISS_MS = 5000;
 
@@ -53,100 +47,77 @@ const TYPE_MAP: Record<string, ToastStyle> = {
 
 const DEFAULT_STYLE = TYPE_MAP.FLOOD_ALERT;
 
-export function FloodToastBanner() {
-  const { toast, dismissToast } = useFloodToastContext();
-  const { top } = useSafeAreaInsets();
-  const translateY = useRef(new Animated.Value(-140)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const slideOut = useCallback(
-    (onDone?: () => void) => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      Animated.parallel([
-        Animated.timing(translateY, {
-          toValue: -140,
-          duration: 220,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 220,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        dismissToast();
-        onDone?.();
-      });
-    },
-    [translateY, opacity, dismissToast],
-  );
-
+function ToastItem({
+  toast,
+  index,
+  onDismiss,
+}: {
+  toast: FloodToastData;
+  index: number;
+  onDismiss: (id: string) => void;
+}) {
+  // Mỗi toast có timer tự ẩn riêng; toast cũ (thêm trước) sẽ hết hạn trước → stack
+  // tự dọn dần từ dưới lên.
   useEffect(() => {
-    if (!toast) return;
-
-    // Reset position before animating in
-    translateY.setValue(-140);
-    opacity.setValue(0);
-
-    Animated.parallel([
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: true,
-        tension: 160,
-        friction: 10,
-      }),
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    timerRef.current = setTimeout(() => slideOut(), AUTO_DISMISS_MS);
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [toast?.id]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (!toast) return null;
+    const timer = setTimeout(() => onDismiss(toast.id), AUTO_DISMISS_MS);
+    return () => clearTimeout(timer);
+  }, [toast.id, onDismiss]);
 
   const ts = TYPE_MAP[toast.notificationType] ?? DEFAULT_STYLE;
 
+  // Toast càng ở dưới (index lớn = cũ hơn) càng mờ và thu nhỏ nhẹ để tạo chiều sâu,
+  // báo hiệu sắp bị ẩn — nhưng vẫn giữ đủ độ rõ để đọc.
+  const itemOpacity = Math.max(0.7, 1 - index * 0.14);
+  const itemScale = 1 - index * 0.03;
+
   return (
-    <Animated.View
+    <TouchableOpacity
+      activeOpacity={0.92}
+      onPress={() => onDismiss(toast.id)}
       style={[
-        styles.wrapper,
-        { top: top + 8, transform: [{ translateY }], opacity },
+        styles.card,
+        {
+          backgroundColor: ts.bg,
+          borderColor: ts.border,
+          opacity: itemOpacity,
+          transform: [{ scale: itemScale }],
+        },
       ]}
-      pointerEvents="box-none"
     >
-      <TouchableOpacity
-        activeOpacity={0.92}
-        onPress={() => slideOut()}
-        style={[styles.card, { backgroundColor: ts.bg, borderColor: ts.border }]}
-      >
-        <View style={[styles.iconWrap, { backgroundColor: ts.iconBg }]}>
-          <Ionicons name={ts.iconName} size={22} color={ts.iconColor} />
-        </View>
+      <View style={[styles.iconWrap, { backgroundColor: ts.iconBg }]}>
+        <Ionicons name={ts.iconName} size={22} color={ts.iconColor} />
+      </View>
 
-        <View style={styles.textWrap}>
-          <Text style={styles.title} numberOfLines={1}>
-            {toast.title}
+      <View style={styles.textWrap}>
+        <Text style={styles.title} numberOfLines={1}>
+          {toast.title}
+        </Text>
+        {!!toast.body && (
+          <Text style={styles.body} numberOfLines={2}>
+            {toast.body}
           </Text>
-          {!!toast.body && (
-            <Text style={styles.body} numberOfLines={2}>
-              {toast.body}
-            </Text>
-          )}
-        </View>
+        )}
+      </View>
 
-        <TouchableOpacity onPress={() => slideOut()} hitSlop={10} style={styles.closeBtn}>
-          <Ionicons name="close" size={16} color="#9ca3af" />
-        </TouchableOpacity>
+      <TouchableOpacity onPress={() => onDismiss(toast.id)} hitSlop={10} style={styles.closeBtn}>
+        <Ionicons name="close" size={16} color="#9ca3af" />
       </TouchableOpacity>
-    </Animated.View>
+    </TouchableOpacity>
+  );
+}
+
+export function FloodToastBanner() {
+  const { toasts, dismissToast } = useFloodToastContext();
+  const { top } = useSafeAreaInsets();
+
+  if (toasts.length === 0) return null;
+
+  return (
+    <View style={[styles.wrapper, { top: top + 8 }]} pointerEvents="box-none">
+      {toasts.map((toast, index) => (
+        <ToastItem key={toast.id} toast={toast} index={index} onDismiss={dismissToast} />
+      ))}
+    </View>
   );
 }
 
@@ -157,6 +128,7 @@ const styles = StyleSheet.create({
     right: 16,
     zIndex: 9999,
     elevation: 20,
+    gap: 10,
   },
   card: {
     flexDirection: 'row',

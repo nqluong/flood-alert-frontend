@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useCallback, useEffect, useState, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import { useQueryClient } from '@tanstack/react-query';
 import { notificationService } from '../services/notification.service';
 import { storageService } from '../services/storage.service';
 import { useFloodToastContext } from '../context/FloodToastContext';
+
+const FLOOD_PUSH_TYPES = new Set(['FLOOD_ALERT', 'FLOOD_RESOLVED', 'FLOOD_UPDATE']);
 
 export interface UnreadNotificationsContextType {
   unreadCount: number;
@@ -31,6 +34,7 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
   const [lastPushAt, setLastPushAt] = useState<number | null>(null);
   const appStateRef = useRef<AppStateStatus>(AppState.currentState);
   const { showFloodToast } = useFloodToastContext();
+  const queryClient = useQueryClient();
 
   const checkAuth = useCallback(async () => {
     const token = await storageService.getAccessToken();
@@ -111,9 +115,13 @@ export function UnreadNotificationsProvider({ children }: UnreadNotificationsPro
       const title = remoteMessage.notification?.title ?? 'Cảnh báo lũ lụt';
       const body = remoteMessage.notification?.body ?? '';
       showFloodToast(title, body, notificationType ?? 'SYSTEM_UPDATE');
+
+      if (notificationType && FLOOD_PUSH_TYPES.has(notificationType)) {
+        queryClient.invalidateQueries({ queryKey: ['nearbyFloods'] });
+      }
       return true;
     },
-    [showFloodToast],
+    [showFloodToast, queryClient],
   );
 
   // FCM foreground message listener
