@@ -7,7 +7,7 @@ export function useNotificationPreferences() {
   const [loading, setLoading] = useState(true);
   const [pushEnabled, setPushEnabled] = useState(true);
   const [severeOnly, setSevereOnly] = useState(false);
-  const [radius, setRadius] = useState(5000);
+  const [radius, setRadius] = useState(500);
   const { showError } = useAlert();
   
   // Store full preferences from server
@@ -16,7 +16,7 @@ export function useNotificationPreferences() {
     preferPush: true,
     floodAlerts: true,
     quietHoursEnabled: false,
-    alertRadiusMeters: 5000,
+    alertRadiusMeters: 500,
   });
   
   // Debounce timer for radius updates
@@ -67,7 +67,7 @@ export function useNotificationPreferences() {
       
       setPushEnabled(true);
       setSevereOnly(false);
-      setRadius(5000);
+      setRadius(500);
     } finally {
       setLoading(false);
     }

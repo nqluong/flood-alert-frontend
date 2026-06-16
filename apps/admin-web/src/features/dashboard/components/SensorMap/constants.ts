@@ -20,6 +20,35 @@ export const SEVERITY_LABEL: Record<SeverityLevel, string> = {
   UNKNOWN: 'Không xác định',
 };
 
+const USER_REPORT_SEVERITY_LABEL: Record<string, string> = {
+  LOW:      'Thấp',
+  MEDIUM:   'Trung bình',
+  HIGH:     'Cao',
+  CRITICAL: 'Nghiêm trọng',
+};
+
+const USER_REPORT_SEVERITY_COLOR: Record<string, string> = {
+  LOW:      '#22c55e',
+  MEDIUM:   '#f59e0b',
+  HIGH:     '#ef4444',
+  CRITICAL: '#b91c1c',
+};
+
+export function getSeverityLabel(severity?: string | null): string {
+  const key = (severity ?? '').toUpperCase();
+  return (SEVERITY_LABEL as Record<string, string>)[key]
+    ?? USER_REPORT_SEVERITY_LABEL[key]
+    ?? SEVERITY_LABEL.UNKNOWN;
+}
+
+/** Trả về màu cho severity, hỗ trợ cả thang cảm biến lẫn báo cáo cộng đồng. */
+export function getSeverityColor(severity?: string | null): string {
+  const key = (severity ?? '').toUpperCase();
+  return (SEVERITY_COLOR as Record<string, string>)[key]
+    ?? USER_REPORT_SEVERITY_COLOR[key]
+    ?? SEVERITY_COLOR.UNKNOWN;
+}
+
 export const SEVERITY_PRIORITY: Record<SeverityLevel, number> = {
   UNKNOWN: 0, SAFE: 1, WARNING: 2, DANGER: 3,
 };

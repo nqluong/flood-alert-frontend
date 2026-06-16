@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { notificationService } from '../services/notification.service';
 import { useUnreadNotificationsContext } from '../background/UnreadNotificationsContext';
@@ -96,6 +97,19 @@ export function useNotifications(): UseNotificationsReturn {
       void loadNotifications(0);
     }
   }, [lastPushAt, isFocused, loadNotifications]);
+
+  const appStateRef = useRef<AppStateStatus>(AppState.currentState);
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState: AppStateStatus) => {
+      const wasBackground = appStateRef.current.match(/inactive|background/);
+      appStateRef.current = nextState;
+
+      if (nextState === 'active' && wasBackground && isFocused) {
+        void loadNotifications(0);
+      }
+    });
+    return () => subscription.remove();
+  }, [isFocused, loadNotifications]);
 
   // Load more (infinite scroll)
   const loadMore = useCallback(async () => {

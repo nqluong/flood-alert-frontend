@@ -83,7 +83,9 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
         };
       });
       
-      setReports(initialReports);
+      // page === 0 (lần đầu hoặc đổi filter) -> thay mới; page > 0 (loadMore) -> nối thêm
+      const isAppend = (filter.page ?? 0) > 0;
+      setReports(prev => (isAppend ? [...prev, ...initialReports] : initialReports));
       setTotalPages(response.totalPages);
       setTotalElements(response.totalElements);
       setLoading(false);
@@ -118,9 +120,10 @@ export function useReports(initialFilter: ReportFilterRequest = {}) {
       if (uniqueUserIds.length > 0) {
         try {
           const nameMap = await userService.getUserNamesByIds(uniqueUserIds);
+          // Giữ nguyên userName đã có (trang trước) nếu trang mới không chứa userId đó
           setReports(prev => prev.map(report => ({
             ...report,
-            userName: nameMap[report.userId] || undefined,
+            userName: nameMap[report.userId] ?? report.userName,
           })));
         } catch {
         }

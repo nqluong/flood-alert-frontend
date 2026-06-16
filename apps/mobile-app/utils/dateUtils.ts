@@ -1,7 +1,3 @@
-/**
- * Format datetime thành "time ago" format
- * VD: "2 phút trước", "1 giờ trước", "3 ngày trước"
- */
 export function formatTimeAgo(dateString: string): string {
   const now = new Date();
   const date = new Date(dateString);
@@ -29,17 +25,21 @@ export function formatTimeAgo(dateString: string): string {
   }
 }
 
-/**
- * Format location từ notification data
- */
 export function formatNotificationLocation(data: any): string {
-  if (data.location) {
+  if (!data) {
+    return '';
+  }
+
+  if (typeof data.location === 'string' && data.location.trim().length > 0) {
     return data.location;
   }
-  
-  if (data.lat && data.lon) {
-    return `${data.lat.toFixed(4)}, ${data.lon.toFixed(4)}`;
+
+  const lat = typeof data.lat === 'string' ? parseFloat(data.lat) : data.lat;
+  const lon = typeof data.lon === 'string' ? parseFloat(data.lon) : data.lon;
+  if (typeof lat === 'number' && !Number.isNaN(lat) &&
+      typeof lon === 'number' && !Number.isNaN(lon)) {
+    return `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
   }
-  
-  return 'Vị trí không xác định';
+
+  return '';
 }

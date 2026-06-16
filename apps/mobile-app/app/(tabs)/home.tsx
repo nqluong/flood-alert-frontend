@@ -461,6 +461,7 @@ export default function HomeScreen() {
           searchedLocationGeoJSON={searchedLocationGeoJSON}
           onFloodPress={handleFloodPress}
           onClearSearch={clearSearchedLocation}
+          cameraRef={cameraRef}
         />
 
         <RouteLayer

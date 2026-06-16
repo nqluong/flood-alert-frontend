@@ -43,6 +43,20 @@ const TYPE_MAP: Record<string, ToastStyle> = {
     iconColor: '#6b7280',
     iconBg: '#f3f4f6',
   },
+  REPORT_APPROVED: {
+    bg: '#f0fdf4',
+    border: '#bbf7d0',
+    iconName: 'checkmark-done-circle',
+    iconColor: '#16a34a',
+    iconBg: '#dcfce7',
+  },
+  REPORT_REJECTED: {
+    bg: '#fef2f2',
+    border: '#fecaca',
+    iconName: 'close-circle',
+    iconColor: '#dc2626',
+    iconBg: '#fee2e2',
+  },
 };
 
 const DEFAULT_STYLE = TYPE_MAP.FLOOD_ALERT;

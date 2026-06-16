@@ -7,8 +7,9 @@ import { Trash2 } from 'lucide-react';
 import type { ActiveFloodEvent } from '../../../../types/flood.types';
 import {
   SEVERITY_COLOR,
-  SEVERITY_LABEL,
   SEVERITY_HALO,
+  getSeverityLabel,
+  getSeverityColor,
   createFloodMarkerIcon,
   createUserReportFloodMarkerIcon,
   createClusterIcon,
@@ -54,10 +55,10 @@ function FloodInfoContent({
           className="smap-popup__badge"
           style={{
             background: '#fef2f2',
-            color: SEVERITY_COLOR[flood.severityLevel] ?? '#374151',
+            color: getSeverityColor(flood.severityLevel),
           }}
         >
-          {SEVERITY_LABEL[flood.severityLevel] ?? flood.severityLevel}
+          {getSeverityLabel(flood.severityLevel)}
         </span>
       </div>
       {waterLevelText && (
