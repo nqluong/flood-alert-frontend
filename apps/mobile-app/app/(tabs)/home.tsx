@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { AppState, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MapView, Camera } from '@maplibre/maplibre-react-native';
@@ -27,6 +27,7 @@ import {
 } from '../../components/home/navigation/CameraModeButton';
 
 import { geocodingService } from '../../services/geocoding.service';
+import { fcmTokenManager } from '../../utils/fcmTokenManager';
 import { MAP_STYLES, type MapStyleId } from '../../components/home/overlay/MapStylePicker';
 import { useAlertContext } from '../../context/AlertContext';
 import { ROUTE_ERROR_CODE, type VehicleType } from '../../types/route.types';
@@ -63,6 +64,22 @@ export default function HomeScreen() {
   // Follow mode: camera tự theo user khi di chuyển
   const [isFollowingUser, setIsFollowingUser] = useState(true);
   const hasFocusedInitially = useRef(false);
+
+  // Đồng bộ FCM token khi vào màn Home và mỗi khi app quay lại foreground.
+  // Dùng getToken() so sánh với token đã cache, chỉ gửi lên Backend khi token
+  // thay đổi (do cài lại app hoặc Firebase tự đổi) -> đảm bảo nhận đúng thông báo.
+  // syncTokenWithBackend đã so cache nên gọi lặp lại vẫn rẻ (không gọi API thừa).
+  useEffect(() => {
+    void fcmTokenManager.ensureTokenSynced();
+
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        void fcmTokenManager.ensureTokenSynced();
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   // Hooks
   const { coordinate: userCoordinate, error: locationError, isRealLocation } = useUserLocation();

@@ -155,36 +155,38 @@ export class FcmTokenManager {
   }
 
   /**
-   * Xin quyền + Lấy token + Đồng bộ + Lắng nghe
-   * Gọi sau khi user đăng nhập thành công
+   * Xin quyền + Lấy token + Đồng bộ (chỉ khi token đổi) + Lắng nghe
+   * Gọi khi user vào màn Home.
+   *
+   * KHÔNG xóa cache trước, mà dựa vào getToken() so sánh với token đã
+   * cache (trong syncTokenWithBackend). Chỉ gửi lên Backend khi token
+   * thực sự thay đổi (do cài lại app hoặc Firebase tự đổi), nhờ vậy token FCM
+   * luôn đúng và người dùng nhận được thông báo.
    */
-  async initializeAfterLogin(): Promise<boolean> {
+  async ensureTokenSynced(): Promise<boolean> {
     try {
-      console.log('[FCM] Initializing FCM after login...');
-
-      // Clear stale cache so syncTokenWithBackend always re-syncs on login,
-      // even if the app was killed before logout could clear it.
-      await this.clearCachedToken();
+      console.log('[FCM] Ensuring token is synced...');
 
       const token = await this.requestPermissionAndGetToken();
-      
+
       if (!token) {
-        console.log('[FCM] No token obtained, initialization stopped');
+        console.log('[FCM] No token obtained, sync skipped');
         return false;
       }
 
+      // syncTokenWithBackend đã so sánh với cache, chỉ gửi khi token đổi
       const synced = await this.syncTokenWithBackend(token);
-      
+
       if (!synced) {
         console.warn('[FCM] Token sync failed, but continuing...');
       }
 
       this.startTokenRefreshListener();
 
-      console.log('[FCM] Initialization completed successfully');
-      return true;
+      console.log('[FCM] Token sync check completed');
+      return synced;
     } catch (error) {
-      console.error('[FCM] Error during initialization:', error);
+      console.error('[FCM] Error ensuring token sync:', error);
       return false;
     }
   }

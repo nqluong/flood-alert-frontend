@@ -39,11 +39,8 @@ export const authService = {
     await storageService.saveTokens(json.data.accessToken, json.data.refreshToken);
     await storageService.saveUser(json.data.userResponse);
 
-    try {
-      await fcmTokenManager.initializeAfterLogin();
-    } catch (error) {
-      console.warn('[Auth] FCM initialization failed, but login succeeded:', error);
-    }
+    // FCM token được đồng bộ khi user vào màn Home (xem home.tsx),
+    // không gửi ở bước login để chỉ gửi lại khi token thực sự thay đổi.
 
     return json.data;
   },
@@ -91,12 +88,8 @@ export const authService = {
    await storageService.saveTokens(json.data.accessToken, json.data.refreshToken);
    await storageService.saveUser(json.data.userResponse);
 
-   // Khởi tạo FCM Token (không chặn login nếu thất bại)
-   try {
-     await fcmTokenManager.initializeAfterLogin();
-   } catch (error) {
-     console.warn('[Auth] FCM initialization failed, but social login succeeded:', error);
-   }
+   // FCM token được đồng bộ khi user vào màn Home (xem home.tsx),
+   // không gửi ở bước login để chỉ gửi lại khi token thực sự thay đổi.
 
    return json.data;
   }

@@ -12,12 +12,12 @@ export function useFcmToken() {
   const [error, setError] = useState<string | null>(null);
 
   /**
-   * Khởi tạo FCM sau khi login
+   * Đồng bộ FCM token (chỉ gửi Backend khi token thay đổi)
    */
   const initializeAfterLogin = async (): Promise<boolean> => {
     try {
       setError(null);
-      const success = await fcmTokenManager.initializeAfterLogin();
+      const success = await fcmTokenManager.ensureTokenSynced();
       setIsInitialized(success);
       
       if (success) {
